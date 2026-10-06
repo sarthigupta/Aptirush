@@ -26,3 +26,16 @@ export const authenticateToken = (
     next();
   });
 };
+
+export const isAdmin = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
+  const user = (req as any).user;
+  if (!user || user.role !== 'ADMIN') {
+    res.status(403).json({ error: 'Admin access required' });
+    return;
+  }
+  next();
+};
