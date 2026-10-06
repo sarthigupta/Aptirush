@@ -16,6 +16,19 @@ export const AuthController = {
     }
   },
 
+  async adminRegister(req: Request, res: Response): Promise<void> {
+    try {
+      const user = await AuthService.adminRegister(req.body);
+      res.status(201).json({ message: 'Admin registered successfully', user });
+    } catch (error: any) {
+      if (error.message === 'Email already in use') {
+        res.status(400).json({ error: error.message });
+        return;
+      }
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  },
+
   async login(req: Request, res: Response): Promise<void> {
     try {
       const result = await AuthService.login(req.body);
@@ -23,6 +36,19 @@ export const AuthController = {
     } catch (error: any) {
       if (error.message === 'Invalid credentials' || error.message === 'Invalid credentials or inactive account') {
         res.status(400).json({ error: error.message });
+        return;
+      }
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  },
+
+  async adminLogin(req: Request, res: Response): Promise<void> {
+    try {
+      const result = await AuthService.adminLogin(req.body);
+      res.status(200).json({ message: 'Admin login successful', ...result });
+    } catch (error: any) {
+      if (error.message === 'Invalid credentials' || error.message === 'Invalid credentials or inactive account' || error.message === 'Unauthorized') {
+        res.status(401).json({ error: error.message });
         return;
       }
       res.status(500).json({ error: 'Internal server error' });

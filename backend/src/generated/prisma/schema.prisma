@@ -19,6 +19,22 @@ enum Role {
   ADMIN
 }
 
+enum DocumentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+}
+
+enum QuestionType {
+  MCQ
+  TITA
+}
+
+enum QuestionStatus {
+  PUBLISHED
+  NEEDS_REVIEW
+}
+
 model User {
   id            String    @id @default(uuid())
   name          String
@@ -29,4 +45,35 @@ model User {
   created_at    DateTime  @default(now())
   updated_at    DateTime  @updatedAt
   deleted_at    DateTime?
+}
+
+model DocumentJob {
+  id         String         @id @default(uuid())
+  filename   String
+  status     DocumentStatus @default(PENDING)
+  questions  Question[]
+  created_at DateTime       @default(now())
+  updated_at DateTime       @updatedAt
+}
+
+model Module {
+  id            String     @id @default(uuid())
+  chapterNumber Int?
+  title         String
+  questions     Question[]
+}
+
+model Question {
+  id            String         @id @default(uuid())
+  moduleId      String
+  module        Module         @relation(fields: [moduleId], references: [id])
+  questionText  String
+  options       Json
+  correctAnswer String
+  type          QuestionType
+  status        QuestionStatus @default(NEEDS_REVIEW)
+  documentJobId String?
+  documentJob   DocumentJob?   @relation(fields: [documentJobId], references: [id])
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
 }

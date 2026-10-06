@@ -132,9 +132,40 @@ exports.Prisma.UserScalarFieldEnum = {
   deleted_at: 'deleted_at'
 };
 
+exports.Prisma.DocumentJobScalarFieldEnum = {
+  id: 'id',
+  filename: 'filename',
+  status: 'status',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.ModuleScalarFieldEnum = {
+  id: 'id',
+  chapterNumber: 'chapterNumber',
+  title: 'title'
+};
+
+exports.Prisma.QuestionScalarFieldEnum = {
+  id: 'id',
+  moduleId: 'moduleId',
+  questionText: 'questionText',
+  options: 'options',
+  correctAnswer: 'correctAnswer',
+  type: 'type',
+  status: 'status',
+  documentJobId: 'documentJobId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.JsonNullValueInput = {
+  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.QueryMode = {
@@ -146,14 +177,39 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
+
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
+};
 exports.Role = exports.$Enums.Role = {
   STUDENT: 'STUDENT',
   FACULTY: 'FACULTY',
   ADMIN: 'ADMIN'
 };
 
+exports.DocumentStatus = exports.$Enums.DocumentStatus = {
+  PENDING: 'PENDING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED'
+};
+
+exports.QuestionType = exports.$Enums.QuestionType = {
+  MCQ: 'MCQ',
+  TITA: 'TITA'
+};
+
+exports.QuestionStatus = exports.$Enums.QuestionStatus = {
+  PUBLISHED: 'PUBLISHED',
+  NEEDS_REVIEW: 'NEEDS_REVIEW'
+};
+
 exports.Prisma.ModelName = {
-  User: 'User'
+  User: 'User',
+  DocumentJob: 'DocumentJob',
+  Module: 'Module',
+  Question: 'Question'
 };
 
 /**
