@@ -1,7 +1,36 @@
 import { prisma } from '../../lib/prisma.js';
 import { DocumentStatus, QuestionStatus, QuestionType } from '../../generated/prisma/client.js';
+import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
+
+const s3Client = new S3Client({ region: process.env.AWS_REGION });
 
 export const PdfProcessingService = {
+  async fetchAndProcessFromS3(jobId: string) {
+    try {
+      // NOTE: Ensure your AWS pipeline saves the output JSON to this key pattern:
+      const s3Key = `bedrock/input/${jobId}.json`;
+      
+      console.log(`Fetching processed JSON from S3: s3://${process.env.AWS_S3_BUCKET}/${s3Key}`);
+      
+      const response = await s3Client.send(new GetObjectCommand({
+        Bucket: process.env.AWS_S3_BUCKET!,
+        Key: s3Key,
+      }));
+      
+      if (!response.Body) throw new Error('S3 response body is empty');
+      
+      const strPayload = await response.Body.transformToString();
+      const payload = JSON.parse(strPayload);
+
+      return await this.processPipelineWebhook(jobId, payload);
+    } catch (error: any) {
+      console.error(`Failed to fetch JSON for job ${jobId}:`, error.message);
+      if (error.name === 'NoSuchKey') {
+        return { success: false, message: 'Processing not finished yet. JSON not found in S3.' };
+      }
+      throw error;
+    }
+  },
   async processPipelineWebhook(jobId: string, payload: any) {
     try {
       const moduleMap = new Map<string, string>();

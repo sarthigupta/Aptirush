@@ -7,6 +7,12 @@ const s3Client = new S3Client({ region: process.env.AWS_REGION });
 const lambdaClient = new LambdaClient({ region: process.env.AWS_REGION });
 
 export const AdminService = {
+  async getDocumentJobs() {
+    return prisma.documentJob.findMany({
+      orderBy: { created_at: 'desc' }
+    });
+  },
+
   async processDocumentUpload(file: Express.Multer.File) {
     // 1. Create a DocumentJob in the database
     const job = await prisma.documentJob.create({

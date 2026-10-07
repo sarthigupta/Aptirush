@@ -14,4 +14,18 @@ router.post(
   AdminController.uploadDocument
 );
 
+router.get(
+  '/documents',
+  authenticateToken,
+  isAdmin,
+  AdminController.getDocuments
+);
+
+router.get(
+  '/documents/:jobId/sync',
+  authenticateToken,
+  isAdmin,
+  AdminController.syncDocumentJob
+);
+
 export default router;

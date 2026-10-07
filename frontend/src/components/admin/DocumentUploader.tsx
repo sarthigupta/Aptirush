@@ -41,7 +41,7 @@ export default function DocumentUploader() {
   };
 
   return (
-    <div className="border-2 border-dashed border-gray-200 rounded-lg p-10 flex flex-col items-center justify-center text-center transition-all hover:border-indigo-300 bg-gray-50/50 relative">
+    <div className="border-2 border-dashed border-gray-200 rounded-lg p-10 flex flex-col items-center justify-center text-center transition-all hover:border-gray-300 bg-gray-50/50 relative">
       <input
         type="file"
         accept="application/pdf"
@@ -73,7 +73,7 @@ export default function DocumentUploader() {
             handleUpload();
           }}
           disabled={uploading}
-          className="mt-4 bg-indigo-600 text-white px-6 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 disabled:opacity-70 flex items-center shadow-sm relative z-10"
+          className="mt-4 bg-gray-900 text-white px-6 py-2 rounded-lg text-sm font-medium hover:bg-gray-800 disabled:opacity-70 flex items-center shadow-sm relative z-10"
         >
           {uploading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Upload className="w-4 h-4 mr-2" />}
           {uploading ? 'Uploading...' : 'Upload'}
