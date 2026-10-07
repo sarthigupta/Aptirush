@@ -33,6 +33,11 @@ export type Module = $Result.DefaultSelection<Prisma.$ModulePayload>
  * 
  */
 export type Question = $Result.DefaultSelection<Prisma.$QuestionPayload>
+/**
+ * Model TestAttempt
+ * 
+ */
+export type TestAttempt = $Result.DefaultSelection<Prisma.$TestAttemptPayload>
 
 /**
  * Enums
@@ -249,6 +254,16 @@ export class PrismaClient<
     * ```
     */
   get question(): Prisma.QuestionDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.testAttempt`: Exposes CRUD operations for the **TestAttempt** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more TestAttempts
+    * const testAttempts = await prisma.testAttempt.findMany()
+    * ```
+    */
+  get testAttempt(): Prisma.TestAttemptDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -699,7 +714,8 @@ export namespace Prisma {
     User: 'User',
     DocumentJob: 'DocumentJob',
     Module: 'Module',
-    Question: 'Question'
+    Question: 'Question',
+    TestAttempt: 'TestAttempt'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -715,7 +731,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "documentJob" | "module" | "question"
+      modelProps: "user" | "documentJob" | "module" | "question" | "testAttempt"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1015,6 +1031,80 @@ export namespace Prisma {
           }
         }
       }
+      TestAttempt: {
+        payload: Prisma.$TestAttemptPayload<ExtArgs>
+        fields: Prisma.TestAttemptFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.TestAttemptFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TestAttemptPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.TestAttemptFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TestAttemptPayload>
+          }
+          findFirst: {
+            args: Prisma.TestAttemptFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TestAttemptPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.TestAttemptFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TestAttemptPayload>
+          }
+          findMany: {
+            args: Prisma.TestAttemptFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TestAttemptPayload>[]
+          }
+          create: {
+            args: Prisma.TestAttemptCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TestAttemptPayload>
+          }
+          createMany: {
+            args: Prisma.TestAttemptCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.TestAttemptCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TestAttemptPayload>[]
+          }
+          delete: {
+            args: Prisma.TestAttemptDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TestAttemptPayload>
+          }
+          update: {
+            args: Prisma.TestAttemptUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TestAttemptPayload>
+          }
+          deleteMany: {
+            args: Prisma.TestAttemptDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.TestAttemptUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.TestAttemptUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TestAttemptPayload>[]
+          }
+          upsert: {
+            args: Prisma.TestAttemptUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TestAttemptPayload>
+          }
+          aggregate: {
+            args: Prisma.TestAttemptAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateTestAttempt>
+          }
+          groupBy: {
+            args: Prisma.TestAttemptGroupByArgs<ExtArgs>
+            result: $Utils.Optional<TestAttemptGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.TestAttemptCountArgs<ExtArgs>
+            result: $Utils.Optional<TestAttemptCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1142,6 +1232,7 @@ export namespace Prisma {
     documentJob?: DocumentJobOmit
     module?: ModuleOmit
     question?: QuestionOmit
+    testAttempt?: TestAttemptOmit
   }
 
   /* Types for Logging */
@@ -1218,6 +1309,37 @@ export namespace Prisma {
 
 
   /**
+   * Count Type UserCountOutputType
+   */
+
+  export type UserCountOutputType = {
+    testAttempts: number
+  }
+
+  export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    testAttempts?: boolean | UserCountOutputTypeCountTestAttemptsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserCountOutputType
+     */
+    select?: UserCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountTestAttemptsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TestAttemptWhereInput
+  }
+
+
+  /**
    * Count Type DocumentJobCountOutputType
    */
 
@@ -1254,10 +1376,12 @@ export namespace Prisma {
 
   export type ModuleCountOutputType = {
     questions: number
+    testAttempts: number
   }
 
   export type ModuleCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     questions?: boolean | ModuleCountOutputTypeCountQuestionsArgs
+    testAttempts?: boolean | ModuleCountOutputTypeCountTestAttemptsArgs
   }
 
   // Custom InputTypes
@@ -1276,6 +1400,13 @@ export namespace Prisma {
    */
   export type ModuleCountOutputTypeCountQuestionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: QuestionWhereInput
+  }
+
+  /**
+   * ModuleCountOutputType without action
+   */
+  export type ModuleCountOutputTypeCountTestAttemptsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TestAttemptWhereInput
   }
 
 
@@ -1479,6 +1610,8 @@ export namespace Prisma {
     created_at?: boolean
     updated_at?: boolean
     deleted_at?: boolean
+    testAttempts?: boolean | User$testAttemptsArgs<ExtArgs>
+    _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -1518,10 +1651,18 @@ export namespace Prisma {
   }
 
   export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "password_hash" | "role" | "is_active" | "created_at" | "updated_at" | "deleted_at", ExtArgs["result"]["user"]>
+  export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    testAttempts?: boolean | User$testAttemptsArgs<ExtArgs>
+    _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type UserIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
 
   export type $UserPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "User"
-    objects: {}
+    objects: {
+      testAttempts: Prisma.$TestAttemptPayload<ExtArgs>[]
+    }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       name: string
@@ -1926,6 +2067,7 @@ export namespace Prisma {
    */
   export interface Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    testAttempts<T extends User$testAttemptsArgs<ExtArgs> = {}>(args?: Subset<T, User$testAttemptsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TestAttemptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1981,6 +2123,10 @@ export namespace Prisma {
      */
     omit?: UserOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
      * Filter, which User to fetch.
      */
     where: UserWhereUniqueInput
@@ -1999,6 +2145,10 @@ export namespace Prisma {
      */
     omit?: UserOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
      * Filter, which User to fetch.
      */
     where: UserWhereUniqueInput
@@ -2016,6 +2166,10 @@ export namespace Prisma {
      * Omit specific fields from the User
      */
     omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
     /**
      * Filter, which User to fetch.
      */
@@ -2065,6 +2219,10 @@ export namespace Prisma {
      */
     omit?: UserOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
      * Filter, which User to fetch.
      */
     where?: UserWhereInput
@@ -2112,6 +2270,10 @@ export namespace Prisma {
      * Omit specific fields from the User
      */
     omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
     /**
      * Filter, which Users to fetch.
      */
@@ -2161,6 +2323,10 @@ export namespace Prisma {
      */
     omit?: UserOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
      * The data needed to create a User.
      */
     data: XOR<UserCreateInput, UserUncheckedCreateInput>
@@ -2208,6 +2374,10 @@ export namespace Prisma {
      * Omit specific fields from the User
      */
     omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
     /**
      * The data needed to update a User.
      */
@@ -2275,6 +2445,10 @@ export namespace Prisma {
      */
     omit?: UserOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
      * The filter to search for the User to update in case it exists.
      */
     where: UserWhereUniqueInput
@@ -2301,6 +2475,10 @@ export namespace Prisma {
      */
     omit?: UserOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
      * Filter which User to delete.
      */
     where: UserWhereUniqueInput
@@ -2321,6 +2499,30 @@ export namespace Prisma {
   }
 
   /**
+   * User.testAttempts
+   */
+  export type User$testAttemptsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TestAttempt
+     */
+    select?: TestAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TestAttempt
+     */
+    omit?: TestAttemptOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TestAttemptInclude<ExtArgs> | null
+    where?: TestAttemptWhereInput
+    orderBy?: TestAttemptOrderByWithRelationInput | TestAttemptOrderByWithRelationInput[]
+    cursor?: TestAttemptWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TestAttemptScalarFieldEnum | TestAttemptScalarFieldEnum[]
+  }
+
+  /**
    * User without action
    */
   export type UserDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2332,6 +2534,10 @@ export namespace Prisma {
      * Omit specific fields from the User
      */
     omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
   }
 
 
@@ -3593,6 +3799,7 @@ export namespace Prisma {
     chapterNumber?: boolean
     title?: boolean
     questions?: boolean | Module$questionsArgs<ExtArgs>
+    testAttempts?: boolean | Module$testAttemptsArgs<ExtArgs>
     _count?: boolean | ModuleCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["module"]>
 
@@ -3617,6 +3824,7 @@ export namespace Prisma {
   export type ModuleOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "chapterNumber" | "title", ExtArgs["result"]["module"]>
   export type ModuleInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     questions?: boolean | Module$questionsArgs<ExtArgs>
+    testAttempts?: boolean | Module$testAttemptsArgs<ExtArgs>
     _count?: boolean | ModuleCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ModuleIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -3626,6 +3834,7 @@ export namespace Prisma {
     name: "Module"
     objects: {
       questions: Prisma.$QuestionPayload<ExtArgs>[]
+      testAttempts: Prisma.$TestAttemptPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -4026,6 +4235,7 @@ export namespace Prisma {
   export interface Prisma__ModuleClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     questions<T extends Module$questionsArgs<ExtArgs> = {}>(args?: Subset<T, Module$questionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QuestionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    testAttempts<T extends Module$testAttemptsArgs<ExtArgs> = {}>(args?: Subset<T, Module$testAttemptsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TestAttemptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4472,6 +4682,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: QuestionScalarFieldEnum | QuestionScalarFieldEnum[]
+  }
+
+  /**
+   * Module.testAttempts
+   */
+  export type Module$testAttemptsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TestAttempt
+     */
+    select?: TestAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TestAttempt
+     */
+    omit?: TestAttemptOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TestAttemptInclude<ExtArgs> | null
+    where?: TestAttemptWhereInput
+    orderBy?: TestAttemptOrderByWithRelationInput | TestAttemptOrderByWithRelationInput[]
+    cursor?: TestAttemptWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TestAttemptScalarFieldEnum | TestAttemptScalarFieldEnum[]
   }
 
   /**
@@ -5645,6 +5879,1128 @@ export namespace Prisma {
 
 
   /**
+   * Model TestAttempt
+   */
+
+  export type AggregateTestAttempt = {
+    _count: TestAttemptCountAggregateOutputType | null
+    _avg: TestAttemptAvgAggregateOutputType | null
+    _sum: TestAttemptSumAggregateOutputType | null
+    _min: TestAttemptMinAggregateOutputType | null
+    _max: TestAttemptMaxAggregateOutputType | null
+  }
+
+  export type TestAttemptAvgAggregateOutputType = {
+    score: number | null
+    total: number | null
+  }
+
+  export type TestAttemptSumAggregateOutputType = {
+    score: number | null
+    total: number | null
+  }
+
+  export type TestAttemptMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    moduleId: string | null
+    score: number | null
+    total: number | null
+    createdAt: Date | null
+  }
+
+  export type TestAttemptMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    moduleId: string | null
+    score: number | null
+    total: number | null
+    createdAt: Date | null
+  }
+
+  export type TestAttemptCountAggregateOutputType = {
+    id: number
+    userId: number
+    moduleId: number
+    score: number
+    total: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type TestAttemptAvgAggregateInputType = {
+    score?: true
+    total?: true
+  }
+
+  export type TestAttemptSumAggregateInputType = {
+    score?: true
+    total?: true
+  }
+
+  export type TestAttemptMinAggregateInputType = {
+    id?: true
+    userId?: true
+    moduleId?: true
+    score?: true
+    total?: true
+    createdAt?: true
+  }
+
+  export type TestAttemptMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    moduleId?: true
+    score?: true
+    total?: true
+    createdAt?: true
+  }
+
+  export type TestAttemptCountAggregateInputType = {
+    id?: true
+    userId?: true
+    moduleId?: true
+    score?: true
+    total?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type TestAttemptAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TestAttempt to aggregate.
+     */
+    where?: TestAttemptWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TestAttempts to fetch.
+     */
+    orderBy?: TestAttemptOrderByWithRelationInput | TestAttemptOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: TestAttemptWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TestAttempts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TestAttempts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned TestAttempts
+    **/
+    _count?: true | TestAttemptCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: TestAttemptAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: TestAttemptSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: TestAttemptMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: TestAttemptMaxAggregateInputType
+  }
+
+  export type GetTestAttemptAggregateType<T extends TestAttemptAggregateArgs> = {
+        [P in keyof T & keyof AggregateTestAttempt]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateTestAttempt[P]>
+      : GetScalarType<T[P], AggregateTestAttempt[P]>
+  }
+
+
+
+
+  export type TestAttemptGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TestAttemptWhereInput
+    orderBy?: TestAttemptOrderByWithAggregationInput | TestAttemptOrderByWithAggregationInput[]
+    by: TestAttemptScalarFieldEnum[] | TestAttemptScalarFieldEnum
+    having?: TestAttemptScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: TestAttemptCountAggregateInputType | true
+    _avg?: TestAttemptAvgAggregateInputType
+    _sum?: TestAttemptSumAggregateInputType
+    _min?: TestAttemptMinAggregateInputType
+    _max?: TestAttemptMaxAggregateInputType
+  }
+
+  export type TestAttemptGroupByOutputType = {
+    id: string
+    userId: string
+    moduleId: string
+    score: number
+    total: number
+    createdAt: Date
+    _count: TestAttemptCountAggregateOutputType | null
+    _avg: TestAttemptAvgAggregateOutputType | null
+    _sum: TestAttemptSumAggregateOutputType | null
+    _min: TestAttemptMinAggregateOutputType | null
+    _max: TestAttemptMaxAggregateOutputType | null
+  }
+
+  type GetTestAttemptGroupByPayload<T extends TestAttemptGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<TestAttemptGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof TestAttemptGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], TestAttemptGroupByOutputType[P]>
+            : GetScalarType<T[P], TestAttemptGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type TestAttemptSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    moduleId?: boolean
+    score?: boolean
+    total?: boolean
+    createdAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    module?: boolean | ModuleDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["testAttempt"]>
+
+  export type TestAttemptSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    moduleId?: boolean
+    score?: boolean
+    total?: boolean
+    createdAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    module?: boolean | ModuleDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["testAttempt"]>
+
+  export type TestAttemptSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    moduleId?: boolean
+    score?: boolean
+    total?: boolean
+    createdAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    module?: boolean | ModuleDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["testAttempt"]>
+
+  export type TestAttemptSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    moduleId?: boolean
+    score?: boolean
+    total?: boolean
+    createdAt?: boolean
+  }
+
+  export type TestAttemptOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "moduleId" | "score" | "total" | "createdAt", ExtArgs["result"]["testAttempt"]>
+  export type TestAttemptInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    module?: boolean | ModuleDefaultArgs<ExtArgs>
+  }
+  export type TestAttemptIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    module?: boolean | ModuleDefaultArgs<ExtArgs>
+  }
+  export type TestAttemptIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    module?: boolean | ModuleDefaultArgs<ExtArgs>
+  }
+
+  export type $TestAttemptPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "TestAttempt"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+      module: Prisma.$ModulePayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      moduleId: string
+      score: number
+      total: number
+      createdAt: Date
+    }, ExtArgs["result"]["testAttempt"]>
+    composites: {}
+  }
+
+  type TestAttemptGetPayload<S extends boolean | null | undefined | TestAttemptDefaultArgs> = $Result.GetResult<Prisma.$TestAttemptPayload, S>
+
+  type TestAttemptCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<TestAttemptFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: TestAttemptCountAggregateInputType | true
+    }
+
+  export interface TestAttemptDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['TestAttempt'], meta: { name: 'TestAttempt' } }
+    /**
+     * Find zero or one TestAttempt that matches the filter.
+     * @param {TestAttemptFindUniqueArgs} args - Arguments to find a TestAttempt
+     * @example
+     * // Get one TestAttempt
+     * const testAttempt = await prisma.testAttempt.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends TestAttemptFindUniqueArgs>(args: SelectSubset<T, TestAttemptFindUniqueArgs<ExtArgs>>): Prisma__TestAttemptClient<$Result.GetResult<Prisma.$TestAttemptPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one TestAttempt that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {TestAttemptFindUniqueOrThrowArgs} args - Arguments to find a TestAttempt
+     * @example
+     * // Get one TestAttempt
+     * const testAttempt = await prisma.testAttempt.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends TestAttemptFindUniqueOrThrowArgs>(args: SelectSubset<T, TestAttemptFindUniqueOrThrowArgs<ExtArgs>>): Prisma__TestAttemptClient<$Result.GetResult<Prisma.$TestAttemptPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TestAttempt that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TestAttemptFindFirstArgs} args - Arguments to find a TestAttempt
+     * @example
+     * // Get one TestAttempt
+     * const testAttempt = await prisma.testAttempt.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends TestAttemptFindFirstArgs>(args?: SelectSubset<T, TestAttemptFindFirstArgs<ExtArgs>>): Prisma__TestAttemptClient<$Result.GetResult<Prisma.$TestAttemptPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TestAttempt that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TestAttemptFindFirstOrThrowArgs} args - Arguments to find a TestAttempt
+     * @example
+     * // Get one TestAttempt
+     * const testAttempt = await prisma.testAttempt.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends TestAttemptFindFirstOrThrowArgs>(args?: SelectSubset<T, TestAttemptFindFirstOrThrowArgs<ExtArgs>>): Prisma__TestAttemptClient<$Result.GetResult<Prisma.$TestAttemptPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more TestAttempts that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TestAttemptFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all TestAttempts
+     * const testAttempts = await prisma.testAttempt.findMany()
+     * 
+     * // Get first 10 TestAttempts
+     * const testAttempts = await prisma.testAttempt.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const testAttemptWithIdOnly = await prisma.testAttempt.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends TestAttemptFindManyArgs>(args?: SelectSubset<T, TestAttemptFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TestAttemptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a TestAttempt.
+     * @param {TestAttemptCreateArgs} args - Arguments to create a TestAttempt.
+     * @example
+     * // Create one TestAttempt
+     * const TestAttempt = await prisma.testAttempt.create({
+     *   data: {
+     *     // ... data to create a TestAttempt
+     *   }
+     * })
+     * 
+     */
+    create<T extends TestAttemptCreateArgs>(args: SelectSubset<T, TestAttemptCreateArgs<ExtArgs>>): Prisma__TestAttemptClient<$Result.GetResult<Prisma.$TestAttemptPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many TestAttempts.
+     * @param {TestAttemptCreateManyArgs} args - Arguments to create many TestAttempts.
+     * @example
+     * // Create many TestAttempts
+     * const testAttempt = await prisma.testAttempt.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends TestAttemptCreateManyArgs>(args?: SelectSubset<T, TestAttemptCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many TestAttempts and returns the data saved in the database.
+     * @param {TestAttemptCreateManyAndReturnArgs} args - Arguments to create many TestAttempts.
+     * @example
+     * // Create many TestAttempts
+     * const testAttempt = await prisma.testAttempt.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many TestAttempts and only return the `id`
+     * const testAttemptWithIdOnly = await prisma.testAttempt.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends TestAttemptCreateManyAndReturnArgs>(args?: SelectSubset<T, TestAttemptCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TestAttemptPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a TestAttempt.
+     * @param {TestAttemptDeleteArgs} args - Arguments to delete one TestAttempt.
+     * @example
+     * // Delete one TestAttempt
+     * const TestAttempt = await prisma.testAttempt.delete({
+     *   where: {
+     *     // ... filter to delete one TestAttempt
+     *   }
+     * })
+     * 
+     */
+    delete<T extends TestAttemptDeleteArgs>(args: SelectSubset<T, TestAttemptDeleteArgs<ExtArgs>>): Prisma__TestAttemptClient<$Result.GetResult<Prisma.$TestAttemptPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one TestAttempt.
+     * @param {TestAttemptUpdateArgs} args - Arguments to update one TestAttempt.
+     * @example
+     * // Update one TestAttempt
+     * const testAttempt = await prisma.testAttempt.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends TestAttemptUpdateArgs>(args: SelectSubset<T, TestAttemptUpdateArgs<ExtArgs>>): Prisma__TestAttemptClient<$Result.GetResult<Prisma.$TestAttemptPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more TestAttempts.
+     * @param {TestAttemptDeleteManyArgs} args - Arguments to filter TestAttempts to delete.
+     * @example
+     * // Delete a few TestAttempts
+     * const { count } = await prisma.testAttempt.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends TestAttemptDeleteManyArgs>(args?: SelectSubset<T, TestAttemptDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TestAttempts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TestAttemptUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many TestAttempts
+     * const testAttempt = await prisma.testAttempt.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends TestAttemptUpdateManyArgs>(args: SelectSubset<T, TestAttemptUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TestAttempts and returns the data updated in the database.
+     * @param {TestAttemptUpdateManyAndReturnArgs} args - Arguments to update many TestAttempts.
+     * @example
+     * // Update many TestAttempts
+     * const testAttempt = await prisma.testAttempt.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more TestAttempts and only return the `id`
+     * const testAttemptWithIdOnly = await prisma.testAttempt.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends TestAttemptUpdateManyAndReturnArgs>(args: SelectSubset<T, TestAttemptUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TestAttemptPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one TestAttempt.
+     * @param {TestAttemptUpsertArgs} args - Arguments to update or create a TestAttempt.
+     * @example
+     * // Update or create a TestAttempt
+     * const testAttempt = await prisma.testAttempt.upsert({
+     *   create: {
+     *     // ... data to create a TestAttempt
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the TestAttempt we want to update
+     *   }
+     * })
+     */
+    upsert<T extends TestAttemptUpsertArgs>(args: SelectSubset<T, TestAttemptUpsertArgs<ExtArgs>>): Prisma__TestAttemptClient<$Result.GetResult<Prisma.$TestAttemptPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of TestAttempts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TestAttemptCountArgs} args - Arguments to filter TestAttempts to count.
+     * @example
+     * // Count the number of TestAttempts
+     * const count = await prisma.testAttempt.count({
+     *   where: {
+     *     // ... the filter for the TestAttempts we want to count
+     *   }
+     * })
+    **/
+    count<T extends TestAttemptCountArgs>(
+      args?: Subset<T, TestAttemptCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], TestAttemptCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a TestAttempt.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TestAttemptAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends TestAttemptAggregateArgs>(args: Subset<T, TestAttemptAggregateArgs>): Prisma.PrismaPromise<GetTestAttemptAggregateType<T>>
+
+    /**
+     * Group by TestAttempt.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TestAttemptGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends TestAttemptGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: TestAttemptGroupByArgs['orderBy'] }
+        : { orderBy?: TestAttemptGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, TestAttemptGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTestAttemptGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the TestAttempt model
+   */
+  readonly fields: TestAttemptFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for TestAttempt.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__TestAttemptClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    module<T extends ModuleDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ModuleDefaultArgs<ExtArgs>>): Prisma__ModuleClient<$Result.GetResult<Prisma.$ModulePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the TestAttempt model
+   */
+  interface TestAttemptFieldRefs {
+    readonly id: FieldRef<"TestAttempt", 'String'>
+    readonly userId: FieldRef<"TestAttempt", 'String'>
+    readonly moduleId: FieldRef<"TestAttempt", 'String'>
+    readonly score: FieldRef<"TestAttempt", 'Int'>
+    readonly total: FieldRef<"TestAttempt", 'Int'>
+    readonly createdAt: FieldRef<"TestAttempt", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * TestAttempt findUnique
+   */
+  export type TestAttemptFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TestAttempt
+     */
+    select?: TestAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TestAttempt
+     */
+    omit?: TestAttemptOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TestAttemptInclude<ExtArgs> | null
+    /**
+     * Filter, which TestAttempt to fetch.
+     */
+    where: TestAttemptWhereUniqueInput
+  }
+
+  /**
+   * TestAttempt findUniqueOrThrow
+   */
+  export type TestAttemptFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TestAttempt
+     */
+    select?: TestAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TestAttempt
+     */
+    omit?: TestAttemptOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TestAttemptInclude<ExtArgs> | null
+    /**
+     * Filter, which TestAttempt to fetch.
+     */
+    where: TestAttemptWhereUniqueInput
+  }
+
+  /**
+   * TestAttempt findFirst
+   */
+  export type TestAttemptFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TestAttempt
+     */
+    select?: TestAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TestAttempt
+     */
+    omit?: TestAttemptOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TestAttemptInclude<ExtArgs> | null
+    /**
+     * Filter, which TestAttempt to fetch.
+     */
+    where?: TestAttemptWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TestAttempts to fetch.
+     */
+    orderBy?: TestAttemptOrderByWithRelationInput | TestAttemptOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TestAttempts.
+     */
+    cursor?: TestAttemptWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TestAttempts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TestAttempts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TestAttempts.
+     */
+    distinct?: TestAttemptScalarFieldEnum | TestAttemptScalarFieldEnum[]
+  }
+
+  /**
+   * TestAttempt findFirstOrThrow
+   */
+  export type TestAttemptFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TestAttempt
+     */
+    select?: TestAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TestAttempt
+     */
+    omit?: TestAttemptOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TestAttemptInclude<ExtArgs> | null
+    /**
+     * Filter, which TestAttempt to fetch.
+     */
+    where?: TestAttemptWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TestAttempts to fetch.
+     */
+    orderBy?: TestAttemptOrderByWithRelationInput | TestAttemptOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TestAttempts.
+     */
+    cursor?: TestAttemptWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TestAttempts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TestAttempts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TestAttempts.
+     */
+    distinct?: TestAttemptScalarFieldEnum | TestAttemptScalarFieldEnum[]
+  }
+
+  /**
+   * TestAttempt findMany
+   */
+  export type TestAttemptFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TestAttempt
+     */
+    select?: TestAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TestAttempt
+     */
+    omit?: TestAttemptOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TestAttemptInclude<ExtArgs> | null
+    /**
+     * Filter, which TestAttempts to fetch.
+     */
+    where?: TestAttemptWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TestAttempts to fetch.
+     */
+    orderBy?: TestAttemptOrderByWithRelationInput | TestAttemptOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing TestAttempts.
+     */
+    cursor?: TestAttemptWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TestAttempts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TestAttempts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TestAttempts.
+     */
+    distinct?: TestAttemptScalarFieldEnum | TestAttemptScalarFieldEnum[]
+  }
+
+  /**
+   * TestAttempt create
+   */
+  export type TestAttemptCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TestAttempt
+     */
+    select?: TestAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TestAttempt
+     */
+    omit?: TestAttemptOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TestAttemptInclude<ExtArgs> | null
+    /**
+     * The data needed to create a TestAttempt.
+     */
+    data: XOR<TestAttemptCreateInput, TestAttemptUncheckedCreateInput>
+  }
+
+  /**
+   * TestAttempt createMany
+   */
+  export type TestAttemptCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many TestAttempts.
+     */
+    data: TestAttemptCreateManyInput | TestAttemptCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * TestAttempt createManyAndReturn
+   */
+  export type TestAttemptCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TestAttempt
+     */
+    select?: TestAttemptSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TestAttempt
+     */
+    omit?: TestAttemptOmit<ExtArgs> | null
+    /**
+     * The data used to create many TestAttempts.
+     */
+    data: TestAttemptCreateManyInput | TestAttemptCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TestAttemptIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * TestAttempt update
+   */
+  export type TestAttemptUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TestAttempt
+     */
+    select?: TestAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TestAttempt
+     */
+    omit?: TestAttemptOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TestAttemptInclude<ExtArgs> | null
+    /**
+     * The data needed to update a TestAttempt.
+     */
+    data: XOR<TestAttemptUpdateInput, TestAttemptUncheckedUpdateInput>
+    /**
+     * Choose, which TestAttempt to update.
+     */
+    where: TestAttemptWhereUniqueInput
+  }
+
+  /**
+   * TestAttempt updateMany
+   */
+  export type TestAttemptUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update TestAttempts.
+     */
+    data: XOR<TestAttemptUpdateManyMutationInput, TestAttemptUncheckedUpdateManyInput>
+    /**
+     * Filter which TestAttempts to update
+     */
+    where?: TestAttemptWhereInput
+    /**
+     * Limit how many TestAttempts to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * TestAttempt updateManyAndReturn
+   */
+  export type TestAttemptUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TestAttempt
+     */
+    select?: TestAttemptSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TestAttempt
+     */
+    omit?: TestAttemptOmit<ExtArgs> | null
+    /**
+     * The data used to update TestAttempts.
+     */
+    data: XOR<TestAttemptUpdateManyMutationInput, TestAttemptUncheckedUpdateManyInput>
+    /**
+     * Filter which TestAttempts to update
+     */
+    where?: TestAttemptWhereInput
+    /**
+     * Limit how many TestAttempts to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TestAttemptIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * TestAttempt upsert
+   */
+  export type TestAttemptUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TestAttempt
+     */
+    select?: TestAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TestAttempt
+     */
+    omit?: TestAttemptOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TestAttemptInclude<ExtArgs> | null
+    /**
+     * The filter to search for the TestAttempt to update in case it exists.
+     */
+    where: TestAttemptWhereUniqueInput
+    /**
+     * In case the TestAttempt found by the `where` argument doesn't exist, create a new TestAttempt with this data.
+     */
+    create: XOR<TestAttemptCreateInput, TestAttemptUncheckedCreateInput>
+    /**
+     * In case the TestAttempt was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<TestAttemptUpdateInput, TestAttemptUncheckedUpdateInput>
+  }
+
+  /**
+   * TestAttempt delete
+   */
+  export type TestAttemptDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TestAttempt
+     */
+    select?: TestAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TestAttempt
+     */
+    omit?: TestAttemptOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TestAttemptInclude<ExtArgs> | null
+    /**
+     * Filter which TestAttempt to delete.
+     */
+    where: TestAttemptWhereUniqueInput
+  }
+
+  /**
+   * TestAttempt deleteMany
+   */
+  export type TestAttemptDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TestAttempts to delete
+     */
+    where?: TestAttemptWhereInput
+    /**
+     * Limit how many TestAttempts to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * TestAttempt without action
+   */
+  export type TestAttemptDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TestAttempt
+     */
+    select?: TestAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TestAttempt
+     */
+    omit?: TestAttemptOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TestAttemptInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -5707,6 +7063,18 @@ export namespace Prisma {
   };
 
   export type QuestionScalarFieldEnum = (typeof QuestionScalarFieldEnum)[keyof typeof QuestionScalarFieldEnum]
+
+
+  export const TestAttemptScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    moduleId: 'moduleId',
+    score: 'score',
+    total: 'total',
+    createdAt: 'createdAt'
+  };
+
+  export type TestAttemptScalarFieldEnum = (typeof TestAttemptScalarFieldEnum)[keyof typeof TestAttemptScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -5903,6 +7271,7 @@ export namespace Prisma {
     created_at?: DateTimeFilter<"User"> | Date | string
     updated_at?: DateTimeFilter<"User"> | Date | string
     deleted_at?: DateTimeNullableFilter<"User"> | Date | string | null
+    testAttempts?: TestAttemptListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -5915,6 +7284,7 @@ export namespace Prisma {
     created_at?: SortOrder
     updated_at?: SortOrder
     deleted_at?: SortOrderInput | SortOrder
+    testAttempts?: TestAttemptOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -5930,6 +7300,7 @@ export namespace Prisma {
     created_at?: DateTimeFilter<"User"> | Date | string
     updated_at?: DateTimeFilter<"User"> | Date | string
     deleted_at?: DateTimeNullableFilter<"User"> | Date | string | null
+    testAttempts?: TestAttemptListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -6025,6 +7396,7 @@ export namespace Prisma {
     chapterNumber?: IntNullableFilter<"Module"> | number | null
     title?: StringFilter<"Module"> | string
     questions?: QuestionListRelationFilter
+    testAttempts?: TestAttemptListRelationFilter
   }
 
   export type ModuleOrderByWithRelationInput = {
@@ -6032,6 +7404,7 @@ export namespace Prisma {
     chapterNumber?: SortOrderInput | SortOrder
     title?: SortOrder
     questions?: QuestionOrderByRelationAggregateInput
+    testAttempts?: TestAttemptOrderByRelationAggregateInput
   }
 
   export type ModuleWhereUniqueInput = Prisma.AtLeast<{
@@ -6042,6 +7415,7 @@ export namespace Prisma {
     chapterNumber?: IntNullableFilter<"Module"> | number | null
     title?: StringFilter<"Module"> | string
     questions?: QuestionListRelationFilter
+    testAttempts?: TestAttemptListRelationFilter
   }, "id">
 
   export type ModuleOrderByWithAggregationInput = {
@@ -6147,6 +7521,71 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"Question"> | Date | string
   }
 
+  export type TestAttemptWhereInput = {
+    AND?: TestAttemptWhereInput | TestAttemptWhereInput[]
+    OR?: TestAttemptWhereInput[]
+    NOT?: TestAttemptWhereInput | TestAttemptWhereInput[]
+    id?: StringFilter<"TestAttempt"> | string
+    userId?: StringFilter<"TestAttempt"> | string
+    moduleId?: StringFilter<"TestAttempt"> | string
+    score?: IntFilter<"TestAttempt"> | number
+    total?: IntFilter<"TestAttempt"> | number
+    createdAt?: DateTimeFilter<"TestAttempt"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    module?: XOR<ModuleScalarRelationFilter, ModuleWhereInput>
+  }
+
+  export type TestAttemptOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    moduleId?: SortOrder
+    score?: SortOrder
+    total?: SortOrder
+    createdAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+    module?: ModuleOrderByWithRelationInput
+  }
+
+  export type TestAttemptWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: TestAttemptWhereInput | TestAttemptWhereInput[]
+    OR?: TestAttemptWhereInput[]
+    NOT?: TestAttemptWhereInput | TestAttemptWhereInput[]
+    userId?: StringFilter<"TestAttempt"> | string
+    moduleId?: StringFilter<"TestAttempt"> | string
+    score?: IntFilter<"TestAttempt"> | number
+    total?: IntFilter<"TestAttempt"> | number
+    createdAt?: DateTimeFilter<"TestAttempt"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    module?: XOR<ModuleScalarRelationFilter, ModuleWhereInput>
+  }, "id">
+
+  export type TestAttemptOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    moduleId?: SortOrder
+    score?: SortOrder
+    total?: SortOrder
+    createdAt?: SortOrder
+    _count?: TestAttemptCountOrderByAggregateInput
+    _avg?: TestAttemptAvgOrderByAggregateInput
+    _max?: TestAttemptMaxOrderByAggregateInput
+    _min?: TestAttemptMinOrderByAggregateInput
+    _sum?: TestAttemptSumOrderByAggregateInput
+  }
+
+  export type TestAttemptScalarWhereWithAggregatesInput = {
+    AND?: TestAttemptScalarWhereWithAggregatesInput | TestAttemptScalarWhereWithAggregatesInput[]
+    OR?: TestAttemptScalarWhereWithAggregatesInput[]
+    NOT?: TestAttemptScalarWhereWithAggregatesInput | TestAttemptScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"TestAttempt"> | string
+    userId?: StringWithAggregatesFilter<"TestAttempt"> | string
+    moduleId?: StringWithAggregatesFilter<"TestAttempt"> | string
+    score?: IntWithAggregatesFilter<"TestAttempt"> | number
+    total?: IntWithAggregatesFilter<"TestAttempt"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"TestAttempt"> | Date | string
+  }
+
   export type UserCreateInput = {
     id?: string
     name: string
@@ -6157,6 +7596,7 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     deleted_at?: Date | string | null
+    testAttempts?: TestAttemptCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -6169,6 +7609,7 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     deleted_at?: Date | string | null
+    testAttempts?: TestAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -6181,6 +7622,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    testAttempts?: TestAttemptUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -6193,6 +7635,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    testAttempts?: TestAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -6296,6 +7739,7 @@ export namespace Prisma {
     chapterNumber?: number | null
     title: string
     questions?: QuestionCreateNestedManyWithoutModuleInput
+    testAttempts?: TestAttemptCreateNestedManyWithoutModuleInput
   }
 
   export type ModuleUncheckedCreateInput = {
@@ -6303,6 +7747,7 @@ export namespace Prisma {
     chapterNumber?: number | null
     title: string
     questions?: QuestionUncheckedCreateNestedManyWithoutModuleInput
+    testAttempts?: TestAttemptUncheckedCreateNestedManyWithoutModuleInput
   }
 
   export type ModuleUpdateInput = {
@@ -6310,6 +7755,7 @@ export namespace Prisma {
     chapterNumber?: NullableIntFieldUpdateOperationsInput | number | null
     title?: StringFieldUpdateOperationsInput | string
     questions?: QuestionUpdateManyWithoutModuleNestedInput
+    testAttempts?: TestAttemptUpdateManyWithoutModuleNestedInput
   }
 
   export type ModuleUncheckedUpdateInput = {
@@ -6317,6 +7763,7 @@ export namespace Prisma {
     chapterNumber?: NullableIntFieldUpdateOperationsInput | number | null
     title?: StringFieldUpdateOperationsInput | string
     questions?: QuestionUncheckedUpdateManyWithoutModuleNestedInput
+    testAttempts?: TestAttemptUncheckedUpdateManyWithoutModuleNestedInput
   }
 
   export type ModuleCreateManyInput = {
@@ -6426,6 +7873,67 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type TestAttemptCreateInput = {
+    id?: string
+    score: number
+    total: number
+    createdAt?: Date | string
+    user: UserCreateNestedOneWithoutTestAttemptsInput
+    module: ModuleCreateNestedOneWithoutTestAttemptsInput
+  }
+
+  export type TestAttemptUncheckedCreateInput = {
+    id?: string
+    userId: string
+    moduleId: string
+    score: number
+    total: number
+    createdAt?: Date | string
+  }
+
+  export type TestAttemptUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    score?: IntFieldUpdateOperationsInput | number
+    total?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutTestAttemptsNestedInput
+    module?: ModuleUpdateOneRequiredWithoutTestAttemptsNestedInput
+  }
+
+  export type TestAttemptUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    moduleId?: StringFieldUpdateOperationsInput | string
+    score?: IntFieldUpdateOperationsInput | number
+    total?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TestAttemptCreateManyInput = {
+    id?: string
+    userId: string
+    moduleId: string
+    score: number
+    total: number
+    createdAt?: Date | string
+  }
+
+  export type TestAttemptUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    score?: IntFieldUpdateOperationsInput | number
+    total?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TestAttemptUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    moduleId?: StringFieldUpdateOperationsInput | string
+    score?: IntFieldUpdateOperationsInput | number
+    total?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -6475,9 +7983,19 @@ export namespace Prisma {
     not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
+  export type TestAttemptListRelationFilter = {
+    every?: TestAttemptWhereInput
+    some?: TestAttemptWhereInput
+    none?: TestAttemptWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
+  }
+
+  export type TestAttemptOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
   export type UserCountOrderByAggregateInput = {
@@ -6847,6 +8365,89 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
+  export type UserScalarRelationFilter = {
+    is?: UserWhereInput
+    isNot?: UserWhereInput
+  }
+
+  export type TestAttemptCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    moduleId?: SortOrder
+    score?: SortOrder
+    total?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type TestAttemptAvgOrderByAggregateInput = {
+    score?: SortOrder
+    total?: SortOrder
+  }
+
+  export type TestAttemptMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    moduleId?: SortOrder
+    score?: SortOrder
+    total?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type TestAttemptMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    moduleId?: SortOrder
+    score?: SortOrder
+    total?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type TestAttemptSumOrderByAggregateInput = {
+    score?: SortOrder
+    total?: SortOrder
+  }
+
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type TestAttemptCreateNestedManyWithoutUserInput = {
+    create?: XOR<TestAttemptCreateWithoutUserInput, TestAttemptUncheckedCreateWithoutUserInput> | TestAttemptCreateWithoutUserInput[] | TestAttemptUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TestAttemptCreateOrConnectWithoutUserInput | TestAttemptCreateOrConnectWithoutUserInput[]
+    createMany?: TestAttemptCreateManyUserInputEnvelope
+    connect?: TestAttemptWhereUniqueInput | TestAttemptWhereUniqueInput[]
+  }
+
+  export type TestAttemptUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<TestAttemptCreateWithoutUserInput, TestAttemptUncheckedCreateWithoutUserInput> | TestAttemptCreateWithoutUserInput[] | TestAttemptUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TestAttemptCreateOrConnectWithoutUserInput | TestAttemptCreateOrConnectWithoutUserInput[]
+    createMany?: TestAttemptCreateManyUserInputEnvelope
+    connect?: TestAttemptWhereUniqueInput | TestAttemptWhereUniqueInput[]
+  }
+
   export type StringFieldUpdateOperationsInput = {
     set?: string
   }
@@ -6865,6 +8466,34 @@ export namespace Prisma {
 
   export type NullableDateTimeFieldUpdateOperationsInput = {
     set?: Date | string | null
+  }
+
+  export type TestAttemptUpdateManyWithoutUserNestedInput = {
+    create?: XOR<TestAttemptCreateWithoutUserInput, TestAttemptUncheckedCreateWithoutUserInput> | TestAttemptCreateWithoutUserInput[] | TestAttemptUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TestAttemptCreateOrConnectWithoutUserInput | TestAttemptCreateOrConnectWithoutUserInput[]
+    upsert?: TestAttemptUpsertWithWhereUniqueWithoutUserInput | TestAttemptUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: TestAttemptCreateManyUserInputEnvelope
+    set?: TestAttemptWhereUniqueInput | TestAttemptWhereUniqueInput[]
+    disconnect?: TestAttemptWhereUniqueInput | TestAttemptWhereUniqueInput[]
+    delete?: TestAttemptWhereUniqueInput | TestAttemptWhereUniqueInput[]
+    connect?: TestAttemptWhereUniqueInput | TestAttemptWhereUniqueInput[]
+    update?: TestAttemptUpdateWithWhereUniqueWithoutUserInput | TestAttemptUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: TestAttemptUpdateManyWithWhereWithoutUserInput | TestAttemptUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: TestAttemptScalarWhereInput | TestAttemptScalarWhereInput[]
+  }
+
+  export type TestAttemptUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<TestAttemptCreateWithoutUserInput, TestAttemptUncheckedCreateWithoutUserInput> | TestAttemptCreateWithoutUserInput[] | TestAttemptUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TestAttemptCreateOrConnectWithoutUserInput | TestAttemptCreateOrConnectWithoutUserInput[]
+    upsert?: TestAttemptUpsertWithWhereUniqueWithoutUserInput | TestAttemptUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: TestAttemptCreateManyUserInputEnvelope
+    set?: TestAttemptWhereUniqueInput | TestAttemptWhereUniqueInput[]
+    disconnect?: TestAttemptWhereUniqueInput | TestAttemptWhereUniqueInput[]
+    delete?: TestAttemptWhereUniqueInput | TestAttemptWhereUniqueInput[]
+    connect?: TestAttemptWhereUniqueInput | TestAttemptWhereUniqueInput[]
+    update?: TestAttemptUpdateWithWhereUniqueWithoutUserInput | TestAttemptUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: TestAttemptUpdateManyWithWhereWithoutUserInput | TestAttemptUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: TestAttemptScalarWhereInput | TestAttemptScalarWhereInput[]
   }
 
   export type QuestionCreateNestedManyWithoutDocumentJobInput = {
@@ -6920,11 +8549,25 @@ export namespace Prisma {
     connect?: QuestionWhereUniqueInput | QuestionWhereUniqueInput[]
   }
 
+  export type TestAttemptCreateNestedManyWithoutModuleInput = {
+    create?: XOR<TestAttemptCreateWithoutModuleInput, TestAttemptUncheckedCreateWithoutModuleInput> | TestAttemptCreateWithoutModuleInput[] | TestAttemptUncheckedCreateWithoutModuleInput[]
+    connectOrCreate?: TestAttemptCreateOrConnectWithoutModuleInput | TestAttemptCreateOrConnectWithoutModuleInput[]
+    createMany?: TestAttemptCreateManyModuleInputEnvelope
+    connect?: TestAttemptWhereUniqueInput | TestAttemptWhereUniqueInput[]
+  }
+
   export type QuestionUncheckedCreateNestedManyWithoutModuleInput = {
     create?: XOR<QuestionCreateWithoutModuleInput, QuestionUncheckedCreateWithoutModuleInput> | QuestionCreateWithoutModuleInput[] | QuestionUncheckedCreateWithoutModuleInput[]
     connectOrCreate?: QuestionCreateOrConnectWithoutModuleInput | QuestionCreateOrConnectWithoutModuleInput[]
     createMany?: QuestionCreateManyModuleInputEnvelope
     connect?: QuestionWhereUniqueInput | QuestionWhereUniqueInput[]
+  }
+
+  export type TestAttemptUncheckedCreateNestedManyWithoutModuleInput = {
+    create?: XOR<TestAttemptCreateWithoutModuleInput, TestAttemptUncheckedCreateWithoutModuleInput> | TestAttemptCreateWithoutModuleInput[] | TestAttemptUncheckedCreateWithoutModuleInput[]
+    connectOrCreate?: TestAttemptCreateOrConnectWithoutModuleInput | TestAttemptCreateOrConnectWithoutModuleInput[]
+    createMany?: TestAttemptCreateManyModuleInputEnvelope
+    connect?: TestAttemptWhereUniqueInput | TestAttemptWhereUniqueInput[]
   }
 
   export type NullableIntFieldUpdateOperationsInput = {
@@ -6949,6 +8592,20 @@ export namespace Prisma {
     deleteMany?: QuestionScalarWhereInput | QuestionScalarWhereInput[]
   }
 
+  export type TestAttemptUpdateManyWithoutModuleNestedInput = {
+    create?: XOR<TestAttemptCreateWithoutModuleInput, TestAttemptUncheckedCreateWithoutModuleInput> | TestAttemptCreateWithoutModuleInput[] | TestAttemptUncheckedCreateWithoutModuleInput[]
+    connectOrCreate?: TestAttemptCreateOrConnectWithoutModuleInput | TestAttemptCreateOrConnectWithoutModuleInput[]
+    upsert?: TestAttemptUpsertWithWhereUniqueWithoutModuleInput | TestAttemptUpsertWithWhereUniqueWithoutModuleInput[]
+    createMany?: TestAttemptCreateManyModuleInputEnvelope
+    set?: TestAttemptWhereUniqueInput | TestAttemptWhereUniqueInput[]
+    disconnect?: TestAttemptWhereUniqueInput | TestAttemptWhereUniqueInput[]
+    delete?: TestAttemptWhereUniqueInput | TestAttemptWhereUniqueInput[]
+    connect?: TestAttemptWhereUniqueInput | TestAttemptWhereUniqueInput[]
+    update?: TestAttemptUpdateWithWhereUniqueWithoutModuleInput | TestAttemptUpdateWithWhereUniqueWithoutModuleInput[]
+    updateMany?: TestAttemptUpdateManyWithWhereWithoutModuleInput | TestAttemptUpdateManyWithWhereWithoutModuleInput[]
+    deleteMany?: TestAttemptScalarWhereInput | TestAttemptScalarWhereInput[]
+  }
+
   export type QuestionUncheckedUpdateManyWithoutModuleNestedInput = {
     create?: XOR<QuestionCreateWithoutModuleInput, QuestionUncheckedCreateWithoutModuleInput> | QuestionCreateWithoutModuleInput[] | QuestionUncheckedCreateWithoutModuleInput[]
     connectOrCreate?: QuestionCreateOrConnectWithoutModuleInput | QuestionCreateOrConnectWithoutModuleInput[]
@@ -6961,6 +8618,20 @@ export namespace Prisma {
     update?: QuestionUpdateWithWhereUniqueWithoutModuleInput | QuestionUpdateWithWhereUniqueWithoutModuleInput[]
     updateMany?: QuestionUpdateManyWithWhereWithoutModuleInput | QuestionUpdateManyWithWhereWithoutModuleInput[]
     deleteMany?: QuestionScalarWhereInput | QuestionScalarWhereInput[]
+  }
+
+  export type TestAttemptUncheckedUpdateManyWithoutModuleNestedInput = {
+    create?: XOR<TestAttemptCreateWithoutModuleInput, TestAttemptUncheckedCreateWithoutModuleInput> | TestAttemptCreateWithoutModuleInput[] | TestAttemptUncheckedCreateWithoutModuleInput[]
+    connectOrCreate?: TestAttemptCreateOrConnectWithoutModuleInput | TestAttemptCreateOrConnectWithoutModuleInput[]
+    upsert?: TestAttemptUpsertWithWhereUniqueWithoutModuleInput | TestAttemptUpsertWithWhereUniqueWithoutModuleInput[]
+    createMany?: TestAttemptCreateManyModuleInputEnvelope
+    set?: TestAttemptWhereUniqueInput | TestAttemptWhereUniqueInput[]
+    disconnect?: TestAttemptWhereUniqueInput | TestAttemptWhereUniqueInput[]
+    delete?: TestAttemptWhereUniqueInput | TestAttemptWhereUniqueInput[]
+    connect?: TestAttemptWhereUniqueInput | TestAttemptWhereUniqueInput[]
+    update?: TestAttemptUpdateWithWhereUniqueWithoutModuleInput | TestAttemptUpdateWithWhereUniqueWithoutModuleInput[]
+    updateMany?: TestAttemptUpdateManyWithWhereWithoutModuleInput | TestAttemptUpdateManyWithWhereWithoutModuleInput[]
+    deleteMany?: TestAttemptScalarWhereInput | TestAttemptScalarWhereInput[]
   }
 
   export type ModuleCreateNestedOneWithoutQuestionsInput = {
@@ -7003,6 +8674,42 @@ export namespace Prisma {
 
   export type NullableStringFieldUpdateOperationsInput = {
     set?: string | null
+  }
+
+  export type UserCreateNestedOneWithoutTestAttemptsInput = {
+    create?: XOR<UserCreateWithoutTestAttemptsInput, UserUncheckedCreateWithoutTestAttemptsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutTestAttemptsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type ModuleCreateNestedOneWithoutTestAttemptsInput = {
+    create?: XOR<ModuleCreateWithoutTestAttemptsInput, ModuleUncheckedCreateWithoutTestAttemptsInput>
+    connectOrCreate?: ModuleCreateOrConnectWithoutTestAttemptsInput
+    connect?: ModuleWhereUniqueInput
+  }
+
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type UserUpdateOneRequiredWithoutTestAttemptsNestedInput = {
+    create?: XOR<UserCreateWithoutTestAttemptsInput, UserUncheckedCreateWithoutTestAttemptsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutTestAttemptsInput
+    upsert?: UserUpsertWithoutTestAttemptsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutTestAttemptsInput, UserUpdateWithoutTestAttemptsInput>, UserUncheckedUpdateWithoutTestAttemptsInput>
+  }
+
+  export type ModuleUpdateOneRequiredWithoutTestAttemptsNestedInput = {
+    create?: XOR<ModuleCreateWithoutTestAttemptsInput, ModuleUncheckedCreateWithoutTestAttemptsInput>
+    connectOrCreate?: ModuleCreateOrConnectWithoutTestAttemptsInput
+    upsert?: ModuleUpsertWithoutTestAttemptsInput
+    connect?: ModuleWhereUniqueInput
+    update?: XOR<XOR<ModuleUpdateToOneWithWhereWithoutTestAttemptsInput, ModuleUpdateWithoutTestAttemptsInput>, ModuleUncheckedUpdateWithoutTestAttemptsInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -7270,6 +8977,87 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
+  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type NestedFloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
+  export type TestAttemptCreateWithoutUserInput = {
+    id?: string
+    score: number
+    total: number
+    createdAt?: Date | string
+    module: ModuleCreateNestedOneWithoutTestAttemptsInput
+  }
+
+  export type TestAttemptUncheckedCreateWithoutUserInput = {
+    id?: string
+    moduleId: string
+    score: number
+    total: number
+    createdAt?: Date | string
+  }
+
+  export type TestAttemptCreateOrConnectWithoutUserInput = {
+    where: TestAttemptWhereUniqueInput
+    create: XOR<TestAttemptCreateWithoutUserInput, TestAttemptUncheckedCreateWithoutUserInput>
+  }
+
+  export type TestAttemptCreateManyUserInputEnvelope = {
+    data: TestAttemptCreateManyUserInput | TestAttemptCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type TestAttemptUpsertWithWhereUniqueWithoutUserInput = {
+    where: TestAttemptWhereUniqueInput
+    update: XOR<TestAttemptUpdateWithoutUserInput, TestAttemptUncheckedUpdateWithoutUserInput>
+    create: XOR<TestAttemptCreateWithoutUserInput, TestAttemptUncheckedCreateWithoutUserInput>
+  }
+
+  export type TestAttemptUpdateWithWhereUniqueWithoutUserInput = {
+    where: TestAttemptWhereUniqueInput
+    data: XOR<TestAttemptUpdateWithoutUserInput, TestAttemptUncheckedUpdateWithoutUserInput>
+  }
+
+  export type TestAttemptUpdateManyWithWhereWithoutUserInput = {
+    where: TestAttemptScalarWhereInput
+    data: XOR<TestAttemptUpdateManyMutationInput, TestAttemptUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type TestAttemptScalarWhereInput = {
+    AND?: TestAttemptScalarWhereInput | TestAttemptScalarWhereInput[]
+    OR?: TestAttemptScalarWhereInput[]
+    NOT?: TestAttemptScalarWhereInput | TestAttemptScalarWhereInput[]
+    id?: StringFilter<"TestAttempt"> | string
+    userId?: StringFilter<"TestAttempt"> | string
+    moduleId?: StringFilter<"TestAttempt"> | string
+    score?: IntFilter<"TestAttempt"> | number
+    total?: IntFilter<"TestAttempt"> | number
+    createdAt?: DateTimeFilter<"TestAttempt"> | Date | string
+  }
+
   export type QuestionCreateWithoutDocumentJobInput = {
     id?: string
     questionText: string
@@ -7370,6 +9158,32 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type TestAttemptCreateWithoutModuleInput = {
+    id?: string
+    score: number
+    total: number
+    createdAt?: Date | string
+    user: UserCreateNestedOneWithoutTestAttemptsInput
+  }
+
+  export type TestAttemptUncheckedCreateWithoutModuleInput = {
+    id?: string
+    userId: string
+    score: number
+    total: number
+    createdAt?: Date | string
+  }
+
+  export type TestAttemptCreateOrConnectWithoutModuleInput = {
+    where: TestAttemptWhereUniqueInput
+    create: XOR<TestAttemptCreateWithoutModuleInput, TestAttemptUncheckedCreateWithoutModuleInput>
+  }
+
+  export type TestAttemptCreateManyModuleInputEnvelope = {
+    data: TestAttemptCreateManyModuleInput | TestAttemptCreateManyModuleInput[]
+    skipDuplicates?: boolean
+  }
+
   export type QuestionUpsertWithWhereUniqueWithoutModuleInput = {
     where: QuestionWhereUniqueInput
     update: XOR<QuestionUpdateWithoutModuleInput, QuestionUncheckedUpdateWithoutModuleInput>
@@ -7386,16 +9200,34 @@ export namespace Prisma {
     data: XOR<QuestionUpdateManyMutationInput, QuestionUncheckedUpdateManyWithoutModuleInput>
   }
 
+  export type TestAttemptUpsertWithWhereUniqueWithoutModuleInput = {
+    where: TestAttemptWhereUniqueInput
+    update: XOR<TestAttemptUpdateWithoutModuleInput, TestAttemptUncheckedUpdateWithoutModuleInput>
+    create: XOR<TestAttemptCreateWithoutModuleInput, TestAttemptUncheckedCreateWithoutModuleInput>
+  }
+
+  export type TestAttemptUpdateWithWhereUniqueWithoutModuleInput = {
+    where: TestAttemptWhereUniqueInput
+    data: XOR<TestAttemptUpdateWithoutModuleInput, TestAttemptUncheckedUpdateWithoutModuleInput>
+  }
+
+  export type TestAttemptUpdateManyWithWhereWithoutModuleInput = {
+    where: TestAttemptScalarWhereInput
+    data: XOR<TestAttemptUpdateManyMutationInput, TestAttemptUncheckedUpdateManyWithoutModuleInput>
+  }
+
   export type ModuleCreateWithoutQuestionsInput = {
     id?: string
     chapterNumber?: number | null
     title: string
+    testAttempts?: TestAttemptCreateNestedManyWithoutModuleInput
   }
 
   export type ModuleUncheckedCreateWithoutQuestionsInput = {
     id?: string
     chapterNumber?: number | null
     title: string
+    testAttempts?: TestAttemptUncheckedCreateNestedManyWithoutModuleInput
   }
 
   export type ModuleCreateOrConnectWithoutQuestionsInput = {
@@ -7439,12 +9271,14 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     chapterNumber?: NullableIntFieldUpdateOperationsInput | number | null
     title?: StringFieldUpdateOperationsInput | string
+    testAttempts?: TestAttemptUpdateManyWithoutModuleNestedInput
   }
 
   export type ModuleUncheckedUpdateWithoutQuestionsInput = {
     id?: StringFieldUpdateOperationsInput | string
     chapterNumber?: NullableIntFieldUpdateOperationsInput | number | null
     title?: StringFieldUpdateOperationsInput | string
+    testAttempts?: TestAttemptUncheckedUpdateManyWithoutModuleNestedInput
   }
 
   export type DocumentJobUpsertWithoutQuestionsInput = {
@@ -7472,6 +9306,146 @@ export namespace Prisma {
     status?: EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserCreateWithoutTestAttemptsInput = {
+    id?: string
+    name: string
+    email: string
+    password_hash: string
+    role?: $Enums.Role
+    is_active?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+    deleted_at?: Date | string | null
+  }
+
+  export type UserUncheckedCreateWithoutTestAttemptsInput = {
+    id?: string
+    name: string
+    email: string
+    password_hash: string
+    role?: $Enums.Role
+    is_active?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+    deleted_at?: Date | string | null
+  }
+
+  export type UserCreateOrConnectWithoutTestAttemptsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutTestAttemptsInput, UserUncheckedCreateWithoutTestAttemptsInput>
+  }
+
+  export type ModuleCreateWithoutTestAttemptsInput = {
+    id?: string
+    chapterNumber?: number | null
+    title: string
+    questions?: QuestionCreateNestedManyWithoutModuleInput
+  }
+
+  export type ModuleUncheckedCreateWithoutTestAttemptsInput = {
+    id?: string
+    chapterNumber?: number | null
+    title: string
+    questions?: QuestionUncheckedCreateNestedManyWithoutModuleInput
+  }
+
+  export type ModuleCreateOrConnectWithoutTestAttemptsInput = {
+    where: ModuleWhereUniqueInput
+    create: XOR<ModuleCreateWithoutTestAttemptsInput, ModuleUncheckedCreateWithoutTestAttemptsInput>
+  }
+
+  export type UserUpsertWithoutTestAttemptsInput = {
+    update: XOR<UserUpdateWithoutTestAttemptsInput, UserUncheckedUpdateWithoutTestAttemptsInput>
+    create: XOR<UserCreateWithoutTestAttemptsInput, UserUncheckedCreateWithoutTestAttemptsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutTestAttemptsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutTestAttemptsInput, UserUncheckedUpdateWithoutTestAttemptsInput>
+  }
+
+  export type UserUpdateWithoutTestAttemptsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password_hash?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type UserUncheckedUpdateWithoutTestAttemptsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password_hash?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type ModuleUpsertWithoutTestAttemptsInput = {
+    update: XOR<ModuleUpdateWithoutTestAttemptsInput, ModuleUncheckedUpdateWithoutTestAttemptsInput>
+    create: XOR<ModuleCreateWithoutTestAttemptsInput, ModuleUncheckedCreateWithoutTestAttemptsInput>
+    where?: ModuleWhereInput
+  }
+
+  export type ModuleUpdateToOneWithWhereWithoutTestAttemptsInput = {
+    where?: ModuleWhereInput
+    data: XOR<ModuleUpdateWithoutTestAttemptsInput, ModuleUncheckedUpdateWithoutTestAttemptsInput>
+  }
+
+  export type ModuleUpdateWithoutTestAttemptsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    chapterNumber?: NullableIntFieldUpdateOperationsInput | number | null
+    title?: StringFieldUpdateOperationsInput | string
+    questions?: QuestionUpdateManyWithoutModuleNestedInput
+  }
+
+  export type ModuleUncheckedUpdateWithoutTestAttemptsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    chapterNumber?: NullableIntFieldUpdateOperationsInput | number | null
+    title?: StringFieldUpdateOperationsInput | string
+    questions?: QuestionUncheckedUpdateManyWithoutModuleNestedInput
+  }
+
+  export type TestAttemptCreateManyUserInput = {
+    id?: string
+    moduleId: string
+    score: number
+    total: number
+    createdAt?: Date | string
+  }
+
+  export type TestAttemptUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    score?: IntFieldUpdateOperationsInput | number
+    total?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    module?: ModuleUpdateOneRequiredWithoutTestAttemptsNestedInput
+  }
+
+  export type TestAttemptUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    moduleId?: StringFieldUpdateOperationsInput | string
+    score?: IntFieldUpdateOperationsInput | number
+    total?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TestAttemptUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    moduleId?: StringFieldUpdateOperationsInput | string
+    score?: IntFieldUpdateOperationsInput | number
+    total?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type QuestionCreateManyDocumentJobInput = {
@@ -7534,6 +9508,14 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type TestAttemptCreateManyModuleInput = {
+    id?: string
+    userId: string
+    score: number
+    total: number
+    createdAt?: Date | string
+  }
+
   export type QuestionUpdateWithoutModuleInput = {
     id?: StringFieldUpdateOperationsInput | string
     questionText?: StringFieldUpdateOperationsInput | string
@@ -7568,6 +9550,30 @@ export namespace Prisma {
     documentJobId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TestAttemptUpdateWithoutModuleInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    score?: IntFieldUpdateOperationsInput | number
+    total?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutTestAttemptsNestedInput
+  }
+
+  export type TestAttemptUncheckedUpdateWithoutModuleInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    score?: IntFieldUpdateOperationsInput | number
+    total?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TestAttemptUncheckedUpdateManyWithoutModuleInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    score?: IntFieldUpdateOperationsInput | number
+    total?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 

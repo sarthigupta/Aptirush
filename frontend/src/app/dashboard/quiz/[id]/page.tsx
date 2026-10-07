@@ -53,12 +53,33 @@ export default function QuizPage() {
     setAnswers({ ...answers, [currentQuestion.id]: titaInput.trim() });
   };
 
+  const handleFinishQuiz = async () => {
+    let score = 0;
+    questions.forEach((q: any) => {
+      if (answers[q.id] && answers[q.id].toLowerCase() === q.correctAnswer.toLowerCase()) {
+        score++;
+      }
+    });
+
+    try {
+      await api.post('/student/attempts', {
+        moduleId: id,
+        score,
+        total: questions.length
+      });
+    } catch (err) {
+      console.error('Failed to save score', err);
+    }
+    
+    setIsFinished(true);
+  };
+
   const handleNext = () => {
     if (!isLastQuestion) {
       setCurrentQuestionIndex(curr => curr + 1);
       setTitaInput('');
     } else {
-      setIsFinished(true);
+      handleFinishQuiz();
     }
   };
 

@@ -6,5 +6,7 @@ const router = Router();
 
 router.get('/modules', authenticateToken, StudentController.getModules);
 router.get('/modules/:id', authenticateToken, StudentController.getModuleQuiz);
+router.post('/attempts', authenticateToken, StudentController.saveTestAttempt);
+router.get('/dashboard-stats', authenticateToken, StudentController.getDashboardStats);
 
 export default router;

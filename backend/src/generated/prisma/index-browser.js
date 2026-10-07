@@ -159,6 +159,15 @@ exports.Prisma.QuestionScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.TestAttemptScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  moduleId: 'moduleId',
+  score: 'score',
+  total: 'total',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -209,7 +218,8 @@ exports.Prisma.ModelName = {
   User: 'User',
   DocumentJob: 'DocumentJob',
   Module: 'Module',
-  Question: 'Question'
+  Question: 'Question',
+  TestAttempt: 'TestAttempt'
 };
 
 /**

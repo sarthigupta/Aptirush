@@ -5,11 +5,32 @@ import { LambdaClient, InvokeCommand } from '@aws-sdk/client-lambda';
 
 const s3Client = new S3Client({ region: process.env.AWS_REGION });
 const lambdaClient = new LambdaClient({ region: process.env.AWS_REGION });
-
 export const AdminService = {
   async getDocumentJobs() {
     return prisma.documentJob.findMany({
       orderBy: { created_at: 'desc' }
+    });
+  },
+
+  async getNeedsReviewQuestions() {
+    return prisma.question.findMany({
+      where: { status: 'NEEDS_REVIEW' },
+      include: { module: true },
+      orderBy: { createdAt: 'desc' }
+    });
+  },
+
+  async updateAndPublishQuestion(id: string, data: any) {
+    // Only extract valid question fields from data
+    const { questionText, options, correctAnswer } = data;
+    return prisma.question.update({
+      where: { id },
+      data: {
+        questionText,
+        options,
+        correctAnswer,
+        status: 'PUBLISHED'
+      }
     });
   },
 

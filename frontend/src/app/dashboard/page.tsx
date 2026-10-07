@@ -1,10 +1,30 @@
-import { ArrowRight, Clock, Target, Trophy } from 'lucide-react';
+'use client';
+
+import { ArrowRight, Clock, Target, Trophy, Loader2 } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { api } from '@/lib/api';
+import { useRouter } from 'next/navigation';
 
 export default function DashboardOverview() {
+  const router = useRouter();
+  const [data, setData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    api.get('/student/dashboard-stats')
+      .then(res => setData(res.data))
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, []);
+
+  if (loading) {
+    return <div className="p-12 text-center text-gray-500 flex flex-col items-center"><Loader2 className="w-8 h-8 animate-spin mb-4" /> Loading dashboard...</div>;
+  }
+
   const stats = [
-    { name: 'Tests Completed', value: '12', icon: Trophy, change: '+2 this week', positive: true },
-    { name: 'Average Score', value: '84%', icon: Target, change: '+5% this month', positive: true },
-    { name: 'Time Spent', value: '24h', icon: Clock, change: 'consistent', positive: null },
+    { name: 'Tests Completed', value: data?.stats?.testsCompleted || '0', icon: Trophy, change: 'Keep it up!', positive: true },
+    { name: 'Average Score', value: data?.stats?.averageScore || '0%', icon: Target, change: 'Lifetime average', positive: true },
+    { name: 'Time Spent', value: data?.stats?.timeSpent || '0h', icon: Clock, change: 'Not tracked', positive: null },
   ];
 
   return (
@@ -46,22 +66,23 @@ export default function DashboardOverview() {
         <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
           <div className="p-6 border-b border-gray-50 flex justify-between items-center">
             <h3 className="font-semibold text-gray-900">Recent Tests</h3>
-            <button className="text-sm text-gray-600 font-medium hover:text-gray-900 flex items-center transition-colors">
-              View all <ArrowRight className="w-4 h-4 ml-1" />
+            <button 
+              onClick={() => router.push('/dashboard/tests')}
+              className="text-sm text-gray-600 font-medium hover:text-gray-900 flex items-center transition-colors"
+            >
+              Take more tests <ArrowRight className="w-4 h-4 ml-1" />
             </button>
           </div>
           <div className="divide-y divide-gray-50">
-            {[
-              { title: 'Quantitative Aptitude Vol 1', score: '88%', date: '2 days ago', status: 'Passed' },
-              { title: 'Logical Reasoning Basics', score: '92%', date: '1 week ago', status: 'Passed' },
-              { title: 'Data Interpretation', score: '74%', date: '2 weeks ago', status: 'Needs Review' },
-            ].map((test, i) => (
+            {(!data?.recentTests || data.recentTests.length === 0) ? (
+              <div className="p-8 text-center text-gray-500">You haven't completed any tests yet.</div>
+            ) : data.recentTests.map((test: any, i: number) => (
               <div key={i} className="p-6 flex items-center justify-between hover:bg-gray-50 transition-colors">
-                <div>
-                  <p className="font-medium text-gray-900">{test.title}</p>
+                <div className="truncate pr-4">
+                  <p className="font-medium text-gray-900 truncate">{test.title}</p>
                   <p className="text-sm text-gray-500 mt-1">{test.date}</p>
                 </div>
-                <div className="text-right">
+                <div className="text-right shrink-0">
                   <p className="font-bold text-gray-900">{test.score}</p>
                   <span className={`text-xs font-medium px-2.5 py-0.5 rounded-full mt-1 inline-block ${
                     test.status === 'Passed' 

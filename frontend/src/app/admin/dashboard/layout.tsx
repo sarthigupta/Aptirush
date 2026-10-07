@@ -47,8 +47,8 @@ export default function AdminDashboardLayout({ children }: { children: ReactNode
 
   const navItems = [
     { name: 'Overview', href: '/admin/dashboard', icon: LayoutDashboard },
+    { name: 'Review Queue', href: '/admin/dashboard/review', icon: FileText },
     { name: 'Users', href: '/admin/dashboard/users', icon: Users },
-    { name: 'Modules', href: '/admin/dashboard/modules', icon: FileText },
     { name: 'Settings', href: '/admin/dashboard/settings', icon: Settings },
   ];
 

@@ -25,6 +25,26 @@ export const AdminController = {
     }
   },
 
+  async getReviewQuestions(req: Request, res: Response): Promise<void> {
+    try {
+      const questions = await AdminService.getNeedsReviewQuestions();
+      res.json(questions);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message || 'Internal server error' });
+    }
+  },
+
+  async publishQuestion(req: Request, res: Response): Promise<void> {
+    try {
+      const { id }  = req.params as { id: string };
+      const data = req.body;
+      const updated = await AdminService.updateAndPublishQuestion(id, data);
+      res.json(updated);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message || 'Internal server error' });
+    }
+  },
+
   async syncDocumentJob(req: Request, res: Response): Promise<void> {
     try {
       const { jobId } = req.params as { jobId: string };

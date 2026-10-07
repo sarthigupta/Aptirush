@@ -22,6 +22,20 @@ router.get(
 );
 
 router.get(
+  '/questions/needs-review',
+  authenticateToken,
+  isAdmin,
+  AdminController.getReviewQuestions
+);
+
+router.patch(
+  '/questions/:id',
+  authenticateToken,
+  isAdmin,
+  AdminController.publishQuestion
+);
+
+router.get(
   '/documents/:jobId/sync',
   authenticateToken,
   isAdmin,

@@ -22,5 +22,26 @@ export const StudentController = {
     } catch (error: any) {
       res.status(500).json({ error: error.message || 'Failed to fetch quiz' });
     }
+  },
+
+  async saveTestAttempt(req: Request, res: Response): Promise<void> {
+    try {
+      const userId = (req as any).user.id;
+      const { moduleId, score, total } = req.body;
+      const attempt = await StudentService.saveTestAttempt(userId, moduleId, score, total);
+      res.json(attempt);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message || 'Failed to save attempt' });
+    }
+  },
+
+  async getDashboardStats(req: Request, res: Response): Promise<void> {
+    try {
+      const userId = (req as any).user.id;
+      const stats = await StudentService.getDashboardStats(userId);
+      res.json(stats);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message || 'Failed to fetch stats' });
+    }
   }
 };
