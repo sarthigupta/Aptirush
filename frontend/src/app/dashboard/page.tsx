@@ -8,11 +8,18 @@ import { useRouter } from 'next/navigation';
 export default function DashboardOverview() {
   const router = useRouter();
   const [data, setData] = useState<any>(null);
+  const [assignedTests, setAssignedTests] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    api.get('/student/dashboard-stats')
-      .then(res => setData(res.data))
+    Promise.all([
+      api.get('/student/dashboard-stats'),
+      api.get('/student/custom-tests')
+    ])
+      .then(([statsRes, testsRes]) => {
+        setData(statsRes.data);
+        setAssignedTests(testsRes.data);
+      })
       .catch(console.error)
       .finally(() => setLoading(false));
   }, []);
@@ -61,6 +68,36 @@ export default function DashboardOverview() {
           );
         })}
       </div>
+
+      {assignedTests.length > 0 && (
+        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6 mb-6">
+          <h3 className="font-semibold text-gray-900 mb-4">Assigned By Faculty</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {assignedTests.map(test => {
+              const attempted = test.attempts && test.attempts.length > 0;
+              return (
+                <div 
+                  key={test.id} 
+                  onClick={() => !attempted && router.push(`/dashboard/quiz/${test.id}?type=custom`)}
+                  className={`p-4 bg-gray-50 rounded-lg flex items-center justify-between transition-colors ${
+                    !attempted ? 'hover:bg-gray-100 cursor-pointer' : 'opacity-75 cursor-default'
+                  }`}
+                >
+                  <div>
+                    <h4 className="font-medium text-gray-900">{test.title}</h4>
+                    <p className="text-sm text-gray-500 mt-1">{test.questions.length} questions</p>
+                  </div>
+                  {attempted ? (
+                    <span className="px-2.5 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700">Completed</span>
+                  ) : (
+                    <span className="px-2.5 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-700">Pending</span>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">

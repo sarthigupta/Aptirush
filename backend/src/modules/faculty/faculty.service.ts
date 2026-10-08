@@ -30,5 +30,38 @@ export const FacultyService = {
         avgScore: `${avgScore}%`
       };
     });
+  },
+
+  async getAvailableQuestions() {
+    return prisma.module.findMany({
+      include: {
+        questions: {
+          where: { status: 'PUBLISHED' }
+        }
+      }
+    });
+  },
+
+  async createCustomTest(facultyId: string, title: string, questionIds: string[]) {
+    return prisma.customTest.create({
+      data: {
+        title,
+        facultyId,
+        questions: {
+          connect: questionIds.map(id => ({ id }))
+        }
+      }
+    });
+  },
+
+  async getMyTests(facultyId: string) {
+    return prisma.customTest.findMany({
+      where: { facultyId },
+      include: {
+        questions: true,
+        attempts: true
+      },
+      orderBy: { createdAt: 'desc' }
+    });
   }
 };

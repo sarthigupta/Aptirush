@@ -1,13 +1,15 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { ArrowLeft, CheckCircle, ChevronRight, ChevronLeft, XCircle } from 'lucide-react';
 import { api } from '@/lib/api';
 
 export default function QuizPage() {
   const { id } = useParams();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const type = searchParams.get('type');
   const [module, setModule] = useState<any>(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
@@ -63,7 +65,7 @@ export default function QuizPage() {
 
     try {
       await api.post('/student/attempts', {
-        moduleId: id,
+        ...(type === 'custom' ? { customTestId: id } : { moduleId: id }),
         score,
         total: questions.length
       });

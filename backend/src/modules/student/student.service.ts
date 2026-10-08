@@ -12,7 +12,7 @@ export const StudentService = {
   },
 
   async getModuleQuiz(moduleId: string) {
-    return prisma.module.findUnique({
+    let quiz: any = await prisma.module.findUnique({
       where: { id: moduleId },
       include: {
         questions: {
@@ -20,16 +20,44 @@ export const StudentService = {
         }
       }
     });
+
+    if (!quiz) {
+      quiz = await prisma.customTest.findUnique({
+        where: { id: moduleId },
+        include: {
+          questions: true
+        }
+      });
+    }
+
+    return quiz;
   },
 
-  async saveTestAttempt(userId: string, moduleId: string, score: number, total: number) {
+  async saveTestAttempt(userId: string, moduleId: string | null, score: number, total: number, customTestId: string | null = null) {
     return prisma.testAttempt.create({
       data: {
         userId,
-        moduleId,
+        ...(moduleId ? { moduleId } : {}),
+        ...(customTestId ? { customTestId } : {}),
         score,
-        total,
+        total
       }
+    });
+  },
+
+  async getAssignedTests(userId: string) {
+    const student = await prisma.user.findUnique({ where: { id: userId }});
+    if (!student?.facultyId) return [];
+    
+    return prisma.customTest.findMany({
+      where: { facultyId: student.facultyId },
+      include: {
+        questions: true,
+        attempts: {
+          where: { userId }
+        }
+      },
+      orderBy: { createdAt: 'desc' }
     });
   },
 

@@ -27,11 +27,21 @@ export const StudentController = {
   async saveTestAttempt(req: Request, res: Response): Promise<void> {
     try {
       const userId = (req as any).user.id;
-      const { moduleId, score, total } = req.body;
-      const attempt = await StudentService.saveTestAttempt(userId, moduleId, score, total);
+      const { moduleId, score, total, customTestId } = req.body;
+      const attempt = await StudentService.saveTestAttempt(userId, moduleId || null, score, total, customTestId || null);
       res.json(attempt);
     } catch (error: any) {
       res.status(500).json({ error: error.message || 'Failed to save attempt' });
+    }
+  },
+
+  async getAssignedTests(req: Request, res: Response): Promise<void> {
+    try {
+      const userId = (req as any).user.id;
+      const tests = await StudentService.getAssignedTests(userId);
+      res.json(tests);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message || 'Failed to fetch assigned tests' });
     }
   },
 

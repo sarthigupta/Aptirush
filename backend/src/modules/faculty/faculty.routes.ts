@@ -5,5 +5,8 @@ import { authenticateToken, isFaculty } from '../../shared/middleware/auth.middl
 const router = Router();
 
 router.get('/students', authenticateToken, isFaculty, FacultyController.getMyStudents);
+router.get('/questions', authenticateToken, isFaculty, FacultyController.getAvailableQuestions);
+router.post('/tests', authenticateToken, isFaculty, FacultyController.createTest);
+router.get('/tests', authenticateToken, isFaculty, FacultyController.getMyTests);
 
 export default router;
