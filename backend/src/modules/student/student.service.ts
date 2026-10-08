@@ -36,7 +36,7 @@ export const StudentService = {
   async getDashboardStats(userId: string) {
     const attempts = await prisma.testAttempt.findMany({
       where: { userId },
-      include: { module: true },
+      include: { module: true, customTest: true },
       orderBy: { createdAt: 'desc' }
     });
 
@@ -47,12 +47,15 @@ export const StudentService = {
       avgScore = Math.round((sum / totalCompleted) * 100);
     }
 
-    const recentTests = attempts.slice(0, 5).map(a => ({
-      title: a.module.title,
-      score: `${Math.round((a.score / a.total) * 100)}%`,
-      date: new Date(a.createdAt).toLocaleDateString(),
-      status: (a.score / a.total) >= 0.7 ? 'Passed' : 'Needs Review'
-    }));
+    const recentTests = attempts.slice(0, 5).map(a => {
+      const title = a.module ? a.module.title : (a.customTest ? a.customTest.title : 'Unknown Test');
+      return {
+        title,
+        score: `${Math.round((a.score / a.total) * 100)}%`,
+        date: new Date(a.createdAt).toLocaleDateString(),
+        status: (a.score / a.total) >= 0.7 ? 'Passed' : 'Needs Review'
+      };
+    });
 
     return {
       stats: {

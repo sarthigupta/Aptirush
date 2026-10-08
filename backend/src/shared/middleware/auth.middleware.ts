@@ -39,3 +39,16 @@ export const isAdmin = (
   }
   next();
 };
+
+export const isFaculty = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
+  const user = (req as any).user;
+  if (!user || user.role !== 'FACULTY') {
+    res.status(403).json({ error: 'Faculty access required' });
+    return;
+  }
+  next();
+};
