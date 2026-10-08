@@ -129,7 +129,8 @@ exports.Prisma.UserScalarFieldEnum = {
   is_active: 'is_active',
   created_at: 'created_at',
   updated_at: 'updated_at',
-  deleted_at: 'deleted_at'
+  deleted_at: 'deleted_at',
+  facultyId: 'facultyId'
 };
 
 exports.Prisma.DocumentJobScalarFieldEnum = {
@@ -163,9 +164,18 @@ exports.Prisma.TestAttemptScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   moduleId: 'moduleId',
+  customTestId: 'customTestId',
   score: 'score',
   total: 'total',
   createdAt: 'createdAt'
+};
+
+exports.Prisma.CustomTestScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  facultyId: 'facultyId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.SortOrder = {
@@ -219,7 +229,8 @@ exports.Prisma.ModelName = {
   DocumentJob: 'DocumentJob',
   Module: 'Module',
   Question: 'Question',
-  TestAttempt: 'TestAttempt'
+  TestAttempt: 'TestAttempt',
+  CustomTest: 'CustomTest'
 };
 
 /**

@@ -17,13 +17,25 @@ export default function LoginForm() {
     e.preventDefault();
     setError('');
     setLoading(true);
-    
+
     try {
       const response = await api.post('/auth/login', { email, password });
       if (response.data.token) {
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('user', JSON.stringify(response.data.user));
-        router.push('/dashboard');
+        if (response.data.user.role === 'ADMIN') {
+          setError('Admins must use the dedicated Admin Portal to log in.');
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          setLoading(false);
+          return;
+        }
+
+        if (response.data.user.role === 'FACULTY') {
+          router.push('/faculty/dashboard');
+        } else {
+          router.push('/dashboard');
+        }
       }
     } catch (err: any) {
       setError(err.response?.data?.error || 'Failed to login. Please check your credentials.');

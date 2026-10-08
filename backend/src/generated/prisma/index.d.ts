@@ -38,6 +38,11 @@ export type Question = $Result.DefaultSelection<Prisma.$QuestionPayload>
  * 
  */
 export type TestAttempt = $Result.DefaultSelection<Prisma.$TestAttemptPayload>
+/**
+ * Model CustomTest
+ * 
+ */
+export type CustomTest = $Result.DefaultSelection<Prisma.$CustomTestPayload>
 
 /**
  * Enums
@@ -264,6 +269,16 @@ export class PrismaClient<
     * ```
     */
   get testAttempt(): Prisma.TestAttemptDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.customTest`: Exposes CRUD operations for the **CustomTest** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more CustomTests
+    * const customTests = await prisma.customTest.findMany()
+    * ```
+    */
+  get customTest(): Prisma.CustomTestDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -715,7 +730,8 @@ export namespace Prisma {
     DocumentJob: 'DocumentJob',
     Module: 'Module',
     Question: 'Question',
-    TestAttempt: 'TestAttempt'
+    TestAttempt: 'TestAttempt',
+    CustomTest: 'CustomTest'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -731,7 +747,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "documentJob" | "module" | "question" | "testAttempt"
+      modelProps: "user" | "documentJob" | "module" | "question" | "testAttempt" | "customTest"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1105,6 +1121,80 @@ export namespace Prisma {
           }
         }
       }
+      CustomTest: {
+        payload: Prisma.$CustomTestPayload<ExtArgs>
+        fields: Prisma.CustomTestFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.CustomTestFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomTestPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.CustomTestFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomTestPayload>
+          }
+          findFirst: {
+            args: Prisma.CustomTestFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomTestPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.CustomTestFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomTestPayload>
+          }
+          findMany: {
+            args: Prisma.CustomTestFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomTestPayload>[]
+          }
+          create: {
+            args: Prisma.CustomTestCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomTestPayload>
+          }
+          createMany: {
+            args: Prisma.CustomTestCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.CustomTestCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomTestPayload>[]
+          }
+          delete: {
+            args: Prisma.CustomTestDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomTestPayload>
+          }
+          update: {
+            args: Prisma.CustomTestUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomTestPayload>
+          }
+          deleteMany: {
+            args: Prisma.CustomTestDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.CustomTestUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.CustomTestUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomTestPayload>[]
+          }
+          upsert: {
+            args: Prisma.CustomTestUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomTestPayload>
+          }
+          aggregate: {
+            args: Prisma.CustomTestAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCustomTest>
+          }
+          groupBy: {
+            args: Prisma.CustomTestGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CustomTestGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.CustomTestCountArgs<ExtArgs>
+            result: $Utils.Optional<CustomTestCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1233,6 +1323,7 @@ export namespace Prisma {
     module?: ModuleOmit
     question?: QuestionOmit
     testAttempt?: TestAttemptOmit
+    customTest?: CustomTestOmit
   }
 
   /* Types for Logging */
@@ -1314,10 +1405,14 @@ export namespace Prisma {
 
   export type UserCountOutputType = {
     testAttempts: number
+    students: number
+    createdTests: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     testAttempts?: boolean | UserCountOutputTypeCountTestAttemptsArgs
+    students?: boolean | UserCountOutputTypeCountStudentsArgs
+    createdTests?: boolean | UserCountOutputTypeCountCreatedTestsArgs
   }
 
   // Custom InputTypes
@@ -1336,6 +1431,20 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountTestAttemptsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: TestAttemptWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountStudentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountCreatedTestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CustomTestWhereInput
   }
 
 
@@ -1411,6 +1520,77 @@ export namespace Prisma {
 
 
   /**
+   * Count Type QuestionCountOutputType
+   */
+
+  export type QuestionCountOutputType = {
+    customTests: number
+  }
+
+  export type QuestionCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    customTests?: boolean | QuestionCountOutputTypeCountCustomTestsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * QuestionCountOutputType without action
+   */
+  export type QuestionCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the QuestionCountOutputType
+     */
+    select?: QuestionCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * QuestionCountOutputType without action
+   */
+  export type QuestionCountOutputTypeCountCustomTestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CustomTestWhereInput
+  }
+
+
+  /**
+   * Count Type CustomTestCountOutputType
+   */
+
+  export type CustomTestCountOutputType = {
+    questions: number
+    attempts: number
+  }
+
+  export type CustomTestCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    questions?: boolean | CustomTestCountOutputTypeCountQuestionsArgs
+    attempts?: boolean | CustomTestCountOutputTypeCountAttemptsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * CustomTestCountOutputType without action
+   */
+  export type CustomTestCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomTestCountOutputType
+     */
+    select?: CustomTestCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * CustomTestCountOutputType without action
+   */
+  export type CustomTestCountOutputTypeCountQuestionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: QuestionWhereInput
+  }
+
+  /**
+   * CustomTestCountOutputType without action
+   */
+  export type CustomTestCountOutputTypeCountAttemptsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TestAttemptWhereInput
+  }
+
+
+  /**
    * Models
    */
 
@@ -1434,6 +1614,7 @@ export namespace Prisma {
     created_at: Date | null
     updated_at: Date | null
     deleted_at: Date | null
+    facultyId: string | null
   }
 
   export type UserMaxAggregateOutputType = {
@@ -1446,6 +1627,7 @@ export namespace Prisma {
     created_at: Date | null
     updated_at: Date | null
     deleted_at: Date | null
+    facultyId: string | null
   }
 
   export type UserCountAggregateOutputType = {
@@ -1458,6 +1640,7 @@ export namespace Prisma {
     created_at: number
     updated_at: number
     deleted_at: number
+    facultyId: number
     _all: number
   }
 
@@ -1472,6 +1655,7 @@ export namespace Prisma {
     created_at?: true
     updated_at?: true
     deleted_at?: true
+    facultyId?: true
   }
 
   export type UserMaxAggregateInputType = {
@@ -1484,6 +1668,7 @@ export namespace Prisma {
     created_at?: true
     updated_at?: true
     deleted_at?: true
+    facultyId?: true
   }
 
   export type UserCountAggregateInputType = {
@@ -1496,6 +1681,7 @@ export namespace Prisma {
     created_at?: true
     updated_at?: true
     deleted_at?: true
+    facultyId?: true
     _all?: true
   }
 
@@ -1581,6 +1767,7 @@ export namespace Prisma {
     created_at: Date
     updated_at: Date
     deleted_at: Date | null
+    facultyId: string | null
     _count: UserCountAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
@@ -1610,7 +1797,11 @@ export namespace Prisma {
     created_at?: boolean
     updated_at?: boolean
     deleted_at?: boolean
+    facultyId?: boolean
     testAttempts?: boolean | User$testAttemptsArgs<ExtArgs>
+    faculty?: boolean | User$facultyArgs<ExtArgs>
+    students?: boolean | User$studentsArgs<ExtArgs>
+    createdTests?: boolean | User$createdTestsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -1624,6 +1815,8 @@ export namespace Prisma {
     created_at?: boolean
     updated_at?: boolean
     deleted_at?: boolean
+    facultyId?: boolean
+    faculty?: boolean | User$facultyArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -1636,6 +1829,8 @@ export namespace Prisma {
     created_at?: boolean
     updated_at?: boolean
     deleted_at?: boolean
+    facultyId?: boolean
+    faculty?: boolean | User$facultyArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectScalar = {
@@ -1648,20 +1843,31 @@ export namespace Prisma {
     created_at?: boolean
     updated_at?: boolean
     deleted_at?: boolean
+    facultyId?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "password_hash" | "role" | "is_active" | "created_at" | "updated_at" | "deleted_at", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "password_hash" | "role" | "is_active" | "created_at" | "updated_at" | "deleted_at" | "facultyId", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     testAttempts?: boolean | User$testAttemptsArgs<ExtArgs>
+    faculty?: boolean | User$facultyArgs<ExtArgs>
+    students?: boolean | User$studentsArgs<ExtArgs>
+    createdTests?: boolean | User$createdTestsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
-  export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
-  export type UserIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    faculty?: boolean | User$facultyArgs<ExtArgs>
+  }
+  export type UserIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    faculty?: boolean | User$facultyArgs<ExtArgs>
+  }
 
   export type $UserPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "User"
     objects: {
       testAttempts: Prisma.$TestAttemptPayload<ExtArgs>[]
+      faculty: Prisma.$UserPayload<ExtArgs> | null
+      students: Prisma.$UserPayload<ExtArgs>[]
+      createdTests: Prisma.$CustomTestPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -1673,6 +1879,7 @@ export namespace Prisma {
       created_at: Date
       updated_at: Date
       deleted_at: Date | null
+      facultyId: string | null
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -2068,6 +2275,9 @@ export namespace Prisma {
   export interface Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     testAttempts<T extends User$testAttemptsArgs<ExtArgs> = {}>(args?: Subset<T, User$testAttemptsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TestAttemptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    faculty<T extends User$facultyArgs<ExtArgs> = {}>(args?: Subset<T, User$facultyArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    students<T extends User$studentsArgs<ExtArgs> = {}>(args?: Subset<T, User$studentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    createdTests<T extends User$createdTestsArgs<ExtArgs> = {}>(args?: Subset<T, User$createdTestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomTestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2106,6 +2316,7 @@ export namespace Prisma {
     readonly created_at: FieldRef<"User", 'DateTime'>
     readonly updated_at: FieldRef<"User", 'DateTime'>
     readonly deleted_at: FieldRef<"User", 'DateTime'>
+    readonly facultyId: FieldRef<"User", 'String'>
   }
     
 
@@ -2360,6 +2571,10 @@ export namespace Prisma {
      */
     data: UserCreateManyInput | UserCreateManyInput[]
     skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -2430,6 +2645,10 @@ export namespace Prisma {
      * Limit how many Users to update.
      */
     limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -2520,6 +2739,73 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: TestAttemptScalarFieldEnum | TestAttemptScalarFieldEnum[]
+  }
+
+  /**
+   * User.faculty
+   */
+  export type User$facultyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * User.students
+   */
+  export type User$studentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+    orderBy?: UserOrderByWithRelationInput | UserOrderByWithRelationInput[]
+    cursor?: UserWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
+  }
+
+  /**
+   * User.createdTests
+   */
+  export type User$createdTestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomTest
+     */
+    select?: CustomTestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomTest
+     */
+    omit?: CustomTestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomTestInclude<ExtArgs> | null
+    where?: CustomTestWhereInput
+    orderBy?: CustomTestOrderByWithRelationInput | CustomTestOrderByWithRelationInput[]
+    cursor?: CustomTestWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CustomTestScalarFieldEnum | CustomTestScalarFieldEnum[]
   }
 
   /**
@@ -4929,6 +5215,8 @@ export namespace Prisma {
     updatedAt?: boolean
     module?: boolean | ModuleDefaultArgs<ExtArgs>
     documentJob?: boolean | Question$documentJobArgs<ExtArgs>
+    customTests?: boolean | Question$customTestsArgs<ExtArgs>
+    _count?: boolean | QuestionCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["question"]>
 
   export type QuestionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -4978,6 +5266,8 @@ export namespace Prisma {
   export type QuestionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     module?: boolean | ModuleDefaultArgs<ExtArgs>
     documentJob?: boolean | Question$documentJobArgs<ExtArgs>
+    customTests?: boolean | Question$customTestsArgs<ExtArgs>
+    _count?: boolean | QuestionCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type QuestionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     module?: boolean | ModuleDefaultArgs<ExtArgs>
@@ -4993,6 +5283,7 @@ export namespace Prisma {
     objects: {
       module: Prisma.$ModulePayload<ExtArgs>
       documentJob: Prisma.$DocumentJobPayload<ExtArgs> | null
+      customTests: Prisma.$CustomTestPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -5401,6 +5692,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     module<T extends ModuleDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ModuleDefaultArgs<ExtArgs>>): Prisma__ModuleClient<$Result.GetResult<Prisma.$ModulePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     documentJob<T extends Question$documentJobArgs<ExtArgs> = {}>(args?: Subset<T, Question$documentJobArgs<ExtArgs>>): Prisma__DocumentJobClient<$Result.GetResult<Prisma.$DocumentJobPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    customTests<T extends Question$customTestsArgs<ExtArgs> = {}>(args?: Subset<T, Question$customTestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomTestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5860,6 +6152,30 @@ export namespace Prisma {
   }
 
   /**
+   * Question.customTests
+   */
+  export type Question$customTestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomTest
+     */
+    select?: CustomTestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomTest
+     */
+    omit?: CustomTestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomTestInclude<ExtArgs> | null
+    where?: CustomTestWhereInput
+    orderBy?: CustomTestOrderByWithRelationInput | CustomTestOrderByWithRelationInput[]
+    cursor?: CustomTestWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CustomTestScalarFieldEnum | CustomTestScalarFieldEnum[]
+  }
+
+  /**
    * Question without action
    */
   export type QuestionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5904,6 +6220,7 @@ export namespace Prisma {
     id: string | null
     userId: string | null
     moduleId: string | null
+    customTestId: string | null
     score: number | null
     total: number | null
     createdAt: Date | null
@@ -5913,6 +6230,7 @@ export namespace Prisma {
     id: string | null
     userId: string | null
     moduleId: string | null
+    customTestId: string | null
     score: number | null
     total: number | null
     createdAt: Date | null
@@ -5922,6 +6240,7 @@ export namespace Prisma {
     id: number
     userId: number
     moduleId: number
+    customTestId: number
     score: number
     total: number
     createdAt: number
@@ -5943,6 +6262,7 @@ export namespace Prisma {
     id?: true
     userId?: true
     moduleId?: true
+    customTestId?: true
     score?: true
     total?: true
     createdAt?: true
@@ -5952,6 +6272,7 @@ export namespace Prisma {
     id?: true
     userId?: true
     moduleId?: true
+    customTestId?: true
     score?: true
     total?: true
     createdAt?: true
@@ -5961,6 +6282,7 @@ export namespace Prisma {
     id?: true
     userId?: true
     moduleId?: true
+    customTestId?: true
     score?: true
     total?: true
     createdAt?: true
@@ -6056,7 +6378,8 @@ export namespace Prisma {
   export type TestAttemptGroupByOutputType = {
     id: string
     userId: string
-    moduleId: string
+    moduleId: string | null
+    customTestId: string | null
     score: number
     total: number
     createdAt: Date
@@ -6085,68 +6408,80 @@ export namespace Prisma {
     id?: boolean
     userId?: boolean
     moduleId?: boolean
+    customTestId?: boolean
     score?: boolean
     total?: boolean
     createdAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
-    module?: boolean | ModuleDefaultArgs<ExtArgs>
+    module?: boolean | TestAttempt$moduleArgs<ExtArgs>
+    customTest?: boolean | TestAttempt$customTestArgs<ExtArgs>
   }, ExtArgs["result"]["testAttempt"]>
 
   export type TestAttemptSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     userId?: boolean
     moduleId?: boolean
+    customTestId?: boolean
     score?: boolean
     total?: boolean
     createdAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
-    module?: boolean | ModuleDefaultArgs<ExtArgs>
+    module?: boolean | TestAttempt$moduleArgs<ExtArgs>
+    customTest?: boolean | TestAttempt$customTestArgs<ExtArgs>
   }, ExtArgs["result"]["testAttempt"]>
 
   export type TestAttemptSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     userId?: boolean
     moduleId?: boolean
+    customTestId?: boolean
     score?: boolean
     total?: boolean
     createdAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
-    module?: boolean | ModuleDefaultArgs<ExtArgs>
+    module?: boolean | TestAttempt$moduleArgs<ExtArgs>
+    customTest?: boolean | TestAttempt$customTestArgs<ExtArgs>
   }, ExtArgs["result"]["testAttempt"]>
 
   export type TestAttemptSelectScalar = {
     id?: boolean
     userId?: boolean
     moduleId?: boolean
+    customTestId?: boolean
     score?: boolean
     total?: boolean
     createdAt?: boolean
   }
 
-  export type TestAttemptOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "moduleId" | "score" | "total" | "createdAt", ExtArgs["result"]["testAttempt"]>
+  export type TestAttemptOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "moduleId" | "customTestId" | "score" | "total" | "createdAt", ExtArgs["result"]["testAttempt"]>
   export type TestAttemptInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
-    module?: boolean | ModuleDefaultArgs<ExtArgs>
+    module?: boolean | TestAttempt$moduleArgs<ExtArgs>
+    customTest?: boolean | TestAttempt$customTestArgs<ExtArgs>
   }
   export type TestAttemptIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
-    module?: boolean | ModuleDefaultArgs<ExtArgs>
+    module?: boolean | TestAttempt$moduleArgs<ExtArgs>
+    customTest?: boolean | TestAttempt$customTestArgs<ExtArgs>
   }
   export type TestAttemptIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
-    module?: boolean | ModuleDefaultArgs<ExtArgs>
+    module?: boolean | TestAttempt$moduleArgs<ExtArgs>
+    customTest?: boolean | TestAttempt$customTestArgs<ExtArgs>
   }
 
   export type $TestAttemptPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "TestAttempt"
     objects: {
       user: Prisma.$UserPayload<ExtArgs>
-      module: Prisma.$ModulePayload<ExtArgs>
+      module: Prisma.$ModulePayload<ExtArgs> | null
+      customTest: Prisma.$CustomTestPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       userId: string
-      moduleId: string
+      moduleId: string | null
+      customTestId: string | null
       score: number
       total: number
       createdAt: Date
@@ -6545,7 +6880,8 @@ export namespace Prisma {
   export interface Prisma__TestAttemptClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    module<T extends ModuleDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ModuleDefaultArgs<ExtArgs>>): Prisma__ModuleClient<$Result.GetResult<Prisma.$ModulePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    module<T extends TestAttempt$moduleArgs<ExtArgs> = {}>(args?: Subset<T, TestAttempt$moduleArgs<ExtArgs>>): Prisma__ModuleClient<$Result.GetResult<Prisma.$ModulePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    customTest<T extends TestAttempt$customTestArgs<ExtArgs> = {}>(args?: Subset<T, TestAttempt$customTestArgs<ExtArgs>>): Prisma__CustomTestClient<$Result.GetResult<Prisma.$CustomTestPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6578,6 +6914,7 @@ export namespace Prisma {
     readonly id: FieldRef<"TestAttempt", 'String'>
     readonly userId: FieldRef<"TestAttempt", 'String'>
     readonly moduleId: FieldRef<"TestAttempt", 'String'>
+    readonly customTestId: FieldRef<"TestAttempt", 'String'>
     readonly score: FieldRef<"TestAttempt", 'Int'>
     readonly total: FieldRef<"TestAttempt", 'Int'>
     readonly createdAt: FieldRef<"TestAttempt", 'DateTime'>
@@ -6982,6 +7319,44 @@ export namespace Prisma {
   }
 
   /**
+   * TestAttempt.module
+   */
+  export type TestAttempt$moduleArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Module
+     */
+    select?: ModuleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Module
+     */
+    omit?: ModuleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ModuleInclude<ExtArgs> | null
+    where?: ModuleWhereInput
+  }
+
+  /**
+   * TestAttempt.customTest
+   */
+  export type TestAttempt$customTestArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomTest
+     */
+    select?: CustomTestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomTest
+     */
+    omit?: CustomTestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomTestInclude<ExtArgs> | null
+    where?: CustomTestWhereInput
+  }
+
+  /**
    * TestAttempt without action
    */
   export type TestAttemptDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -6997,6 +7372,1127 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: TestAttemptInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model CustomTest
+   */
+
+  export type AggregateCustomTest = {
+    _count: CustomTestCountAggregateOutputType | null
+    _min: CustomTestMinAggregateOutputType | null
+    _max: CustomTestMaxAggregateOutputType | null
+  }
+
+  export type CustomTestMinAggregateOutputType = {
+    id: string | null
+    title: string | null
+    facultyId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type CustomTestMaxAggregateOutputType = {
+    id: string | null
+    title: string | null
+    facultyId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type CustomTestCountAggregateOutputType = {
+    id: number
+    title: number
+    facultyId: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type CustomTestMinAggregateInputType = {
+    id?: true
+    title?: true
+    facultyId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type CustomTestMaxAggregateInputType = {
+    id?: true
+    title?: true
+    facultyId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type CustomTestCountAggregateInputType = {
+    id?: true
+    title?: true
+    facultyId?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type CustomTestAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CustomTest to aggregate.
+     */
+    where?: CustomTestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CustomTests to fetch.
+     */
+    orderBy?: CustomTestOrderByWithRelationInput | CustomTestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: CustomTestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CustomTests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CustomTests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned CustomTests
+    **/
+    _count?: true | CustomTestCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CustomTestMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CustomTestMaxAggregateInputType
+  }
+
+  export type GetCustomTestAggregateType<T extends CustomTestAggregateArgs> = {
+        [P in keyof T & keyof AggregateCustomTest]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCustomTest[P]>
+      : GetScalarType<T[P], AggregateCustomTest[P]>
+  }
+
+
+
+
+  export type CustomTestGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CustomTestWhereInput
+    orderBy?: CustomTestOrderByWithAggregationInput | CustomTestOrderByWithAggregationInput[]
+    by: CustomTestScalarFieldEnum[] | CustomTestScalarFieldEnum
+    having?: CustomTestScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CustomTestCountAggregateInputType | true
+    _min?: CustomTestMinAggregateInputType
+    _max?: CustomTestMaxAggregateInputType
+  }
+
+  export type CustomTestGroupByOutputType = {
+    id: string
+    title: string
+    facultyId: string
+    createdAt: Date
+    updatedAt: Date
+    _count: CustomTestCountAggregateOutputType | null
+    _min: CustomTestMinAggregateOutputType | null
+    _max: CustomTestMaxAggregateOutputType | null
+  }
+
+  type GetCustomTestGroupByPayload<T extends CustomTestGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<CustomTestGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CustomTestGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CustomTestGroupByOutputType[P]>
+            : GetScalarType<T[P], CustomTestGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CustomTestSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    title?: boolean
+    facultyId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    faculty?: boolean | UserDefaultArgs<ExtArgs>
+    questions?: boolean | CustomTest$questionsArgs<ExtArgs>
+    attempts?: boolean | CustomTest$attemptsArgs<ExtArgs>
+    _count?: boolean | CustomTestCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["customTest"]>
+
+  export type CustomTestSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    title?: boolean
+    facultyId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    faculty?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["customTest"]>
+
+  export type CustomTestSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    title?: boolean
+    facultyId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    faculty?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["customTest"]>
+
+  export type CustomTestSelectScalar = {
+    id?: boolean
+    title?: boolean
+    facultyId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type CustomTestOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "facultyId" | "createdAt" | "updatedAt", ExtArgs["result"]["customTest"]>
+  export type CustomTestInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    faculty?: boolean | UserDefaultArgs<ExtArgs>
+    questions?: boolean | CustomTest$questionsArgs<ExtArgs>
+    attempts?: boolean | CustomTest$attemptsArgs<ExtArgs>
+    _count?: boolean | CustomTestCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type CustomTestIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    faculty?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type CustomTestIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    faculty?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $CustomTestPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "CustomTest"
+    objects: {
+      faculty: Prisma.$UserPayload<ExtArgs>
+      questions: Prisma.$QuestionPayload<ExtArgs>[]
+      attempts: Prisma.$TestAttemptPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      title: string
+      facultyId: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["customTest"]>
+    composites: {}
+  }
+
+  type CustomTestGetPayload<S extends boolean | null | undefined | CustomTestDefaultArgs> = $Result.GetResult<Prisma.$CustomTestPayload, S>
+
+  type CustomTestCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<CustomTestFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: CustomTestCountAggregateInputType | true
+    }
+
+  export interface CustomTestDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['CustomTest'], meta: { name: 'CustomTest' } }
+    /**
+     * Find zero or one CustomTest that matches the filter.
+     * @param {CustomTestFindUniqueArgs} args - Arguments to find a CustomTest
+     * @example
+     * // Get one CustomTest
+     * const customTest = await prisma.customTest.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends CustomTestFindUniqueArgs>(args: SelectSubset<T, CustomTestFindUniqueArgs<ExtArgs>>): Prisma__CustomTestClient<$Result.GetResult<Prisma.$CustomTestPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one CustomTest that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {CustomTestFindUniqueOrThrowArgs} args - Arguments to find a CustomTest
+     * @example
+     * // Get one CustomTest
+     * const customTest = await prisma.customTest.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends CustomTestFindUniqueOrThrowArgs>(args: SelectSubset<T, CustomTestFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CustomTestClient<$Result.GetResult<Prisma.$CustomTestPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CustomTest that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomTestFindFirstArgs} args - Arguments to find a CustomTest
+     * @example
+     * // Get one CustomTest
+     * const customTest = await prisma.customTest.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends CustomTestFindFirstArgs>(args?: SelectSubset<T, CustomTestFindFirstArgs<ExtArgs>>): Prisma__CustomTestClient<$Result.GetResult<Prisma.$CustomTestPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CustomTest that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomTestFindFirstOrThrowArgs} args - Arguments to find a CustomTest
+     * @example
+     * // Get one CustomTest
+     * const customTest = await prisma.customTest.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends CustomTestFindFirstOrThrowArgs>(args?: SelectSubset<T, CustomTestFindFirstOrThrowArgs<ExtArgs>>): Prisma__CustomTestClient<$Result.GetResult<Prisma.$CustomTestPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more CustomTests that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomTestFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all CustomTests
+     * const customTests = await prisma.customTest.findMany()
+     * 
+     * // Get first 10 CustomTests
+     * const customTests = await prisma.customTest.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const customTestWithIdOnly = await prisma.customTest.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends CustomTestFindManyArgs>(args?: SelectSubset<T, CustomTestFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomTestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a CustomTest.
+     * @param {CustomTestCreateArgs} args - Arguments to create a CustomTest.
+     * @example
+     * // Create one CustomTest
+     * const CustomTest = await prisma.customTest.create({
+     *   data: {
+     *     // ... data to create a CustomTest
+     *   }
+     * })
+     * 
+     */
+    create<T extends CustomTestCreateArgs>(args: SelectSubset<T, CustomTestCreateArgs<ExtArgs>>): Prisma__CustomTestClient<$Result.GetResult<Prisma.$CustomTestPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many CustomTests.
+     * @param {CustomTestCreateManyArgs} args - Arguments to create many CustomTests.
+     * @example
+     * // Create many CustomTests
+     * const customTest = await prisma.customTest.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends CustomTestCreateManyArgs>(args?: SelectSubset<T, CustomTestCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many CustomTests and returns the data saved in the database.
+     * @param {CustomTestCreateManyAndReturnArgs} args - Arguments to create many CustomTests.
+     * @example
+     * // Create many CustomTests
+     * const customTest = await prisma.customTest.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many CustomTests and only return the `id`
+     * const customTestWithIdOnly = await prisma.customTest.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends CustomTestCreateManyAndReturnArgs>(args?: SelectSubset<T, CustomTestCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomTestPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a CustomTest.
+     * @param {CustomTestDeleteArgs} args - Arguments to delete one CustomTest.
+     * @example
+     * // Delete one CustomTest
+     * const CustomTest = await prisma.customTest.delete({
+     *   where: {
+     *     // ... filter to delete one CustomTest
+     *   }
+     * })
+     * 
+     */
+    delete<T extends CustomTestDeleteArgs>(args: SelectSubset<T, CustomTestDeleteArgs<ExtArgs>>): Prisma__CustomTestClient<$Result.GetResult<Prisma.$CustomTestPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one CustomTest.
+     * @param {CustomTestUpdateArgs} args - Arguments to update one CustomTest.
+     * @example
+     * // Update one CustomTest
+     * const customTest = await prisma.customTest.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends CustomTestUpdateArgs>(args: SelectSubset<T, CustomTestUpdateArgs<ExtArgs>>): Prisma__CustomTestClient<$Result.GetResult<Prisma.$CustomTestPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more CustomTests.
+     * @param {CustomTestDeleteManyArgs} args - Arguments to filter CustomTests to delete.
+     * @example
+     * // Delete a few CustomTests
+     * const { count } = await prisma.customTest.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends CustomTestDeleteManyArgs>(args?: SelectSubset<T, CustomTestDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CustomTests.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomTestUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many CustomTests
+     * const customTest = await prisma.customTest.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends CustomTestUpdateManyArgs>(args: SelectSubset<T, CustomTestUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CustomTests and returns the data updated in the database.
+     * @param {CustomTestUpdateManyAndReturnArgs} args - Arguments to update many CustomTests.
+     * @example
+     * // Update many CustomTests
+     * const customTest = await prisma.customTest.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more CustomTests and only return the `id`
+     * const customTestWithIdOnly = await prisma.customTest.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends CustomTestUpdateManyAndReturnArgs>(args: SelectSubset<T, CustomTestUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomTestPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one CustomTest.
+     * @param {CustomTestUpsertArgs} args - Arguments to update or create a CustomTest.
+     * @example
+     * // Update or create a CustomTest
+     * const customTest = await prisma.customTest.upsert({
+     *   create: {
+     *     // ... data to create a CustomTest
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the CustomTest we want to update
+     *   }
+     * })
+     */
+    upsert<T extends CustomTestUpsertArgs>(args: SelectSubset<T, CustomTestUpsertArgs<ExtArgs>>): Prisma__CustomTestClient<$Result.GetResult<Prisma.$CustomTestPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of CustomTests.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomTestCountArgs} args - Arguments to filter CustomTests to count.
+     * @example
+     * // Count the number of CustomTests
+     * const count = await prisma.customTest.count({
+     *   where: {
+     *     // ... the filter for the CustomTests we want to count
+     *   }
+     * })
+    **/
+    count<T extends CustomTestCountArgs>(
+      args?: Subset<T, CustomTestCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CustomTestCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a CustomTest.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomTestAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CustomTestAggregateArgs>(args: Subset<T, CustomTestAggregateArgs>): Prisma.PrismaPromise<GetCustomTestAggregateType<T>>
+
+    /**
+     * Group by CustomTest.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomTestGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CustomTestGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CustomTestGroupByArgs['orderBy'] }
+        : { orderBy?: CustomTestGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CustomTestGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCustomTestGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the CustomTest model
+   */
+  readonly fields: CustomTestFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for CustomTest.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__CustomTestClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    faculty<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    questions<T extends CustomTest$questionsArgs<ExtArgs> = {}>(args?: Subset<T, CustomTest$questionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QuestionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    attempts<T extends CustomTest$attemptsArgs<ExtArgs> = {}>(args?: Subset<T, CustomTest$attemptsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TestAttemptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the CustomTest model
+   */
+  interface CustomTestFieldRefs {
+    readonly id: FieldRef<"CustomTest", 'String'>
+    readonly title: FieldRef<"CustomTest", 'String'>
+    readonly facultyId: FieldRef<"CustomTest", 'String'>
+    readonly createdAt: FieldRef<"CustomTest", 'DateTime'>
+    readonly updatedAt: FieldRef<"CustomTest", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * CustomTest findUnique
+   */
+  export type CustomTestFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomTest
+     */
+    select?: CustomTestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomTest
+     */
+    omit?: CustomTestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomTestInclude<ExtArgs> | null
+    /**
+     * Filter, which CustomTest to fetch.
+     */
+    where: CustomTestWhereUniqueInput
+  }
+
+  /**
+   * CustomTest findUniqueOrThrow
+   */
+  export type CustomTestFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomTest
+     */
+    select?: CustomTestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomTest
+     */
+    omit?: CustomTestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomTestInclude<ExtArgs> | null
+    /**
+     * Filter, which CustomTest to fetch.
+     */
+    where: CustomTestWhereUniqueInput
+  }
+
+  /**
+   * CustomTest findFirst
+   */
+  export type CustomTestFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomTest
+     */
+    select?: CustomTestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomTest
+     */
+    omit?: CustomTestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomTestInclude<ExtArgs> | null
+    /**
+     * Filter, which CustomTest to fetch.
+     */
+    where?: CustomTestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CustomTests to fetch.
+     */
+    orderBy?: CustomTestOrderByWithRelationInput | CustomTestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CustomTests.
+     */
+    cursor?: CustomTestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CustomTests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CustomTests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CustomTests.
+     */
+    distinct?: CustomTestScalarFieldEnum | CustomTestScalarFieldEnum[]
+  }
+
+  /**
+   * CustomTest findFirstOrThrow
+   */
+  export type CustomTestFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomTest
+     */
+    select?: CustomTestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomTest
+     */
+    omit?: CustomTestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomTestInclude<ExtArgs> | null
+    /**
+     * Filter, which CustomTest to fetch.
+     */
+    where?: CustomTestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CustomTests to fetch.
+     */
+    orderBy?: CustomTestOrderByWithRelationInput | CustomTestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CustomTests.
+     */
+    cursor?: CustomTestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CustomTests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CustomTests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CustomTests.
+     */
+    distinct?: CustomTestScalarFieldEnum | CustomTestScalarFieldEnum[]
+  }
+
+  /**
+   * CustomTest findMany
+   */
+  export type CustomTestFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomTest
+     */
+    select?: CustomTestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomTest
+     */
+    omit?: CustomTestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomTestInclude<ExtArgs> | null
+    /**
+     * Filter, which CustomTests to fetch.
+     */
+    where?: CustomTestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CustomTests to fetch.
+     */
+    orderBy?: CustomTestOrderByWithRelationInput | CustomTestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing CustomTests.
+     */
+    cursor?: CustomTestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CustomTests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CustomTests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CustomTests.
+     */
+    distinct?: CustomTestScalarFieldEnum | CustomTestScalarFieldEnum[]
+  }
+
+  /**
+   * CustomTest create
+   */
+  export type CustomTestCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomTest
+     */
+    select?: CustomTestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomTest
+     */
+    omit?: CustomTestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomTestInclude<ExtArgs> | null
+    /**
+     * The data needed to create a CustomTest.
+     */
+    data: XOR<CustomTestCreateInput, CustomTestUncheckedCreateInput>
+  }
+
+  /**
+   * CustomTest createMany
+   */
+  export type CustomTestCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many CustomTests.
+     */
+    data: CustomTestCreateManyInput | CustomTestCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * CustomTest createManyAndReturn
+   */
+  export type CustomTestCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomTest
+     */
+    select?: CustomTestSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomTest
+     */
+    omit?: CustomTestOmit<ExtArgs> | null
+    /**
+     * The data used to create many CustomTests.
+     */
+    data: CustomTestCreateManyInput | CustomTestCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomTestIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * CustomTest update
+   */
+  export type CustomTestUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomTest
+     */
+    select?: CustomTestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomTest
+     */
+    omit?: CustomTestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomTestInclude<ExtArgs> | null
+    /**
+     * The data needed to update a CustomTest.
+     */
+    data: XOR<CustomTestUpdateInput, CustomTestUncheckedUpdateInput>
+    /**
+     * Choose, which CustomTest to update.
+     */
+    where: CustomTestWhereUniqueInput
+  }
+
+  /**
+   * CustomTest updateMany
+   */
+  export type CustomTestUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update CustomTests.
+     */
+    data: XOR<CustomTestUpdateManyMutationInput, CustomTestUncheckedUpdateManyInput>
+    /**
+     * Filter which CustomTests to update
+     */
+    where?: CustomTestWhereInput
+    /**
+     * Limit how many CustomTests to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * CustomTest updateManyAndReturn
+   */
+  export type CustomTestUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomTest
+     */
+    select?: CustomTestSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomTest
+     */
+    omit?: CustomTestOmit<ExtArgs> | null
+    /**
+     * The data used to update CustomTests.
+     */
+    data: XOR<CustomTestUpdateManyMutationInput, CustomTestUncheckedUpdateManyInput>
+    /**
+     * Filter which CustomTests to update
+     */
+    where?: CustomTestWhereInput
+    /**
+     * Limit how many CustomTests to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomTestIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * CustomTest upsert
+   */
+  export type CustomTestUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomTest
+     */
+    select?: CustomTestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomTest
+     */
+    omit?: CustomTestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomTestInclude<ExtArgs> | null
+    /**
+     * The filter to search for the CustomTest to update in case it exists.
+     */
+    where: CustomTestWhereUniqueInput
+    /**
+     * In case the CustomTest found by the `where` argument doesn't exist, create a new CustomTest with this data.
+     */
+    create: XOR<CustomTestCreateInput, CustomTestUncheckedCreateInput>
+    /**
+     * In case the CustomTest was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<CustomTestUpdateInput, CustomTestUncheckedUpdateInput>
+  }
+
+  /**
+   * CustomTest delete
+   */
+  export type CustomTestDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomTest
+     */
+    select?: CustomTestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomTest
+     */
+    omit?: CustomTestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomTestInclude<ExtArgs> | null
+    /**
+     * Filter which CustomTest to delete.
+     */
+    where: CustomTestWhereUniqueInput
+  }
+
+  /**
+   * CustomTest deleteMany
+   */
+  export type CustomTestDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CustomTests to delete
+     */
+    where?: CustomTestWhereInput
+    /**
+     * Limit how many CustomTests to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * CustomTest.questions
+   */
+  export type CustomTest$questionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Question
+     */
+    select?: QuestionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Question
+     */
+    omit?: QuestionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuestionInclude<ExtArgs> | null
+    where?: QuestionWhereInput
+    orderBy?: QuestionOrderByWithRelationInput | QuestionOrderByWithRelationInput[]
+    cursor?: QuestionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: QuestionScalarFieldEnum | QuestionScalarFieldEnum[]
+  }
+
+  /**
+   * CustomTest.attempts
+   */
+  export type CustomTest$attemptsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TestAttempt
+     */
+    select?: TestAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TestAttempt
+     */
+    omit?: TestAttemptOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TestAttemptInclude<ExtArgs> | null
+    where?: TestAttemptWhereInput
+    orderBy?: TestAttemptOrderByWithRelationInput | TestAttemptOrderByWithRelationInput[]
+    cursor?: TestAttemptWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TestAttemptScalarFieldEnum | TestAttemptScalarFieldEnum[]
+  }
+
+  /**
+   * CustomTest without action
+   */
+  export type CustomTestDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomTest
+     */
+    select?: CustomTestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomTest
+     */
+    omit?: CustomTestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomTestInclude<ExtArgs> | null
   }
 
 
@@ -7023,7 +8519,8 @@ export namespace Prisma {
     is_active: 'is_active',
     created_at: 'created_at',
     updated_at: 'updated_at',
-    deleted_at: 'deleted_at'
+    deleted_at: 'deleted_at',
+    facultyId: 'facultyId'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -7069,12 +8566,24 @@ export namespace Prisma {
     id: 'id',
     userId: 'userId',
     moduleId: 'moduleId',
+    customTestId: 'customTestId',
     score: 'score',
     total: 'total',
     createdAt: 'createdAt'
   };
 
   export type TestAttemptScalarFieldEnum = (typeof TestAttemptScalarFieldEnum)[keyof typeof TestAttemptScalarFieldEnum]
+
+
+  export const CustomTestScalarFieldEnum: {
+    id: 'id',
+    title: 'title',
+    facultyId: 'facultyId',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type CustomTestScalarFieldEnum = (typeof CustomTestScalarFieldEnum)[keyof typeof CustomTestScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -7271,7 +8780,11 @@ export namespace Prisma {
     created_at?: DateTimeFilter<"User"> | Date | string
     updated_at?: DateTimeFilter<"User"> | Date | string
     deleted_at?: DateTimeNullableFilter<"User"> | Date | string | null
+    facultyId?: StringNullableFilter<"User"> | string | null
     testAttempts?: TestAttemptListRelationFilter
+    faculty?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    students?: UserListRelationFilter
+    createdTests?: CustomTestListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -7284,7 +8797,11 @@ export namespace Prisma {
     created_at?: SortOrder
     updated_at?: SortOrder
     deleted_at?: SortOrderInput | SortOrder
+    facultyId?: SortOrderInput | SortOrder
     testAttempts?: TestAttemptOrderByRelationAggregateInput
+    faculty?: UserOrderByWithRelationInput
+    students?: UserOrderByRelationAggregateInput
+    createdTests?: CustomTestOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -7300,7 +8817,11 @@ export namespace Prisma {
     created_at?: DateTimeFilter<"User"> | Date | string
     updated_at?: DateTimeFilter<"User"> | Date | string
     deleted_at?: DateTimeNullableFilter<"User"> | Date | string | null
+    facultyId?: StringNullableFilter<"User"> | string | null
     testAttempts?: TestAttemptListRelationFilter
+    faculty?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    students?: UserListRelationFilter
+    createdTests?: CustomTestListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -7313,6 +8834,7 @@ export namespace Prisma {
     created_at?: SortOrder
     updated_at?: SortOrder
     deleted_at?: SortOrderInput | SortOrder
+    facultyId?: SortOrderInput | SortOrder
     _count?: UserCountOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
     _min?: UserMinOrderByAggregateInput
@@ -7331,6 +8853,7 @@ export namespace Prisma {
     created_at?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updated_at?: DateTimeWithAggregatesFilter<"User"> | Date | string
     deleted_at?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+    facultyId?: StringNullableWithAggregatesFilter<"User"> | string | null
   }
 
   export type DocumentJobWhereInput = {
@@ -7454,6 +8977,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Question"> | Date | string
     module?: XOR<ModuleScalarRelationFilter, ModuleWhereInput>
     documentJob?: XOR<DocumentJobNullableScalarRelationFilter, DocumentJobWhereInput> | null
+    customTests?: CustomTestListRelationFilter
   }
 
   export type QuestionOrderByWithRelationInput = {
@@ -7469,6 +8993,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     module?: ModuleOrderByWithRelationInput
     documentJob?: DocumentJobOrderByWithRelationInput
+    customTests?: CustomTestOrderByRelationAggregateInput
   }
 
   export type QuestionWhereUniqueInput = Prisma.AtLeast<{
@@ -7487,6 +9012,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Question"> | Date | string
     module?: XOR<ModuleScalarRelationFilter, ModuleWhereInput>
     documentJob?: XOR<DocumentJobNullableScalarRelationFilter, DocumentJobWhereInput> | null
+    customTests?: CustomTestListRelationFilter
   }, "id">
 
   export type QuestionOrderByWithAggregationInput = {
@@ -7527,23 +9053,27 @@ export namespace Prisma {
     NOT?: TestAttemptWhereInput | TestAttemptWhereInput[]
     id?: StringFilter<"TestAttempt"> | string
     userId?: StringFilter<"TestAttempt"> | string
-    moduleId?: StringFilter<"TestAttempt"> | string
+    moduleId?: StringNullableFilter<"TestAttempt"> | string | null
+    customTestId?: StringNullableFilter<"TestAttempt"> | string | null
     score?: IntFilter<"TestAttempt"> | number
     total?: IntFilter<"TestAttempt"> | number
     createdAt?: DateTimeFilter<"TestAttempt"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
-    module?: XOR<ModuleScalarRelationFilter, ModuleWhereInput>
+    module?: XOR<ModuleNullableScalarRelationFilter, ModuleWhereInput> | null
+    customTest?: XOR<CustomTestNullableScalarRelationFilter, CustomTestWhereInput> | null
   }
 
   export type TestAttemptOrderByWithRelationInput = {
     id?: SortOrder
     userId?: SortOrder
-    moduleId?: SortOrder
+    moduleId?: SortOrderInput | SortOrder
+    customTestId?: SortOrderInput | SortOrder
     score?: SortOrder
     total?: SortOrder
     createdAt?: SortOrder
     user?: UserOrderByWithRelationInput
     module?: ModuleOrderByWithRelationInput
+    customTest?: CustomTestOrderByWithRelationInput
   }
 
   export type TestAttemptWhereUniqueInput = Prisma.AtLeast<{
@@ -7552,18 +9082,21 @@ export namespace Prisma {
     OR?: TestAttemptWhereInput[]
     NOT?: TestAttemptWhereInput | TestAttemptWhereInput[]
     userId?: StringFilter<"TestAttempt"> | string
-    moduleId?: StringFilter<"TestAttempt"> | string
+    moduleId?: StringNullableFilter<"TestAttempt"> | string | null
+    customTestId?: StringNullableFilter<"TestAttempt"> | string | null
     score?: IntFilter<"TestAttempt"> | number
     total?: IntFilter<"TestAttempt"> | number
     createdAt?: DateTimeFilter<"TestAttempt"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
-    module?: XOR<ModuleScalarRelationFilter, ModuleWhereInput>
+    module?: XOR<ModuleNullableScalarRelationFilter, ModuleWhereInput> | null
+    customTest?: XOR<CustomTestNullableScalarRelationFilter, CustomTestWhereInput> | null
   }, "id">
 
   export type TestAttemptOrderByWithAggregationInput = {
     id?: SortOrder
     userId?: SortOrder
-    moduleId?: SortOrder
+    moduleId?: SortOrderInput | SortOrder
+    customTestId?: SortOrderInput | SortOrder
     score?: SortOrder
     total?: SortOrder
     createdAt?: SortOrder
@@ -7580,10 +9113,72 @@ export namespace Prisma {
     NOT?: TestAttemptScalarWhereWithAggregatesInput | TestAttemptScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"TestAttempt"> | string
     userId?: StringWithAggregatesFilter<"TestAttempt"> | string
-    moduleId?: StringWithAggregatesFilter<"TestAttempt"> | string
+    moduleId?: StringNullableWithAggregatesFilter<"TestAttempt"> | string | null
+    customTestId?: StringNullableWithAggregatesFilter<"TestAttempt"> | string | null
     score?: IntWithAggregatesFilter<"TestAttempt"> | number
     total?: IntWithAggregatesFilter<"TestAttempt"> | number
     createdAt?: DateTimeWithAggregatesFilter<"TestAttempt"> | Date | string
+  }
+
+  export type CustomTestWhereInput = {
+    AND?: CustomTestWhereInput | CustomTestWhereInput[]
+    OR?: CustomTestWhereInput[]
+    NOT?: CustomTestWhereInput | CustomTestWhereInput[]
+    id?: StringFilter<"CustomTest"> | string
+    title?: StringFilter<"CustomTest"> | string
+    facultyId?: StringFilter<"CustomTest"> | string
+    createdAt?: DateTimeFilter<"CustomTest"> | Date | string
+    updatedAt?: DateTimeFilter<"CustomTest"> | Date | string
+    faculty?: XOR<UserScalarRelationFilter, UserWhereInput>
+    questions?: QuestionListRelationFilter
+    attempts?: TestAttemptListRelationFilter
+  }
+
+  export type CustomTestOrderByWithRelationInput = {
+    id?: SortOrder
+    title?: SortOrder
+    facultyId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    faculty?: UserOrderByWithRelationInput
+    questions?: QuestionOrderByRelationAggregateInput
+    attempts?: TestAttemptOrderByRelationAggregateInput
+  }
+
+  export type CustomTestWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: CustomTestWhereInput | CustomTestWhereInput[]
+    OR?: CustomTestWhereInput[]
+    NOT?: CustomTestWhereInput | CustomTestWhereInput[]
+    title?: StringFilter<"CustomTest"> | string
+    facultyId?: StringFilter<"CustomTest"> | string
+    createdAt?: DateTimeFilter<"CustomTest"> | Date | string
+    updatedAt?: DateTimeFilter<"CustomTest"> | Date | string
+    faculty?: XOR<UserScalarRelationFilter, UserWhereInput>
+    questions?: QuestionListRelationFilter
+    attempts?: TestAttemptListRelationFilter
+  }, "id">
+
+  export type CustomTestOrderByWithAggregationInput = {
+    id?: SortOrder
+    title?: SortOrder
+    facultyId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: CustomTestCountOrderByAggregateInput
+    _max?: CustomTestMaxOrderByAggregateInput
+    _min?: CustomTestMinOrderByAggregateInput
+  }
+
+  export type CustomTestScalarWhereWithAggregatesInput = {
+    AND?: CustomTestScalarWhereWithAggregatesInput | CustomTestScalarWhereWithAggregatesInput[]
+    OR?: CustomTestScalarWhereWithAggregatesInput[]
+    NOT?: CustomTestScalarWhereWithAggregatesInput | CustomTestScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"CustomTest"> | string
+    title?: StringWithAggregatesFilter<"CustomTest"> | string
+    facultyId?: StringWithAggregatesFilter<"CustomTest"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"CustomTest"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"CustomTest"> | Date | string
   }
 
   export type UserCreateInput = {
@@ -7597,6 +9192,9 @@ export namespace Prisma {
     updated_at?: Date | string
     deleted_at?: Date | string | null
     testAttempts?: TestAttemptCreateNestedManyWithoutUserInput
+    faculty?: UserCreateNestedOneWithoutStudentsInput
+    students?: UserCreateNestedManyWithoutFacultyInput
+    createdTests?: CustomTestCreateNestedManyWithoutFacultyInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -7609,7 +9207,10 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     deleted_at?: Date | string | null
+    facultyId?: string | null
     testAttempts?: TestAttemptUncheckedCreateNestedManyWithoutUserInput
+    students?: UserUncheckedCreateNestedManyWithoutFacultyInput
+    createdTests?: CustomTestUncheckedCreateNestedManyWithoutFacultyInput
   }
 
   export type UserUpdateInput = {
@@ -7623,6 +9224,9 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     testAttempts?: TestAttemptUpdateManyWithoutUserNestedInput
+    faculty?: UserUpdateOneWithoutStudentsNestedInput
+    students?: UserUpdateManyWithoutFacultyNestedInput
+    createdTests?: CustomTestUpdateManyWithoutFacultyNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -7635,7 +9239,10 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    facultyId?: NullableStringFieldUpdateOperationsInput | string | null
     testAttempts?: TestAttemptUncheckedUpdateManyWithoutUserNestedInput
+    students?: UserUncheckedUpdateManyWithoutFacultyNestedInput
+    createdTests?: CustomTestUncheckedUpdateManyWithoutFacultyNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -7648,6 +9255,7 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     deleted_at?: Date | string | null
+    facultyId?: string | null
   }
 
   export type UserUpdateManyMutationInput = {
@@ -7672,6 +9280,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    facultyId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type DocumentJobCreateInput = {
@@ -7795,6 +9404,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     module: ModuleCreateNestedOneWithoutQuestionsInput
     documentJob?: DocumentJobCreateNestedOneWithoutQuestionsInput
+    customTests?: CustomTestCreateNestedManyWithoutQuestionsInput
   }
 
   export type QuestionUncheckedCreateInput = {
@@ -7808,6 +9418,7 @@ export namespace Prisma {
     documentJobId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    customTests?: CustomTestUncheckedCreateNestedManyWithoutQuestionsInput
   }
 
   export type QuestionUpdateInput = {
@@ -7821,6 +9432,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     module?: ModuleUpdateOneRequiredWithoutQuestionsNestedInput
     documentJob?: DocumentJobUpdateOneWithoutQuestionsNestedInput
+    customTests?: CustomTestUpdateManyWithoutQuestionsNestedInput
   }
 
   export type QuestionUncheckedUpdateInput = {
@@ -7834,6 +9446,7 @@ export namespace Prisma {
     documentJobId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customTests?: CustomTestUncheckedUpdateManyWithoutQuestionsNestedInput
   }
 
   export type QuestionCreateManyInput = {
@@ -7879,13 +9492,15 @@ export namespace Prisma {
     total: number
     createdAt?: Date | string
     user: UserCreateNestedOneWithoutTestAttemptsInput
-    module: ModuleCreateNestedOneWithoutTestAttemptsInput
+    module?: ModuleCreateNestedOneWithoutTestAttemptsInput
+    customTest?: CustomTestCreateNestedOneWithoutAttemptsInput
   }
 
   export type TestAttemptUncheckedCreateInput = {
     id?: string
     userId: string
-    moduleId: string
+    moduleId?: string | null
+    customTestId?: string | null
     score: number
     total: number
     createdAt?: Date | string
@@ -7897,13 +9512,15 @@ export namespace Prisma {
     total?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutTestAttemptsNestedInput
-    module?: ModuleUpdateOneRequiredWithoutTestAttemptsNestedInput
+    module?: ModuleUpdateOneWithoutTestAttemptsNestedInput
+    customTest?: CustomTestUpdateOneWithoutAttemptsNestedInput
   }
 
   export type TestAttemptUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
-    moduleId?: StringFieldUpdateOperationsInput | string
+    moduleId?: NullableStringFieldUpdateOperationsInput | string | null
+    customTestId?: NullableStringFieldUpdateOperationsInput | string | null
     score?: IntFieldUpdateOperationsInput | number
     total?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -7912,7 +9529,8 @@ export namespace Prisma {
   export type TestAttemptCreateManyInput = {
     id?: string
     userId: string
-    moduleId: string
+    moduleId?: string | null
+    customTestId?: string | null
     score: number
     total: number
     createdAt?: Date | string
@@ -7928,10 +9546,74 @@ export namespace Prisma {
   export type TestAttemptUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
-    moduleId?: StringFieldUpdateOperationsInput | string
+    moduleId?: NullableStringFieldUpdateOperationsInput | string | null
+    customTestId?: NullableStringFieldUpdateOperationsInput | string | null
     score?: IntFieldUpdateOperationsInput | number
     total?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CustomTestCreateInput = {
+    id?: string
+    title: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    faculty: UserCreateNestedOneWithoutCreatedTestsInput
+    questions?: QuestionCreateNestedManyWithoutCustomTestsInput
+    attempts?: TestAttemptCreateNestedManyWithoutCustomTestInput
+  }
+
+  export type CustomTestUncheckedCreateInput = {
+    id?: string
+    title: string
+    facultyId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    questions?: QuestionUncheckedCreateNestedManyWithoutCustomTestsInput
+    attempts?: TestAttemptUncheckedCreateNestedManyWithoutCustomTestInput
+  }
+
+  export type CustomTestUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    faculty?: UserUpdateOneRequiredWithoutCreatedTestsNestedInput
+    questions?: QuestionUpdateManyWithoutCustomTestsNestedInput
+    attempts?: TestAttemptUpdateManyWithoutCustomTestNestedInput
+  }
+
+  export type CustomTestUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    facultyId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    questions?: QuestionUncheckedUpdateManyWithoutCustomTestsNestedInput
+    attempts?: TestAttemptUncheckedUpdateManyWithoutCustomTestNestedInput
+  }
+
+  export type CustomTestCreateManyInput = {
+    id?: string
+    title: string
+    facultyId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CustomTestUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CustomTestUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    facultyId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -7983,10 +9665,42 @@ export namespace Prisma {
     not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
+  export type StringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
   export type TestAttemptListRelationFilter = {
     every?: TestAttemptWhereInput
     some?: TestAttemptWhereInput
     none?: TestAttemptWhereInput
+  }
+
+  export type UserNullableScalarRelationFilter = {
+    is?: UserWhereInput | null
+    isNot?: UserWhereInput | null
+  }
+
+  export type UserListRelationFilter = {
+    every?: UserWhereInput
+    some?: UserWhereInput
+    none?: UserWhereInput
+  }
+
+  export type CustomTestListRelationFilter = {
+    every?: CustomTestWhereInput
+    some?: CustomTestWhereInput
+    none?: CustomTestWhereInput
   }
 
   export type SortOrderInput = {
@@ -7995,6 +9709,14 @@ export namespace Prisma {
   }
 
   export type TestAttemptOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type UserOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type CustomTestOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -8008,6 +9730,7 @@ export namespace Prisma {
     created_at?: SortOrder
     updated_at?: SortOrder
     deleted_at?: SortOrder
+    facultyId?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -8020,6 +9743,7 @@ export namespace Prisma {
     created_at?: SortOrder
     updated_at?: SortOrder
     deleted_at?: SortOrder
+    facultyId?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
@@ -8032,6 +9756,7 @@ export namespace Prisma {
     created_at?: SortOrder
     updated_at?: SortOrder
     deleted_at?: SortOrder
+    facultyId?: SortOrder
   }
 
   export type StringWithAggregatesFilter<$PrismaModel = never> = {
@@ -8096,6 +9821,24 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedDateTimeNullableFilter<$PrismaModel>
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
+  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type EnumDocumentStatusFilter<$PrismaModel = never> = {
@@ -8239,21 +9982,6 @@ export namespace Prisma {
     not?: NestedEnumQuestionStatusFilter<$PrismaModel> | $Enums.QuestionStatus
   }
 
-  export type StringNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
-  }
-
   export type ModuleScalarRelationFilter = {
     is?: ModuleWhereInput
     isNot?: ModuleWhereInput
@@ -8347,24 +10075,6 @@ export namespace Prisma {
     _max?: NestedEnumQuestionStatusFilter<$PrismaModel>
   }
 
-  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
-  }
-
   export type IntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -8381,10 +10091,21 @@ export namespace Prisma {
     isNot?: UserWhereInput
   }
 
+  export type ModuleNullableScalarRelationFilter = {
+    is?: ModuleWhereInput | null
+    isNot?: ModuleWhereInput | null
+  }
+
+  export type CustomTestNullableScalarRelationFilter = {
+    is?: CustomTestWhereInput | null
+    isNot?: CustomTestWhereInput | null
+  }
+
   export type TestAttemptCountOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
     moduleId?: SortOrder
+    customTestId?: SortOrder
     score?: SortOrder
     total?: SortOrder
     createdAt?: SortOrder
@@ -8399,6 +10120,7 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     moduleId?: SortOrder
+    customTestId?: SortOrder
     score?: SortOrder
     total?: SortOrder
     createdAt?: SortOrder
@@ -8408,6 +10130,7 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     moduleId?: SortOrder
+    customTestId?: SortOrder
     score?: SortOrder
     total?: SortOrder
     createdAt?: SortOrder
@@ -8434,6 +10157,30 @@ export namespace Prisma {
     _max?: NestedIntFilter<$PrismaModel>
   }
 
+  export type CustomTestCountOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    facultyId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CustomTestMaxOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    facultyId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CustomTestMinOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    facultyId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
   export type TestAttemptCreateNestedManyWithoutUserInput = {
     create?: XOR<TestAttemptCreateWithoutUserInput, TestAttemptUncheckedCreateWithoutUserInput> | TestAttemptCreateWithoutUserInput[] | TestAttemptUncheckedCreateWithoutUserInput[]
     connectOrCreate?: TestAttemptCreateOrConnectWithoutUserInput | TestAttemptCreateOrConnectWithoutUserInput[]
@@ -8441,11 +10188,45 @@ export namespace Prisma {
     connect?: TestAttemptWhereUniqueInput | TestAttemptWhereUniqueInput[]
   }
 
+  export type UserCreateNestedOneWithoutStudentsInput = {
+    create?: XOR<UserCreateWithoutStudentsInput, UserUncheckedCreateWithoutStudentsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutStudentsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserCreateNestedManyWithoutFacultyInput = {
+    create?: XOR<UserCreateWithoutFacultyInput, UserUncheckedCreateWithoutFacultyInput> | UserCreateWithoutFacultyInput[] | UserUncheckedCreateWithoutFacultyInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutFacultyInput | UserCreateOrConnectWithoutFacultyInput[]
+    createMany?: UserCreateManyFacultyInputEnvelope
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+  }
+
+  export type CustomTestCreateNestedManyWithoutFacultyInput = {
+    create?: XOR<CustomTestCreateWithoutFacultyInput, CustomTestUncheckedCreateWithoutFacultyInput> | CustomTestCreateWithoutFacultyInput[] | CustomTestUncheckedCreateWithoutFacultyInput[]
+    connectOrCreate?: CustomTestCreateOrConnectWithoutFacultyInput | CustomTestCreateOrConnectWithoutFacultyInput[]
+    createMany?: CustomTestCreateManyFacultyInputEnvelope
+    connect?: CustomTestWhereUniqueInput | CustomTestWhereUniqueInput[]
+  }
+
   export type TestAttemptUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<TestAttemptCreateWithoutUserInput, TestAttemptUncheckedCreateWithoutUserInput> | TestAttemptCreateWithoutUserInput[] | TestAttemptUncheckedCreateWithoutUserInput[]
     connectOrCreate?: TestAttemptCreateOrConnectWithoutUserInput | TestAttemptCreateOrConnectWithoutUserInput[]
     createMany?: TestAttemptCreateManyUserInputEnvelope
     connect?: TestAttemptWhereUniqueInput | TestAttemptWhereUniqueInput[]
+  }
+
+  export type UserUncheckedCreateNestedManyWithoutFacultyInput = {
+    create?: XOR<UserCreateWithoutFacultyInput, UserUncheckedCreateWithoutFacultyInput> | UserCreateWithoutFacultyInput[] | UserUncheckedCreateWithoutFacultyInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutFacultyInput | UserCreateOrConnectWithoutFacultyInput[]
+    createMany?: UserCreateManyFacultyInputEnvelope
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+  }
+
+  export type CustomTestUncheckedCreateNestedManyWithoutFacultyInput = {
+    create?: XOR<CustomTestCreateWithoutFacultyInput, CustomTestUncheckedCreateWithoutFacultyInput> | CustomTestCreateWithoutFacultyInput[] | CustomTestUncheckedCreateWithoutFacultyInput[]
+    connectOrCreate?: CustomTestCreateOrConnectWithoutFacultyInput | CustomTestCreateOrConnectWithoutFacultyInput[]
+    createMany?: CustomTestCreateManyFacultyInputEnvelope
+    connect?: CustomTestWhereUniqueInput | CustomTestWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -8482,6 +10263,48 @@ export namespace Prisma {
     deleteMany?: TestAttemptScalarWhereInput | TestAttemptScalarWhereInput[]
   }
 
+  export type UserUpdateOneWithoutStudentsNestedInput = {
+    create?: XOR<UserCreateWithoutStudentsInput, UserUncheckedCreateWithoutStudentsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutStudentsInput
+    upsert?: UserUpsertWithoutStudentsInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutStudentsInput, UserUpdateWithoutStudentsInput>, UserUncheckedUpdateWithoutStudentsInput>
+  }
+
+  export type UserUpdateManyWithoutFacultyNestedInput = {
+    create?: XOR<UserCreateWithoutFacultyInput, UserUncheckedCreateWithoutFacultyInput> | UserCreateWithoutFacultyInput[] | UserUncheckedCreateWithoutFacultyInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutFacultyInput | UserCreateOrConnectWithoutFacultyInput[]
+    upsert?: UserUpsertWithWhereUniqueWithoutFacultyInput | UserUpsertWithWhereUniqueWithoutFacultyInput[]
+    createMany?: UserCreateManyFacultyInputEnvelope
+    set?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    disconnect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    delete?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    update?: UserUpdateWithWhereUniqueWithoutFacultyInput | UserUpdateWithWhereUniqueWithoutFacultyInput[]
+    updateMany?: UserUpdateManyWithWhereWithoutFacultyInput | UserUpdateManyWithWhereWithoutFacultyInput[]
+    deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
+  }
+
+  export type CustomTestUpdateManyWithoutFacultyNestedInput = {
+    create?: XOR<CustomTestCreateWithoutFacultyInput, CustomTestUncheckedCreateWithoutFacultyInput> | CustomTestCreateWithoutFacultyInput[] | CustomTestUncheckedCreateWithoutFacultyInput[]
+    connectOrCreate?: CustomTestCreateOrConnectWithoutFacultyInput | CustomTestCreateOrConnectWithoutFacultyInput[]
+    upsert?: CustomTestUpsertWithWhereUniqueWithoutFacultyInput | CustomTestUpsertWithWhereUniqueWithoutFacultyInput[]
+    createMany?: CustomTestCreateManyFacultyInputEnvelope
+    set?: CustomTestWhereUniqueInput | CustomTestWhereUniqueInput[]
+    disconnect?: CustomTestWhereUniqueInput | CustomTestWhereUniqueInput[]
+    delete?: CustomTestWhereUniqueInput | CustomTestWhereUniqueInput[]
+    connect?: CustomTestWhereUniqueInput | CustomTestWhereUniqueInput[]
+    update?: CustomTestUpdateWithWhereUniqueWithoutFacultyInput | CustomTestUpdateWithWhereUniqueWithoutFacultyInput[]
+    updateMany?: CustomTestUpdateManyWithWhereWithoutFacultyInput | CustomTestUpdateManyWithWhereWithoutFacultyInput[]
+    deleteMany?: CustomTestScalarWhereInput | CustomTestScalarWhereInput[]
+  }
+
+  export type NullableStringFieldUpdateOperationsInput = {
+    set?: string | null
+  }
+
   export type TestAttemptUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<TestAttemptCreateWithoutUserInput, TestAttemptUncheckedCreateWithoutUserInput> | TestAttemptCreateWithoutUserInput[] | TestAttemptUncheckedCreateWithoutUserInput[]
     connectOrCreate?: TestAttemptCreateOrConnectWithoutUserInput | TestAttemptCreateOrConnectWithoutUserInput[]
@@ -8494,6 +10317,34 @@ export namespace Prisma {
     update?: TestAttemptUpdateWithWhereUniqueWithoutUserInput | TestAttemptUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: TestAttemptUpdateManyWithWhereWithoutUserInput | TestAttemptUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: TestAttemptScalarWhereInput | TestAttemptScalarWhereInput[]
+  }
+
+  export type UserUncheckedUpdateManyWithoutFacultyNestedInput = {
+    create?: XOR<UserCreateWithoutFacultyInput, UserUncheckedCreateWithoutFacultyInput> | UserCreateWithoutFacultyInput[] | UserUncheckedCreateWithoutFacultyInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutFacultyInput | UserCreateOrConnectWithoutFacultyInput[]
+    upsert?: UserUpsertWithWhereUniqueWithoutFacultyInput | UserUpsertWithWhereUniqueWithoutFacultyInput[]
+    createMany?: UserCreateManyFacultyInputEnvelope
+    set?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    disconnect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    delete?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    update?: UserUpdateWithWhereUniqueWithoutFacultyInput | UserUpdateWithWhereUniqueWithoutFacultyInput[]
+    updateMany?: UserUpdateManyWithWhereWithoutFacultyInput | UserUpdateManyWithWhereWithoutFacultyInput[]
+    deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
+  }
+
+  export type CustomTestUncheckedUpdateManyWithoutFacultyNestedInput = {
+    create?: XOR<CustomTestCreateWithoutFacultyInput, CustomTestUncheckedCreateWithoutFacultyInput> | CustomTestCreateWithoutFacultyInput[] | CustomTestUncheckedCreateWithoutFacultyInput[]
+    connectOrCreate?: CustomTestCreateOrConnectWithoutFacultyInput | CustomTestCreateOrConnectWithoutFacultyInput[]
+    upsert?: CustomTestUpsertWithWhereUniqueWithoutFacultyInput | CustomTestUpsertWithWhereUniqueWithoutFacultyInput[]
+    createMany?: CustomTestCreateManyFacultyInputEnvelope
+    set?: CustomTestWhereUniqueInput | CustomTestWhereUniqueInput[]
+    disconnect?: CustomTestWhereUniqueInput | CustomTestWhereUniqueInput[]
+    delete?: CustomTestWhereUniqueInput | CustomTestWhereUniqueInput[]
+    connect?: CustomTestWhereUniqueInput | CustomTestWhereUniqueInput[]
+    update?: CustomTestUpdateWithWhereUniqueWithoutFacultyInput | CustomTestUpdateWithWhereUniqueWithoutFacultyInput[]
+    updateMany?: CustomTestUpdateManyWithWhereWithoutFacultyInput | CustomTestUpdateManyWithWhereWithoutFacultyInput[]
+    deleteMany?: CustomTestScalarWhereInput | CustomTestScalarWhereInput[]
   }
 
   export type QuestionCreateNestedManyWithoutDocumentJobInput = {
@@ -8646,6 +10497,18 @@ export namespace Prisma {
     connect?: DocumentJobWhereUniqueInput
   }
 
+  export type CustomTestCreateNestedManyWithoutQuestionsInput = {
+    create?: XOR<CustomTestCreateWithoutQuestionsInput, CustomTestUncheckedCreateWithoutQuestionsInput> | CustomTestCreateWithoutQuestionsInput[] | CustomTestUncheckedCreateWithoutQuestionsInput[]
+    connectOrCreate?: CustomTestCreateOrConnectWithoutQuestionsInput | CustomTestCreateOrConnectWithoutQuestionsInput[]
+    connect?: CustomTestWhereUniqueInput | CustomTestWhereUniqueInput[]
+  }
+
+  export type CustomTestUncheckedCreateNestedManyWithoutQuestionsInput = {
+    create?: XOR<CustomTestCreateWithoutQuestionsInput, CustomTestUncheckedCreateWithoutQuestionsInput> | CustomTestCreateWithoutQuestionsInput[] | CustomTestUncheckedCreateWithoutQuestionsInput[]
+    connectOrCreate?: CustomTestCreateOrConnectWithoutQuestionsInput | CustomTestCreateOrConnectWithoutQuestionsInput[]
+    connect?: CustomTestWhereUniqueInput | CustomTestWhereUniqueInput[]
+  }
+
   export type EnumQuestionTypeFieldUpdateOperationsInput = {
     set?: $Enums.QuestionType
   }
@@ -8672,8 +10535,30 @@ export namespace Prisma {
     update?: XOR<XOR<DocumentJobUpdateToOneWithWhereWithoutQuestionsInput, DocumentJobUpdateWithoutQuestionsInput>, DocumentJobUncheckedUpdateWithoutQuestionsInput>
   }
 
-  export type NullableStringFieldUpdateOperationsInput = {
-    set?: string | null
+  export type CustomTestUpdateManyWithoutQuestionsNestedInput = {
+    create?: XOR<CustomTestCreateWithoutQuestionsInput, CustomTestUncheckedCreateWithoutQuestionsInput> | CustomTestCreateWithoutQuestionsInput[] | CustomTestUncheckedCreateWithoutQuestionsInput[]
+    connectOrCreate?: CustomTestCreateOrConnectWithoutQuestionsInput | CustomTestCreateOrConnectWithoutQuestionsInput[]
+    upsert?: CustomTestUpsertWithWhereUniqueWithoutQuestionsInput | CustomTestUpsertWithWhereUniqueWithoutQuestionsInput[]
+    set?: CustomTestWhereUniqueInput | CustomTestWhereUniqueInput[]
+    disconnect?: CustomTestWhereUniqueInput | CustomTestWhereUniqueInput[]
+    delete?: CustomTestWhereUniqueInput | CustomTestWhereUniqueInput[]
+    connect?: CustomTestWhereUniqueInput | CustomTestWhereUniqueInput[]
+    update?: CustomTestUpdateWithWhereUniqueWithoutQuestionsInput | CustomTestUpdateWithWhereUniqueWithoutQuestionsInput[]
+    updateMany?: CustomTestUpdateManyWithWhereWithoutQuestionsInput | CustomTestUpdateManyWithWhereWithoutQuestionsInput[]
+    deleteMany?: CustomTestScalarWhereInput | CustomTestScalarWhereInput[]
+  }
+
+  export type CustomTestUncheckedUpdateManyWithoutQuestionsNestedInput = {
+    create?: XOR<CustomTestCreateWithoutQuestionsInput, CustomTestUncheckedCreateWithoutQuestionsInput> | CustomTestCreateWithoutQuestionsInput[] | CustomTestUncheckedCreateWithoutQuestionsInput[]
+    connectOrCreate?: CustomTestCreateOrConnectWithoutQuestionsInput | CustomTestCreateOrConnectWithoutQuestionsInput[]
+    upsert?: CustomTestUpsertWithWhereUniqueWithoutQuestionsInput | CustomTestUpsertWithWhereUniqueWithoutQuestionsInput[]
+    set?: CustomTestWhereUniqueInput | CustomTestWhereUniqueInput[]
+    disconnect?: CustomTestWhereUniqueInput | CustomTestWhereUniqueInput[]
+    delete?: CustomTestWhereUniqueInput | CustomTestWhereUniqueInput[]
+    connect?: CustomTestWhereUniqueInput | CustomTestWhereUniqueInput[]
+    update?: CustomTestUpdateWithWhereUniqueWithoutQuestionsInput | CustomTestUpdateWithWhereUniqueWithoutQuestionsInput[]
+    updateMany?: CustomTestUpdateManyWithWhereWithoutQuestionsInput | CustomTestUpdateManyWithWhereWithoutQuestionsInput[]
+    deleteMany?: CustomTestScalarWhereInput | CustomTestScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutTestAttemptsInput = {
@@ -8686,6 +10571,12 @@ export namespace Prisma {
     create?: XOR<ModuleCreateWithoutTestAttemptsInput, ModuleUncheckedCreateWithoutTestAttemptsInput>
     connectOrCreate?: ModuleCreateOrConnectWithoutTestAttemptsInput
     connect?: ModuleWhereUniqueInput
+  }
+
+  export type CustomTestCreateNestedOneWithoutAttemptsInput = {
+    create?: XOR<CustomTestCreateWithoutAttemptsInput, CustomTestUncheckedCreateWithoutAttemptsInput>
+    connectOrCreate?: CustomTestCreateOrConnectWithoutAttemptsInput
+    connect?: CustomTestWhereUniqueInput
   }
 
   export type IntFieldUpdateOperationsInput = {
@@ -8704,12 +10595,118 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutTestAttemptsInput, UserUpdateWithoutTestAttemptsInput>, UserUncheckedUpdateWithoutTestAttemptsInput>
   }
 
-  export type ModuleUpdateOneRequiredWithoutTestAttemptsNestedInput = {
+  export type ModuleUpdateOneWithoutTestAttemptsNestedInput = {
     create?: XOR<ModuleCreateWithoutTestAttemptsInput, ModuleUncheckedCreateWithoutTestAttemptsInput>
     connectOrCreate?: ModuleCreateOrConnectWithoutTestAttemptsInput
     upsert?: ModuleUpsertWithoutTestAttemptsInput
+    disconnect?: ModuleWhereInput | boolean
+    delete?: ModuleWhereInput | boolean
     connect?: ModuleWhereUniqueInput
     update?: XOR<XOR<ModuleUpdateToOneWithWhereWithoutTestAttemptsInput, ModuleUpdateWithoutTestAttemptsInput>, ModuleUncheckedUpdateWithoutTestAttemptsInput>
+  }
+
+  export type CustomTestUpdateOneWithoutAttemptsNestedInput = {
+    create?: XOR<CustomTestCreateWithoutAttemptsInput, CustomTestUncheckedCreateWithoutAttemptsInput>
+    connectOrCreate?: CustomTestCreateOrConnectWithoutAttemptsInput
+    upsert?: CustomTestUpsertWithoutAttemptsInput
+    disconnect?: CustomTestWhereInput | boolean
+    delete?: CustomTestWhereInput | boolean
+    connect?: CustomTestWhereUniqueInput
+    update?: XOR<XOR<CustomTestUpdateToOneWithWhereWithoutAttemptsInput, CustomTestUpdateWithoutAttemptsInput>, CustomTestUncheckedUpdateWithoutAttemptsInput>
+  }
+
+  export type UserCreateNestedOneWithoutCreatedTestsInput = {
+    create?: XOR<UserCreateWithoutCreatedTestsInput, UserUncheckedCreateWithoutCreatedTestsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCreatedTestsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type QuestionCreateNestedManyWithoutCustomTestsInput = {
+    create?: XOR<QuestionCreateWithoutCustomTestsInput, QuestionUncheckedCreateWithoutCustomTestsInput> | QuestionCreateWithoutCustomTestsInput[] | QuestionUncheckedCreateWithoutCustomTestsInput[]
+    connectOrCreate?: QuestionCreateOrConnectWithoutCustomTestsInput | QuestionCreateOrConnectWithoutCustomTestsInput[]
+    connect?: QuestionWhereUniqueInput | QuestionWhereUniqueInput[]
+  }
+
+  export type TestAttemptCreateNestedManyWithoutCustomTestInput = {
+    create?: XOR<TestAttemptCreateWithoutCustomTestInput, TestAttemptUncheckedCreateWithoutCustomTestInput> | TestAttemptCreateWithoutCustomTestInput[] | TestAttemptUncheckedCreateWithoutCustomTestInput[]
+    connectOrCreate?: TestAttemptCreateOrConnectWithoutCustomTestInput | TestAttemptCreateOrConnectWithoutCustomTestInput[]
+    createMany?: TestAttemptCreateManyCustomTestInputEnvelope
+    connect?: TestAttemptWhereUniqueInput | TestAttemptWhereUniqueInput[]
+  }
+
+  export type QuestionUncheckedCreateNestedManyWithoutCustomTestsInput = {
+    create?: XOR<QuestionCreateWithoutCustomTestsInput, QuestionUncheckedCreateWithoutCustomTestsInput> | QuestionCreateWithoutCustomTestsInput[] | QuestionUncheckedCreateWithoutCustomTestsInput[]
+    connectOrCreate?: QuestionCreateOrConnectWithoutCustomTestsInput | QuestionCreateOrConnectWithoutCustomTestsInput[]
+    connect?: QuestionWhereUniqueInput | QuestionWhereUniqueInput[]
+  }
+
+  export type TestAttemptUncheckedCreateNestedManyWithoutCustomTestInput = {
+    create?: XOR<TestAttemptCreateWithoutCustomTestInput, TestAttemptUncheckedCreateWithoutCustomTestInput> | TestAttemptCreateWithoutCustomTestInput[] | TestAttemptUncheckedCreateWithoutCustomTestInput[]
+    connectOrCreate?: TestAttemptCreateOrConnectWithoutCustomTestInput | TestAttemptCreateOrConnectWithoutCustomTestInput[]
+    createMany?: TestAttemptCreateManyCustomTestInputEnvelope
+    connect?: TestAttemptWhereUniqueInput | TestAttemptWhereUniqueInput[]
+  }
+
+  export type UserUpdateOneRequiredWithoutCreatedTestsNestedInput = {
+    create?: XOR<UserCreateWithoutCreatedTestsInput, UserUncheckedCreateWithoutCreatedTestsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCreatedTestsInput
+    upsert?: UserUpsertWithoutCreatedTestsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutCreatedTestsInput, UserUpdateWithoutCreatedTestsInput>, UserUncheckedUpdateWithoutCreatedTestsInput>
+  }
+
+  export type QuestionUpdateManyWithoutCustomTestsNestedInput = {
+    create?: XOR<QuestionCreateWithoutCustomTestsInput, QuestionUncheckedCreateWithoutCustomTestsInput> | QuestionCreateWithoutCustomTestsInput[] | QuestionUncheckedCreateWithoutCustomTestsInput[]
+    connectOrCreate?: QuestionCreateOrConnectWithoutCustomTestsInput | QuestionCreateOrConnectWithoutCustomTestsInput[]
+    upsert?: QuestionUpsertWithWhereUniqueWithoutCustomTestsInput | QuestionUpsertWithWhereUniqueWithoutCustomTestsInput[]
+    set?: QuestionWhereUniqueInput | QuestionWhereUniqueInput[]
+    disconnect?: QuestionWhereUniqueInput | QuestionWhereUniqueInput[]
+    delete?: QuestionWhereUniqueInput | QuestionWhereUniqueInput[]
+    connect?: QuestionWhereUniqueInput | QuestionWhereUniqueInput[]
+    update?: QuestionUpdateWithWhereUniqueWithoutCustomTestsInput | QuestionUpdateWithWhereUniqueWithoutCustomTestsInput[]
+    updateMany?: QuestionUpdateManyWithWhereWithoutCustomTestsInput | QuestionUpdateManyWithWhereWithoutCustomTestsInput[]
+    deleteMany?: QuestionScalarWhereInput | QuestionScalarWhereInput[]
+  }
+
+  export type TestAttemptUpdateManyWithoutCustomTestNestedInput = {
+    create?: XOR<TestAttemptCreateWithoutCustomTestInput, TestAttemptUncheckedCreateWithoutCustomTestInput> | TestAttemptCreateWithoutCustomTestInput[] | TestAttemptUncheckedCreateWithoutCustomTestInput[]
+    connectOrCreate?: TestAttemptCreateOrConnectWithoutCustomTestInput | TestAttemptCreateOrConnectWithoutCustomTestInput[]
+    upsert?: TestAttemptUpsertWithWhereUniqueWithoutCustomTestInput | TestAttemptUpsertWithWhereUniqueWithoutCustomTestInput[]
+    createMany?: TestAttemptCreateManyCustomTestInputEnvelope
+    set?: TestAttemptWhereUniqueInput | TestAttemptWhereUniqueInput[]
+    disconnect?: TestAttemptWhereUniqueInput | TestAttemptWhereUniqueInput[]
+    delete?: TestAttemptWhereUniqueInput | TestAttemptWhereUniqueInput[]
+    connect?: TestAttemptWhereUniqueInput | TestAttemptWhereUniqueInput[]
+    update?: TestAttemptUpdateWithWhereUniqueWithoutCustomTestInput | TestAttemptUpdateWithWhereUniqueWithoutCustomTestInput[]
+    updateMany?: TestAttemptUpdateManyWithWhereWithoutCustomTestInput | TestAttemptUpdateManyWithWhereWithoutCustomTestInput[]
+    deleteMany?: TestAttemptScalarWhereInput | TestAttemptScalarWhereInput[]
+  }
+
+  export type QuestionUncheckedUpdateManyWithoutCustomTestsNestedInput = {
+    create?: XOR<QuestionCreateWithoutCustomTestsInput, QuestionUncheckedCreateWithoutCustomTestsInput> | QuestionCreateWithoutCustomTestsInput[] | QuestionUncheckedCreateWithoutCustomTestsInput[]
+    connectOrCreate?: QuestionCreateOrConnectWithoutCustomTestsInput | QuestionCreateOrConnectWithoutCustomTestsInput[]
+    upsert?: QuestionUpsertWithWhereUniqueWithoutCustomTestsInput | QuestionUpsertWithWhereUniqueWithoutCustomTestsInput[]
+    set?: QuestionWhereUniqueInput | QuestionWhereUniqueInput[]
+    disconnect?: QuestionWhereUniqueInput | QuestionWhereUniqueInput[]
+    delete?: QuestionWhereUniqueInput | QuestionWhereUniqueInput[]
+    connect?: QuestionWhereUniqueInput | QuestionWhereUniqueInput[]
+    update?: QuestionUpdateWithWhereUniqueWithoutCustomTestsInput | QuestionUpdateWithWhereUniqueWithoutCustomTestsInput[]
+    updateMany?: QuestionUpdateManyWithWhereWithoutCustomTestsInput | QuestionUpdateManyWithWhereWithoutCustomTestsInput[]
+    deleteMany?: QuestionScalarWhereInput | QuestionScalarWhereInput[]
+  }
+
+  export type TestAttemptUncheckedUpdateManyWithoutCustomTestNestedInput = {
+    create?: XOR<TestAttemptCreateWithoutCustomTestInput, TestAttemptUncheckedCreateWithoutCustomTestInput> | TestAttemptCreateWithoutCustomTestInput[] | TestAttemptUncheckedCreateWithoutCustomTestInput[]
+    connectOrCreate?: TestAttemptCreateOrConnectWithoutCustomTestInput | TestAttemptCreateOrConnectWithoutCustomTestInput[]
+    upsert?: TestAttemptUpsertWithWhereUniqueWithoutCustomTestInput | TestAttemptUpsertWithWhereUniqueWithoutCustomTestInput[]
+    createMany?: TestAttemptCreateManyCustomTestInputEnvelope
+    set?: TestAttemptWhereUniqueInput | TestAttemptWhereUniqueInput[]
+    disconnect?: TestAttemptWhereUniqueInput | TestAttemptWhereUniqueInput[]
+    delete?: TestAttemptWhereUniqueInput | TestAttemptWhereUniqueInput[]
+    connect?: TestAttemptWhereUniqueInput | TestAttemptWhereUniqueInput[]
+    update?: TestAttemptUpdateWithWhereUniqueWithoutCustomTestInput | TestAttemptUpdateWithWhereUniqueWithoutCustomTestInput[]
+    updateMany?: TestAttemptUpdateManyWithWhereWithoutCustomTestInput | TestAttemptUpdateManyWithWhereWithoutCustomTestInput[]
+    deleteMany?: TestAttemptScalarWhereInput | TestAttemptScalarWhereInput[]
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -8758,6 +10755,20 @@ export namespace Prisma {
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type NestedStringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
   export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
@@ -8845,6 +10856,23 @@ export namespace Prisma {
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
+  export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
   export type NestedEnumDocumentStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.DocumentStatus | EnumDocumentStatusFieldRefInput<$PrismaModel>
     in?: $Enums.DocumentStatus[] | ListEnumDocumentStatusFieldRefInput<$PrismaModel>
@@ -8902,20 +10930,6 @@ export namespace Prisma {
     notIn?: $Enums.QuestionStatus[] | ListEnumQuestionStatusFieldRefInput<$PrismaModel>
     not?: NestedEnumQuestionStatusFilter<$PrismaModel> | $Enums.QuestionStatus
   }
-
-  export type NestedStringNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
-  }
   export type NestedJsonFilter<$PrismaModel = never> =
     | PatchUndefined<
         Either<Required<NestedJsonFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>,
@@ -8960,23 +10974,6 @@ export namespace Prisma {
     _max?: NestedEnumQuestionStatusFilter<$PrismaModel>
   }
 
-  export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
-  }
-
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -9009,12 +11006,14 @@ export namespace Prisma {
     score: number
     total: number
     createdAt?: Date | string
-    module: ModuleCreateNestedOneWithoutTestAttemptsInput
+    module?: ModuleCreateNestedOneWithoutTestAttemptsInput
+    customTest?: CustomTestCreateNestedOneWithoutAttemptsInput
   }
 
   export type TestAttemptUncheckedCreateWithoutUserInput = {
     id?: string
-    moduleId: string
+    moduleId?: string | null
+    customTestId?: string | null
     score: number
     total: number
     createdAt?: Date | string
@@ -9027,6 +11026,109 @@ export namespace Prisma {
 
   export type TestAttemptCreateManyUserInputEnvelope = {
     data: TestAttemptCreateManyUserInput | TestAttemptCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserCreateWithoutStudentsInput = {
+    id?: string
+    name: string
+    email: string
+    password_hash: string
+    role?: $Enums.Role
+    is_active?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+    deleted_at?: Date | string | null
+    testAttempts?: TestAttemptCreateNestedManyWithoutUserInput
+    faculty?: UserCreateNestedOneWithoutStudentsInput
+    createdTests?: CustomTestCreateNestedManyWithoutFacultyInput
+  }
+
+  export type UserUncheckedCreateWithoutStudentsInput = {
+    id?: string
+    name: string
+    email: string
+    password_hash: string
+    role?: $Enums.Role
+    is_active?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+    deleted_at?: Date | string | null
+    facultyId?: string | null
+    testAttempts?: TestAttemptUncheckedCreateNestedManyWithoutUserInput
+    createdTests?: CustomTestUncheckedCreateNestedManyWithoutFacultyInput
+  }
+
+  export type UserCreateOrConnectWithoutStudentsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutStudentsInput, UserUncheckedCreateWithoutStudentsInput>
+  }
+
+  export type UserCreateWithoutFacultyInput = {
+    id?: string
+    name: string
+    email: string
+    password_hash: string
+    role?: $Enums.Role
+    is_active?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+    deleted_at?: Date | string | null
+    testAttempts?: TestAttemptCreateNestedManyWithoutUserInput
+    students?: UserCreateNestedManyWithoutFacultyInput
+    createdTests?: CustomTestCreateNestedManyWithoutFacultyInput
+  }
+
+  export type UserUncheckedCreateWithoutFacultyInput = {
+    id?: string
+    name: string
+    email: string
+    password_hash: string
+    role?: $Enums.Role
+    is_active?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+    deleted_at?: Date | string | null
+    testAttempts?: TestAttemptUncheckedCreateNestedManyWithoutUserInput
+    students?: UserUncheckedCreateNestedManyWithoutFacultyInput
+    createdTests?: CustomTestUncheckedCreateNestedManyWithoutFacultyInput
+  }
+
+  export type UserCreateOrConnectWithoutFacultyInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutFacultyInput, UserUncheckedCreateWithoutFacultyInput>
+  }
+
+  export type UserCreateManyFacultyInputEnvelope = {
+    data: UserCreateManyFacultyInput | UserCreateManyFacultyInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CustomTestCreateWithoutFacultyInput = {
+    id?: string
+    title: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    questions?: QuestionCreateNestedManyWithoutCustomTestsInput
+    attempts?: TestAttemptCreateNestedManyWithoutCustomTestInput
+  }
+
+  export type CustomTestUncheckedCreateWithoutFacultyInput = {
+    id?: string
+    title: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    questions?: QuestionUncheckedCreateNestedManyWithoutCustomTestsInput
+    attempts?: TestAttemptUncheckedCreateNestedManyWithoutCustomTestInput
+  }
+
+  export type CustomTestCreateOrConnectWithoutFacultyInput = {
+    where: CustomTestWhereUniqueInput
+    create: XOR<CustomTestCreateWithoutFacultyInput, CustomTestUncheckedCreateWithoutFacultyInput>
+  }
+
+  export type CustomTestCreateManyFacultyInputEnvelope = {
+    data: CustomTestCreateManyFacultyInput | CustomTestCreateManyFacultyInput[]
     skipDuplicates?: boolean
   }
 
@@ -9052,10 +11154,111 @@ export namespace Prisma {
     NOT?: TestAttemptScalarWhereInput | TestAttemptScalarWhereInput[]
     id?: StringFilter<"TestAttempt"> | string
     userId?: StringFilter<"TestAttempt"> | string
-    moduleId?: StringFilter<"TestAttempt"> | string
+    moduleId?: StringNullableFilter<"TestAttempt"> | string | null
+    customTestId?: StringNullableFilter<"TestAttempt"> | string | null
     score?: IntFilter<"TestAttempt"> | number
     total?: IntFilter<"TestAttempt"> | number
     createdAt?: DateTimeFilter<"TestAttempt"> | Date | string
+  }
+
+  export type UserUpsertWithoutStudentsInput = {
+    update: XOR<UserUpdateWithoutStudentsInput, UserUncheckedUpdateWithoutStudentsInput>
+    create: XOR<UserCreateWithoutStudentsInput, UserUncheckedCreateWithoutStudentsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutStudentsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutStudentsInput, UserUncheckedUpdateWithoutStudentsInput>
+  }
+
+  export type UserUpdateWithoutStudentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password_hash?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    testAttempts?: TestAttemptUpdateManyWithoutUserNestedInput
+    faculty?: UserUpdateOneWithoutStudentsNestedInput
+    createdTests?: CustomTestUpdateManyWithoutFacultyNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutStudentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password_hash?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    facultyId?: NullableStringFieldUpdateOperationsInput | string | null
+    testAttempts?: TestAttemptUncheckedUpdateManyWithoutUserNestedInput
+    createdTests?: CustomTestUncheckedUpdateManyWithoutFacultyNestedInput
+  }
+
+  export type UserUpsertWithWhereUniqueWithoutFacultyInput = {
+    where: UserWhereUniqueInput
+    update: XOR<UserUpdateWithoutFacultyInput, UserUncheckedUpdateWithoutFacultyInput>
+    create: XOR<UserCreateWithoutFacultyInput, UserUncheckedCreateWithoutFacultyInput>
+  }
+
+  export type UserUpdateWithWhereUniqueWithoutFacultyInput = {
+    where: UserWhereUniqueInput
+    data: XOR<UserUpdateWithoutFacultyInput, UserUncheckedUpdateWithoutFacultyInput>
+  }
+
+  export type UserUpdateManyWithWhereWithoutFacultyInput = {
+    where: UserScalarWhereInput
+    data: XOR<UserUpdateManyMutationInput, UserUncheckedUpdateManyWithoutFacultyInput>
+  }
+
+  export type UserScalarWhereInput = {
+    AND?: UserScalarWhereInput | UserScalarWhereInput[]
+    OR?: UserScalarWhereInput[]
+    NOT?: UserScalarWhereInput | UserScalarWhereInput[]
+    id?: StringFilter<"User"> | string
+    name?: StringFilter<"User"> | string
+    email?: StringFilter<"User"> | string
+    password_hash?: StringFilter<"User"> | string
+    role?: EnumRoleFilter<"User"> | $Enums.Role
+    is_active?: BoolFilter<"User"> | boolean
+    created_at?: DateTimeFilter<"User"> | Date | string
+    updated_at?: DateTimeFilter<"User"> | Date | string
+    deleted_at?: DateTimeNullableFilter<"User"> | Date | string | null
+    facultyId?: StringNullableFilter<"User"> | string | null
+  }
+
+  export type CustomTestUpsertWithWhereUniqueWithoutFacultyInput = {
+    where: CustomTestWhereUniqueInput
+    update: XOR<CustomTestUpdateWithoutFacultyInput, CustomTestUncheckedUpdateWithoutFacultyInput>
+    create: XOR<CustomTestCreateWithoutFacultyInput, CustomTestUncheckedCreateWithoutFacultyInput>
+  }
+
+  export type CustomTestUpdateWithWhereUniqueWithoutFacultyInput = {
+    where: CustomTestWhereUniqueInput
+    data: XOR<CustomTestUpdateWithoutFacultyInput, CustomTestUncheckedUpdateWithoutFacultyInput>
+  }
+
+  export type CustomTestUpdateManyWithWhereWithoutFacultyInput = {
+    where: CustomTestScalarWhereInput
+    data: XOR<CustomTestUpdateManyMutationInput, CustomTestUncheckedUpdateManyWithoutFacultyInput>
+  }
+
+  export type CustomTestScalarWhereInput = {
+    AND?: CustomTestScalarWhereInput | CustomTestScalarWhereInput[]
+    OR?: CustomTestScalarWhereInput[]
+    NOT?: CustomTestScalarWhereInput | CustomTestScalarWhereInput[]
+    id?: StringFilter<"CustomTest"> | string
+    title?: StringFilter<"CustomTest"> | string
+    facultyId?: StringFilter<"CustomTest"> | string
+    createdAt?: DateTimeFilter<"CustomTest"> | Date | string
+    updatedAt?: DateTimeFilter<"CustomTest"> | Date | string
   }
 
   export type QuestionCreateWithoutDocumentJobInput = {
@@ -9068,6 +11271,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     module: ModuleCreateNestedOneWithoutQuestionsInput
+    customTests?: CustomTestCreateNestedManyWithoutQuestionsInput
   }
 
   export type QuestionUncheckedCreateWithoutDocumentJobInput = {
@@ -9080,6 +11284,7 @@ export namespace Prisma {
     status?: $Enums.QuestionStatus
     createdAt?: Date | string
     updatedAt?: Date | string
+    customTests?: CustomTestUncheckedCreateNestedManyWithoutQuestionsInput
   }
 
   export type QuestionCreateOrConnectWithoutDocumentJobInput = {
@@ -9134,6 +11339,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     documentJob?: DocumentJobCreateNestedOneWithoutQuestionsInput
+    customTests?: CustomTestCreateNestedManyWithoutQuestionsInput
   }
 
   export type QuestionUncheckedCreateWithoutModuleInput = {
@@ -9146,6 +11352,7 @@ export namespace Prisma {
     documentJobId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    customTests?: CustomTestUncheckedCreateNestedManyWithoutQuestionsInput
   }
 
   export type QuestionCreateOrConnectWithoutModuleInput = {
@@ -9164,11 +11371,13 @@ export namespace Prisma {
     total: number
     createdAt?: Date | string
     user: UserCreateNestedOneWithoutTestAttemptsInput
+    customTest?: CustomTestCreateNestedOneWithoutAttemptsInput
   }
 
   export type TestAttemptUncheckedCreateWithoutModuleInput = {
     id?: string
     userId: string
+    customTestId?: string | null
     score: number
     total: number
     createdAt?: Date | string
@@ -9256,6 +11465,29 @@ export namespace Prisma {
     create: XOR<DocumentJobCreateWithoutQuestionsInput, DocumentJobUncheckedCreateWithoutQuestionsInput>
   }
 
+  export type CustomTestCreateWithoutQuestionsInput = {
+    id?: string
+    title: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    faculty: UserCreateNestedOneWithoutCreatedTestsInput
+    attempts?: TestAttemptCreateNestedManyWithoutCustomTestInput
+  }
+
+  export type CustomTestUncheckedCreateWithoutQuestionsInput = {
+    id?: string
+    title: string
+    facultyId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    attempts?: TestAttemptUncheckedCreateNestedManyWithoutCustomTestInput
+  }
+
+  export type CustomTestCreateOrConnectWithoutQuestionsInput = {
+    where: CustomTestWhereUniqueInput
+    create: XOR<CustomTestCreateWithoutQuestionsInput, CustomTestUncheckedCreateWithoutQuestionsInput>
+  }
+
   export type ModuleUpsertWithoutQuestionsInput = {
     update: XOR<ModuleUpdateWithoutQuestionsInput, ModuleUncheckedUpdateWithoutQuestionsInput>
     create: XOR<ModuleCreateWithoutQuestionsInput, ModuleUncheckedCreateWithoutQuestionsInput>
@@ -9308,6 +11540,22 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type CustomTestUpsertWithWhereUniqueWithoutQuestionsInput = {
+    where: CustomTestWhereUniqueInput
+    update: XOR<CustomTestUpdateWithoutQuestionsInput, CustomTestUncheckedUpdateWithoutQuestionsInput>
+    create: XOR<CustomTestCreateWithoutQuestionsInput, CustomTestUncheckedCreateWithoutQuestionsInput>
+  }
+
+  export type CustomTestUpdateWithWhereUniqueWithoutQuestionsInput = {
+    where: CustomTestWhereUniqueInput
+    data: XOR<CustomTestUpdateWithoutQuestionsInput, CustomTestUncheckedUpdateWithoutQuestionsInput>
+  }
+
+  export type CustomTestUpdateManyWithWhereWithoutQuestionsInput = {
+    where: CustomTestScalarWhereInput
+    data: XOR<CustomTestUpdateManyMutationInput, CustomTestUncheckedUpdateManyWithoutQuestionsInput>
+  }
+
   export type UserCreateWithoutTestAttemptsInput = {
     id?: string
     name: string
@@ -9318,6 +11566,9 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     deleted_at?: Date | string | null
+    faculty?: UserCreateNestedOneWithoutStudentsInput
+    students?: UserCreateNestedManyWithoutFacultyInput
+    createdTests?: CustomTestCreateNestedManyWithoutFacultyInput
   }
 
   export type UserUncheckedCreateWithoutTestAttemptsInput = {
@@ -9330,6 +11581,9 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     deleted_at?: Date | string | null
+    facultyId?: string | null
+    students?: UserUncheckedCreateNestedManyWithoutFacultyInput
+    createdTests?: CustomTestUncheckedCreateNestedManyWithoutFacultyInput
   }
 
   export type UserCreateOrConnectWithoutTestAttemptsInput = {
@@ -9356,6 +11610,29 @@ export namespace Prisma {
     create: XOR<ModuleCreateWithoutTestAttemptsInput, ModuleUncheckedCreateWithoutTestAttemptsInput>
   }
 
+  export type CustomTestCreateWithoutAttemptsInput = {
+    id?: string
+    title: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    faculty: UserCreateNestedOneWithoutCreatedTestsInput
+    questions?: QuestionCreateNestedManyWithoutCustomTestsInput
+  }
+
+  export type CustomTestUncheckedCreateWithoutAttemptsInput = {
+    id?: string
+    title: string
+    facultyId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    questions?: QuestionUncheckedCreateNestedManyWithoutCustomTestsInput
+  }
+
+  export type CustomTestCreateOrConnectWithoutAttemptsInput = {
+    where: CustomTestWhereUniqueInput
+    create: XOR<CustomTestCreateWithoutAttemptsInput, CustomTestUncheckedCreateWithoutAttemptsInput>
+  }
+
   export type UserUpsertWithoutTestAttemptsInput = {
     update: XOR<UserUpdateWithoutTestAttemptsInput, UserUncheckedUpdateWithoutTestAttemptsInput>
     create: XOR<UserCreateWithoutTestAttemptsInput, UserUncheckedCreateWithoutTestAttemptsInput>
@@ -9377,6 +11654,9 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    faculty?: UserUpdateOneWithoutStudentsNestedInput
+    students?: UserUpdateManyWithoutFacultyNestedInput
+    createdTests?: CustomTestUpdateManyWithoutFacultyNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTestAttemptsInput = {
@@ -9389,6 +11669,9 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    facultyId?: NullableStringFieldUpdateOperationsInput | string | null
+    students?: UserUncheckedUpdateManyWithoutFacultyNestedInput
+    createdTests?: CustomTestUncheckedUpdateManyWithoutFacultyNestedInput
   }
 
   export type ModuleUpsertWithoutTestAttemptsInput = {
@@ -9416,12 +11699,228 @@ export namespace Prisma {
     questions?: QuestionUncheckedUpdateManyWithoutModuleNestedInput
   }
 
-  export type TestAttemptCreateManyUserInput = {
+  export type CustomTestUpsertWithoutAttemptsInput = {
+    update: XOR<CustomTestUpdateWithoutAttemptsInput, CustomTestUncheckedUpdateWithoutAttemptsInput>
+    create: XOR<CustomTestCreateWithoutAttemptsInput, CustomTestUncheckedCreateWithoutAttemptsInput>
+    where?: CustomTestWhereInput
+  }
+
+  export type CustomTestUpdateToOneWithWhereWithoutAttemptsInput = {
+    where?: CustomTestWhereInput
+    data: XOR<CustomTestUpdateWithoutAttemptsInput, CustomTestUncheckedUpdateWithoutAttemptsInput>
+  }
+
+  export type CustomTestUpdateWithoutAttemptsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    faculty?: UserUpdateOneRequiredWithoutCreatedTestsNestedInput
+    questions?: QuestionUpdateManyWithoutCustomTestsNestedInput
+  }
+
+  export type CustomTestUncheckedUpdateWithoutAttemptsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    facultyId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    questions?: QuestionUncheckedUpdateManyWithoutCustomTestsNestedInput
+  }
+
+  export type UserCreateWithoutCreatedTestsInput = {
+    id?: string
+    name: string
+    email: string
+    password_hash: string
+    role?: $Enums.Role
+    is_active?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+    deleted_at?: Date | string | null
+    testAttempts?: TestAttemptCreateNestedManyWithoutUserInput
+    faculty?: UserCreateNestedOneWithoutStudentsInput
+    students?: UserCreateNestedManyWithoutFacultyInput
+  }
+
+  export type UserUncheckedCreateWithoutCreatedTestsInput = {
+    id?: string
+    name: string
+    email: string
+    password_hash: string
+    role?: $Enums.Role
+    is_active?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+    deleted_at?: Date | string | null
+    facultyId?: string | null
+    testAttempts?: TestAttemptUncheckedCreateNestedManyWithoutUserInput
+    students?: UserUncheckedCreateNestedManyWithoutFacultyInput
+  }
+
+  export type UserCreateOrConnectWithoutCreatedTestsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutCreatedTestsInput, UserUncheckedCreateWithoutCreatedTestsInput>
+  }
+
+  export type QuestionCreateWithoutCustomTestsInput = {
+    id?: string
+    questionText: string
+    options: JsonNullValueInput | InputJsonValue
+    correctAnswer: string
+    type: $Enums.QuestionType
+    status?: $Enums.QuestionStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    module: ModuleCreateNestedOneWithoutQuestionsInput
+    documentJob?: DocumentJobCreateNestedOneWithoutQuestionsInput
+  }
+
+  export type QuestionUncheckedCreateWithoutCustomTestsInput = {
     id?: string
     moduleId: string
+    questionText: string
+    options: JsonNullValueInput | InputJsonValue
+    correctAnswer: string
+    type: $Enums.QuestionType
+    status?: $Enums.QuestionStatus
+    documentJobId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type QuestionCreateOrConnectWithoutCustomTestsInput = {
+    where: QuestionWhereUniqueInput
+    create: XOR<QuestionCreateWithoutCustomTestsInput, QuestionUncheckedCreateWithoutCustomTestsInput>
+  }
+
+  export type TestAttemptCreateWithoutCustomTestInput = {
+    id?: string
     score: number
     total: number
     createdAt?: Date | string
+    user: UserCreateNestedOneWithoutTestAttemptsInput
+    module?: ModuleCreateNestedOneWithoutTestAttemptsInput
+  }
+
+  export type TestAttemptUncheckedCreateWithoutCustomTestInput = {
+    id?: string
+    userId: string
+    moduleId?: string | null
+    score: number
+    total: number
+    createdAt?: Date | string
+  }
+
+  export type TestAttemptCreateOrConnectWithoutCustomTestInput = {
+    where: TestAttemptWhereUniqueInput
+    create: XOR<TestAttemptCreateWithoutCustomTestInput, TestAttemptUncheckedCreateWithoutCustomTestInput>
+  }
+
+  export type TestAttemptCreateManyCustomTestInputEnvelope = {
+    data: TestAttemptCreateManyCustomTestInput | TestAttemptCreateManyCustomTestInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserUpsertWithoutCreatedTestsInput = {
+    update: XOR<UserUpdateWithoutCreatedTestsInput, UserUncheckedUpdateWithoutCreatedTestsInput>
+    create: XOR<UserCreateWithoutCreatedTestsInput, UserUncheckedCreateWithoutCreatedTestsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutCreatedTestsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutCreatedTestsInput, UserUncheckedUpdateWithoutCreatedTestsInput>
+  }
+
+  export type UserUpdateWithoutCreatedTestsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password_hash?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    testAttempts?: TestAttemptUpdateManyWithoutUserNestedInput
+    faculty?: UserUpdateOneWithoutStudentsNestedInput
+    students?: UserUpdateManyWithoutFacultyNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutCreatedTestsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password_hash?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    facultyId?: NullableStringFieldUpdateOperationsInput | string | null
+    testAttempts?: TestAttemptUncheckedUpdateManyWithoutUserNestedInput
+    students?: UserUncheckedUpdateManyWithoutFacultyNestedInput
+  }
+
+  export type QuestionUpsertWithWhereUniqueWithoutCustomTestsInput = {
+    where: QuestionWhereUniqueInput
+    update: XOR<QuestionUpdateWithoutCustomTestsInput, QuestionUncheckedUpdateWithoutCustomTestsInput>
+    create: XOR<QuestionCreateWithoutCustomTestsInput, QuestionUncheckedCreateWithoutCustomTestsInput>
+  }
+
+  export type QuestionUpdateWithWhereUniqueWithoutCustomTestsInput = {
+    where: QuestionWhereUniqueInput
+    data: XOR<QuestionUpdateWithoutCustomTestsInput, QuestionUncheckedUpdateWithoutCustomTestsInput>
+  }
+
+  export type QuestionUpdateManyWithWhereWithoutCustomTestsInput = {
+    where: QuestionScalarWhereInput
+    data: XOR<QuestionUpdateManyMutationInput, QuestionUncheckedUpdateManyWithoutCustomTestsInput>
+  }
+
+  export type TestAttemptUpsertWithWhereUniqueWithoutCustomTestInput = {
+    where: TestAttemptWhereUniqueInput
+    update: XOR<TestAttemptUpdateWithoutCustomTestInput, TestAttemptUncheckedUpdateWithoutCustomTestInput>
+    create: XOR<TestAttemptCreateWithoutCustomTestInput, TestAttemptUncheckedCreateWithoutCustomTestInput>
+  }
+
+  export type TestAttemptUpdateWithWhereUniqueWithoutCustomTestInput = {
+    where: TestAttemptWhereUniqueInput
+    data: XOR<TestAttemptUpdateWithoutCustomTestInput, TestAttemptUncheckedUpdateWithoutCustomTestInput>
+  }
+
+  export type TestAttemptUpdateManyWithWhereWithoutCustomTestInput = {
+    where: TestAttemptScalarWhereInput
+    data: XOR<TestAttemptUpdateManyMutationInput, TestAttemptUncheckedUpdateManyWithoutCustomTestInput>
+  }
+
+  export type TestAttemptCreateManyUserInput = {
+    id?: string
+    moduleId?: string | null
+    customTestId?: string | null
+    score: number
+    total: number
+    createdAt?: Date | string
+  }
+
+  export type UserCreateManyFacultyInput = {
+    id?: string
+    name: string
+    email: string
+    password_hash: string
+    role?: $Enums.Role
+    is_active?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+    deleted_at?: Date | string | null
+  }
+
+  export type CustomTestCreateManyFacultyInput = {
+    id?: string
+    title: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type TestAttemptUpdateWithoutUserInput = {
@@ -9429,12 +11928,14 @@ export namespace Prisma {
     score?: IntFieldUpdateOperationsInput | number
     total?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    module?: ModuleUpdateOneRequiredWithoutTestAttemptsNestedInput
+    module?: ModuleUpdateOneWithoutTestAttemptsNestedInput
+    customTest?: CustomTestUpdateOneWithoutAttemptsNestedInput
   }
 
   export type TestAttemptUncheckedUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    moduleId?: StringFieldUpdateOperationsInput | string
+    moduleId?: NullableStringFieldUpdateOperationsInput | string | null
+    customTestId?: NullableStringFieldUpdateOperationsInput | string | null
     score?: IntFieldUpdateOperationsInput | number
     total?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9442,10 +11943,78 @@ export namespace Prisma {
 
   export type TestAttemptUncheckedUpdateManyWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    moduleId?: StringFieldUpdateOperationsInput | string
+    moduleId?: NullableStringFieldUpdateOperationsInput | string | null
+    customTestId?: NullableStringFieldUpdateOperationsInput | string | null
     score?: IntFieldUpdateOperationsInput | number
     total?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserUpdateWithoutFacultyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password_hash?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    testAttempts?: TestAttemptUpdateManyWithoutUserNestedInput
+    students?: UserUpdateManyWithoutFacultyNestedInput
+    createdTests?: CustomTestUpdateManyWithoutFacultyNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutFacultyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password_hash?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    testAttempts?: TestAttemptUncheckedUpdateManyWithoutUserNestedInput
+    students?: UserUncheckedUpdateManyWithoutFacultyNestedInput
+    createdTests?: CustomTestUncheckedUpdateManyWithoutFacultyNestedInput
+  }
+
+  export type UserUncheckedUpdateManyWithoutFacultyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password_hash?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type CustomTestUpdateWithoutFacultyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    questions?: QuestionUpdateManyWithoutCustomTestsNestedInput
+    attempts?: TestAttemptUpdateManyWithoutCustomTestNestedInput
+  }
+
+  export type CustomTestUncheckedUpdateWithoutFacultyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    questions?: QuestionUncheckedUpdateManyWithoutCustomTestsNestedInput
+    attempts?: TestAttemptUncheckedUpdateManyWithoutCustomTestNestedInput
+  }
+
+  export type CustomTestUncheckedUpdateManyWithoutFacultyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type QuestionCreateManyDocumentJobInput = {
@@ -9470,6 +12039,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     module?: ModuleUpdateOneRequiredWithoutQuestionsNestedInput
+    customTests?: CustomTestUpdateManyWithoutQuestionsNestedInput
   }
 
   export type QuestionUncheckedUpdateWithoutDocumentJobInput = {
@@ -9482,6 +12052,7 @@ export namespace Prisma {
     status?: EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customTests?: CustomTestUncheckedUpdateManyWithoutQuestionsNestedInput
   }
 
   export type QuestionUncheckedUpdateManyWithoutDocumentJobInput = {
@@ -9511,6 +12082,7 @@ export namespace Prisma {
   export type TestAttemptCreateManyModuleInput = {
     id?: string
     userId: string
+    customTestId?: string | null
     score: number
     total: number
     createdAt?: Date | string
@@ -9526,6 +12098,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     documentJob?: DocumentJobUpdateOneWithoutQuestionsNestedInput
+    customTests?: CustomTestUpdateManyWithoutQuestionsNestedInput
   }
 
   export type QuestionUncheckedUpdateWithoutModuleInput = {
@@ -9538,6 +12111,7 @@ export namespace Prisma {
     documentJobId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customTests?: CustomTestUncheckedUpdateManyWithoutQuestionsNestedInput
   }
 
   export type QuestionUncheckedUpdateManyWithoutModuleInput = {
@@ -9558,11 +12132,13 @@ export namespace Prisma {
     total?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutTestAttemptsNestedInput
+    customTest?: CustomTestUpdateOneWithoutAttemptsNestedInput
   }
 
   export type TestAttemptUncheckedUpdateWithoutModuleInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
+    customTestId?: NullableStringFieldUpdateOperationsInput | string | null
     score?: IntFieldUpdateOperationsInput | number
     total?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9571,6 +12147,108 @@ export namespace Prisma {
   export type TestAttemptUncheckedUpdateManyWithoutModuleInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
+    customTestId?: NullableStringFieldUpdateOperationsInput | string | null
+    score?: IntFieldUpdateOperationsInput | number
+    total?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CustomTestUpdateWithoutQuestionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    faculty?: UserUpdateOneRequiredWithoutCreatedTestsNestedInput
+    attempts?: TestAttemptUpdateManyWithoutCustomTestNestedInput
+  }
+
+  export type CustomTestUncheckedUpdateWithoutQuestionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    facultyId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    attempts?: TestAttemptUncheckedUpdateManyWithoutCustomTestNestedInput
+  }
+
+  export type CustomTestUncheckedUpdateManyWithoutQuestionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    facultyId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TestAttemptCreateManyCustomTestInput = {
+    id?: string
+    userId: string
+    moduleId?: string | null
+    score: number
+    total: number
+    createdAt?: Date | string
+  }
+
+  export type QuestionUpdateWithoutCustomTestsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    questionText?: StringFieldUpdateOperationsInput | string
+    options?: JsonNullValueInput | InputJsonValue
+    correctAnswer?: StringFieldUpdateOperationsInput | string
+    type?: EnumQuestionTypeFieldUpdateOperationsInput | $Enums.QuestionType
+    status?: EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    module?: ModuleUpdateOneRequiredWithoutQuestionsNestedInput
+    documentJob?: DocumentJobUpdateOneWithoutQuestionsNestedInput
+  }
+
+  export type QuestionUncheckedUpdateWithoutCustomTestsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    moduleId?: StringFieldUpdateOperationsInput | string
+    questionText?: StringFieldUpdateOperationsInput | string
+    options?: JsonNullValueInput | InputJsonValue
+    correctAnswer?: StringFieldUpdateOperationsInput | string
+    type?: EnumQuestionTypeFieldUpdateOperationsInput | $Enums.QuestionType
+    status?: EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+    documentJobId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type QuestionUncheckedUpdateManyWithoutCustomTestsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    moduleId?: StringFieldUpdateOperationsInput | string
+    questionText?: StringFieldUpdateOperationsInput | string
+    options?: JsonNullValueInput | InputJsonValue
+    correctAnswer?: StringFieldUpdateOperationsInput | string
+    type?: EnumQuestionTypeFieldUpdateOperationsInput | $Enums.QuestionType
+    status?: EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+    documentJobId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TestAttemptUpdateWithoutCustomTestInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    score?: IntFieldUpdateOperationsInput | number
+    total?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutTestAttemptsNestedInput
+    module?: ModuleUpdateOneWithoutTestAttemptsNestedInput
+  }
+
+  export type TestAttemptUncheckedUpdateWithoutCustomTestInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    moduleId?: NullableStringFieldUpdateOperationsInput | string | null
+    score?: IntFieldUpdateOperationsInput | number
+    total?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TestAttemptUncheckedUpdateManyWithoutCustomTestInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    moduleId?: NullableStringFieldUpdateOperationsInput | string | null
     score?: IntFieldUpdateOperationsInput | number
     total?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
