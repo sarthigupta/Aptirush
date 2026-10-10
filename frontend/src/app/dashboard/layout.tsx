@@ -2,21 +2,11 @@
 
 import { ReactNode, useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { 
-  LayoutDashboard, 
-  BookOpen, 
-  Settings, 
-  LogOut, 
-  Menu,
-  X,
-  User,
-  GraduationCap
-} from 'lucide-react';
+import Link from 'next/link';
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
@@ -39,99 +29,77 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   };
 
   const navItems = [
-    { name: 'Overview', href: '/dashboard', icon: LayoutDashboard },
-    { name: 'My Tests', href: '/dashboard/tests', icon: BookOpen },
-    { name: 'Performance', href: '/dashboard/performance', icon: GraduationCap },
-    { name: 'Settings', href: '/dashboard/settings', icon: Settings },
+    { name: 'Lobby', href: '/dashboard' },
+    { name: '1v1 Arena', href: '/dashboard/battle' },
+    { name: 'My Tests', href: '/dashboard/tests' },
+    { name: 'Leaderboard', href: '/dashboard/performance' },
   ];
 
-  if (!user) return <div className="min-h-screen bg-gray-50 flex items-center justify-center"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div></div>;
+  if (!user) return <div className="min-h-screen bg-surface flex items-center justify-center"><div className="w-8 h-8 rounded-full border-2 border-primary border-t-transparent animate-spin"></div></div>;
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
-      {!isSidebarOpen && (
-        <div 
-          className="fixed inset-0 bg-black/20 z-20 md:hidden"
-          onClick={() => setIsSidebarOpen(true)}
-        />
-      )}
-
-      <aside 
-        className={`fixed md:static inset-y-0 left-0 z-30 w-64 bg-white border-r border-gray-200 transition-transform duration-300 ease-in-out ${
-          isSidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
-        }`}
-      >
-        <div className="h-full flex flex-col">
-          <div className="h-16 flex items-center px-6 border-b border-gray-100">
-            <h1 className="text-xl font-bold text-gray-900">AptiRush</h1>
-            <button 
-              className="ml-auto md:hidden text-gray-400 hover:text-gray-600"
-              onClick={() => setIsSidebarOpen(false)}
-            >
-              <X className="w-5 h-5" />
-            </button>
+    <div className="min-h-screen bg-surface flex flex-col w-full text-on-surface antialiased">
+      <header className="fixed top-0 w-full z-50 bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.03)]">
+        <div className="h-16 max-w-[1120px] mx-auto px-gutter flex items-center justify-between gap-space-md">
+          
+          <div className="flex items-center gap-space-sm flex-shrink-0">
+            <Link href="/dashboard" className="flex items-center gap-space-xs">
+              <span className="font-title-md text-title-md font-semibold tracking-tight text-on-surface">AptiRush</span>
+            </Link>
+            <span className="hidden sm:inline-flex items-center px-space-sm py-space-xs rounded-full bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm">Practice & Arena</span>
           </div>
 
-          <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
+          <nav className="hidden md:flex items-center gap-space-xs p-space-xs rounded-xl bg-surface-container-low/60">
             {navItems.map((item) => {
               const isActive = pathname === item.href;
-              const Icon = item.icon;
               return (
-                <a
+                <Link
                   key={item.name}
                   href={item.href}
-                  className={`flex items-center px-3 py-2.5 rounded-lg transition-colors group ${
-                    isActive 
-                      ? 'bg-gray-100 text-gray-900 font-medium' 
-                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                  className={`px-space-md py-space-xs rounded-lg transition-colors font-label-lg text-label-lg ${
+                    isActive
+                      ? 'bg-surface-container text-primary font-semibold'
+                      : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high'
                   }`}
                 >
-                  <Icon className={`w-5 h-5 mr-3 ${isActive ? 'text-gray-900' : 'text-gray-400 group-hover:text-gray-600'}`} />
                   {item.name}
-                </a>
+                </Link>
               );
             })}
           </nav>
 
-          <div className="p-4 border-t border-gray-100">
-            <button
-              onClick={handleLogout}
-              className="flex items-center w-full px-3 py-2.5 rounded-lg text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors"
-            >
-              <LogOut className="w-5 h-5 mr-3" />
-              Sign Out
-            </button>
-          </div>
-        </div>
-      </aside>
-
-      <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-4 sm:px-6 lg:px-8">
-          <button 
-            className="md:hidden p-2 -ml-2 text-gray-500 hover:text-gray-700 rounded-md"
-            onClick={() => setIsSidebarOpen(true)}
-          >
-            <Menu className="w-6 h-6" />
-          </button>
-
-          <div className="flex-1 flex justify-end items-center">
-            <div className="flex items-center space-x-3">
-              <span className="text-sm font-medium text-gray-700 hidden sm:block">
-                {user.name}
-              </span>
-              <div className="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 border border-gray-200">
-                <User className="w-4 h-4" />
+          <div className="flex items-center gap-space-sm flex-shrink-0">
+            <div className="hidden lg:flex items-center px-space-sm py-space-xs rounded-full bg-surface-container-lowest shadow-[0_1px_3px_0_rgba(15,23,42,0.04)]">
+              <span className="font-label-md text-label-md text-on-surface-variant">Diamond II <span class="text-outline-variant mx-space-xs">•</span> <span className="font-semibold text-primary">1,840 MMR</span></span>
+            </div>
+            <div className="flex items-center gap-space-xs px-space-sm py-space-xs rounded-full bg-tertiary-fixed/40 text-tertiary font-label-md text-label-md">
+              <span className="material-symbols-outlined text-base leading-none text-tertiary-container">local_fire_department</span>
+              <span>5 Streak</span>
+            </div>
+            <div className="pl-space-xs cursor-pointer" onClick={handleLogout} title="Logout">
+              <div className="w-8 h-8 rounded-full bg-surface-container-highest flex items-center justify-center text-on-surface font-bold text-xs ring-2 ring-surface-container-highest">
+                {user?.name?.substring(0,2).toUpperCase() || 'U'}
               </div>
             </div>
           </div>
-        </header>
+        </div>
+      </header>
 
-        <div className="flex-1 overflow-auto p-4 sm:p-6 lg:p-8">
-          <div className="max-w-7xl mx-auto">
-            {children}
+      <main className="w-full pt-16 bg-surface min-h-[calc(100vh-140px)] flex-1">
+        {children}
+      </main>
+      
+      <footer className="w-full bg-surface-container-lowest shadow-[0_-1px_6px_rgba(0,0,0,0.02)] mt-space-xxl">
+        <div className="max-w-[1120px] mx-auto px-gutter py-space-xl flex flex-col md:flex-row items-center justify-between gap-space-md text-center md:text-left">
+          <div className="flex flex-col gap-space-xs">
+            <span className="font-headline-sm text-headline-sm text-on-surface tracking-tight">AptiRush</span>
+            <p className="font-body-sm text-body-sm text-on-surface-variant max-w-sm">A serene cognitive arena designed for mindful quantitative, logical, and verbal head-to-head challenges.</p>
+          </div>
+          <div className="font-label-sm text-label-sm text-on-surface-variant">
+            © 2025 AptiRush. All cognitive rights reserved.
           </div>
         </div>
-      </main>
+      </footer>
     </div>
   );
 }

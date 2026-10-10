@@ -25,6 +25,12 @@ enum DocumentStatus {
   FAILED
 }
 
+enum BattleStatus {
+  WAITING
+  IN_PROGRESS
+  COMPLETED
+}
+
 enum QuestionType {
   MCQ
   TITA
@@ -50,6 +56,10 @@ model User {
   faculty       User?         @relation("StudentFaculty", fields: [facultyId], references: [id])
   students      User[]        @relation("StudentFaculty")
   createdTests  CustomTest[]
+  battlesAsP1   Battle[]      @relation("BattlePlayer1")
+  battlesAsP2   Battle[]      @relation("BattlePlayer2")
+  battlesWon    Battle[]      @relation("BattleWinner")
+  elo           Int           @default(1000)
 }
 
 model DocumentJob {
@@ -83,6 +93,7 @@ model Question {
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
   customTests   CustomTest[]
+  battles       Battle[]
 }
 
 model TestAttempt {
@@ -95,6 +106,7 @@ model TestAttempt {
   customTest   CustomTest? @relation(fields: [customTestId], references: [id])
   score        Int
   total        Int
+  durationMs   Int         @default(0)
   createdAt    DateTime    @default(now())
 }
 
@@ -107,4 +119,18 @@ model CustomTest {
   attempts  TestAttempt[]
   createdAt DateTime      @default(now())
   updatedAt DateTime      @updatedAt
+}
+
+model Battle {
+  id        String       @id @default(uuid())
+  player1Id String
+  player2Id String?
+  player1   User         @relation("BattlePlayer1", fields: [player1Id], references: [id])
+  player2   User?        @relation("BattlePlayer2", fields: [player2Id], references: [id])
+  winnerId  String?
+  winner    User?        @relation("BattleWinner", fields: [winnerId], references: [id])
+  status    BattleStatus @default(WAITING)
+  questions Question[]
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
 }

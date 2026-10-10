@@ -130,7 +130,8 @@ exports.Prisma.UserScalarFieldEnum = {
   created_at: 'created_at',
   updated_at: 'updated_at',
   deleted_at: 'deleted_at',
-  facultyId: 'facultyId'
+  facultyId: 'facultyId',
+  elo: 'elo'
 };
 
 exports.Prisma.DocumentJobScalarFieldEnum = {
@@ -167,6 +168,7 @@ exports.Prisma.TestAttemptScalarFieldEnum = {
   customTestId: 'customTestId',
   score: 'score',
   total: 'total',
+  durationMs: 'durationMs',
   createdAt: 'createdAt'
 };
 
@@ -174,6 +176,16 @@ exports.Prisma.CustomTestScalarFieldEnum = {
   id: 'id',
   title: 'title',
   facultyId: 'facultyId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.BattleScalarFieldEnum = {
+  id: 'id',
+  player1Id: 'player1Id',
+  player2Id: 'player2Id',
+  winnerId: 'winnerId',
+  status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -224,13 +236,20 @@ exports.QuestionStatus = exports.$Enums.QuestionStatus = {
   NEEDS_REVIEW: 'NEEDS_REVIEW'
 };
 
+exports.BattleStatus = exports.$Enums.BattleStatus = {
+  WAITING: 'WAITING',
+  IN_PROGRESS: 'IN_PROGRESS',
+  COMPLETED: 'COMPLETED'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   DocumentJob: 'DocumentJob',
   Module: 'Module',
   Question: 'Question',
   TestAttempt: 'TestAttempt',
-  CustomTest: 'CustomTest'
+  CustomTest: 'CustomTest',
+  Battle: 'Battle'
 };
 
 /**

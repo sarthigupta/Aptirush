@@ -21,7 +21,6 @@ export default function SignupForm() {
     
     try {
       await api.post('/auth/register', { name, email, password });
-      // Automatically navigate to login or login directly after successful signup
       router.push('/login');
     } catch (err: any) {
       setError(err.response?.data?.error || 'Failed to register. Please try again.');
@@ -31,21 +30,27 @@ export default function SignupForm() {
   };
 
   return (
-    <div className="w-full max-w-md bg-white rounded-xl shadow-[0_2px_10px_rgb(0,0,0,0.06)] border border-gray-100 p-8">
-      <div className="mb-8 text-center">
-        <h1 className="text-2xl font-bold tracking-tight text-gray-900">Create Account</h1>
-        <p className="text-sm text-gray-500 mt-2">Join AptiRush today</p>
+    <div className="w-full max-w-md bg-surface-container-lowest rounded-2xl shadow-sm border border-surface-variant p-8 relative overflow-hidden">
+      <div className="pointer-events-none absolute -top-16 -left-16 w-32 h-32 bg-secondary-fixed/30 rounded-full blur-2xl"></div>
+      
+      <div className="mb-8 text-center relative z-10">
+        <div className="mx-auto w-12 h-12 bg-secondary-fixed/40 text-secondary rounded-xl flex items-center justify-center mb-4">
+          <span className="material-symbols-outlined text-[24px]">person_add</span>
+        </div>
+        <h1 className="font-headline-md text-headline-md text-on-surface tracking-tight">Create Account</h1>
+        <p className="font-body-sm text-body-sm text-on-surface-variant mt-2">Join AptiRush today</p>
       </div>
 
       {error && (
-        <div className="mb-6 p-4 rounded-lg bg-red-50 text-red-600 text-sm border border-red-100">
+        <div className="mb-6 p-4 rounded-lg bg-error-container/40 text-error font-body-sm text-body-sm border border-error-container relative z-10 flex items-center">
+          <span className="material-symbols-outlined text-base mr-2">error</span>
           {error}
         </div>
       )}
 
-      <form onSubmit={handleSignup} className="space-y-5">
+      <form onSubmit={handleSignup} className="space-y-5 relative z-10">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="name">
+          <label className="block font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-2" htmlFor="name">
             Full Name
           </label>
           <input
@@ -53,14 +58,14 @@ export default function SignupForm() {
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-50 text-gray-900 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
+            className="w-full px-4 py-3 rounded-lg border border-outline-variant/60 bg-surface-container-lowest text-on-surface focus:bg-surface-container-low focus:ring-2 focus:ring-secondary focus:border-secondary outline-none transition-all font-body-md shadow-inner"
             placeholder="John Doe"
             required
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="email">
+          <label className="block font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-2" htmlFor="email">
             Email address
           </label>
           <input
@@ -68,14 +73,14 @@ export default function SignupForm() {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-50 text-gray-900 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
+            className="w-full px-4 py-3 rounded-lg border border-outline-variant/60 bg-surface-container-lowest text-on-surface focus:bg-surface-container-low focus:ring-2 focus:ring-secondary focus:border-secondary outline-none transition-all font-body-md shadow-inner"
             placeholder="you@example.com"
             required
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="password">
+          <label className="block font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-2" htmlFor="password">
             Password
           </label>
           <input
@@ -83,7 +88,7 @@ export default function SignupForm() {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-50 text-gray-900 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
+            className="w-full px-4 py-3 rounded-lg border border-outline-variant/60 bg-surface-container-lowest text-on-surface focus:bg-surface-container-low focus:ring-2 focus:ring-secondary focus:border-secondary outline-none transition-all font-body-md shadow-inner"
             placeholder="••••••••"
             required
           />
@@ -92,15 +97,15 @@ export default function SignupForm() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full flex items-center justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gray-900 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 disabled:opacity-70 disabled:cursor-not-allowed transition-all"
+          className="w-full flex items-center justify-center py-3 px-4 rounded-xl shadow-sm font-label-lg text-label-lg text-on-secondary bg-secondary hover:bg-secondary-container disabled:opacity-70 disabled:cursor-not-allowed transition-all mt-6 active:scale-[0.98]"
         >
           {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Create Account'}
         </button>
       </form>
 
-      <p className="mt-8 text-center text-sm text-gray-500">
+      <p className="mt-8 text-center font-body-md text-body-sm text-on-surface-variant relative z-10">
         Already have an account?{' '}
-        <Link href="/login" className="font-medium text-gray-900 hover:underline">
+        <Link href="/login" className="font-semibold text-secondary hover:underline transition-colors">
           Sign in
         </Link>
       </p>

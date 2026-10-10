@@ -1,26 +1,171 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --color-secondary-fixed-dim: #4edea3;
+  --color-on-primary-fixed: #0f0069;
+  --color-on-background: #131b2e;
+  --color-on-tertiary: #ffffff;
+  --color-surface-tint: #4d44e3;
+  --color-inverse-primary: #c3c0ff;
+  --color-tertiary-container: #885500;
+  --color-on-error-container: #93000a;
+  --color-tertiary-fixed: #ffddb8;
+  --color-on-surface: #131b2e;
+  --color-primary: #3525cd;
+  --color-on-secondary: #ffffff;
+  --color-primary-fixed-dim: #c3c0ff;
+  --color-on-secondary-fixed: #002113;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container: #eaedff;
+  --color-on-tertiary-fixed: #2a1700;
+  --color-secondary: #006c49;
+  --color-on-error: #ffffff;
+  --color-error-container: #ffdad6;
+  --color-surface-container-high: #e2e7ff;
+  --color-tertiary-fixed-dim: #ffb95f;
+  --color-on-tertiary-fixed-variant: #653e00;
+  --color-error: #ba1a1a;
+  --color-on-tertiary-container: #ffd4a4;
+  --color-background: #faf8ff;
+  --color-inverse-on-surface: #eef0ff;
+  --color-surface-variant: #dae2fd;
+  --color-on-secondary-fixed-variant: #005236;
+  --color-primary-fixed: #e2dfff;
+  --color-on-surface-variant: #464555;
+  --color-on-primary-fixed-variant: #3323cc;
+  --color-surface-bright: #faf8ff;
+  --color-tertiary: #684000;
+  --color-outline-variant: #c7c4d8;
+  --color-secondary-fixed: #6ffbbe;
+  --color-surface-dim: #d2d9f4;
+  --color-on-primary: #ffffff;
+  --color-inverse-surface: #283044;
+  --color-surface-container-highest: #dae2fd;
+  --color-surface-container-low: #f2f3ff;
+  --color-on-primary-container: #dad7ff;
+  --color-outline: #777587;
+  --color-secondary-container: #6cf8bb;
+  --color-on-secondary-container: #00714d;
+  --color-surface: #faf8ff;
+  --color-primary-container: #4f46e5;
+
+  --radius-DEFAULT: 0.25rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-full: 9999px;
+
+  --spacing-space-lg: 1.5rem;
+  --spacing-space-sm: 0.5rem;
+  --spacing-gutter: 1.25rem;
+  --spacing-space-xl: 2.25rem;
+  --spacing-space-xxl: 3.5rem;
+  --spacing-margin-mobile: 1rem;
+  --spacing-space-md: 1rem;
+  --spacing-margin: 2rem;
+  --spacing-space-xs: 0.25rem;
+  --spacing-gutter-mobile: 0.75rem;
+
+  --font-headline-sm: "Plus Jakarta Sans", sans-serif;
+  --font-display: "Plus Jakarta Sans", sans-serif;
+  --font-label-md: "Plus Jakarta Sans", sans-serif;
+  --font-body-sm: "Plus Jakarta Sans", sans-serif;
+  --font-headline-lg: "Plus Jakarta Sans", sans-serif;
+  --font-label-lg: "Plus Jakarta Sans", sans-serif;
+  --font-body-lg: "Plus Jakarta Sans", sans-serif;
+  --font-title-md: "Plus Jakarta Sans", sans-serif;
+  --font-headline-md: "Plus Jakarta Sans", sans-serif;
+  --font-body-md: "Plus Jakarta Sans", sans-serif;
+  --font-label-sm: "Plus Jakarta Sans", sans-serif;
+  --font-headline-lg-mobile: "Plus Jakarta Sans", sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@utility text-headline-sm {
+  font-size: 20px;
+  line-height: 28px;
+  letter-spacing: -0.005em;
+  font-weight: 600;
+}
+@utility text-display {
+  font-size: 40px;
+  line-height: 48px;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+}
+@utility text-label-md {
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.02em;
+  font-weight: 600;
+}
+@utility text-body-sm {
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 400;
+}
+@utility text-headline-lg {
+  font-size: 32px;
+  line-height: 40px;
+  letter-spacing: -0.015em;
+  font-weight: 600;
+}
+@utility text-label-lg {
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.01em;
+  font-weight: 600;
+}
+@utility text-body-lg {
+  font-size: 16px;
+  line-height: 26px;
+  font-weight: 400;
+}
+@utility text-title-md {
+  font-size: 18px;
+  line-height: 26px;
+  font-weight: 500;
+}
+@utility text-headline-md {
+  font-size: 24px;
+  line-height: 32px;
+  letter-spacing: -0.01em;
+  font-weight: 600;
+}
+@utility text-body-md {
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 400;
+}
+@utility text-label-sm {
+  font-size: 11px;
+  line-height: 14px;
+  letter-spacing: 0.03em;
+  font-weight: 500;
+}
+@utility text-headline-lg-mobile {
+  font-size: 26px;
+  line-height: 34px;
+  letter-spacing: -0.01em;
+  font-weight: 600;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  html, body {
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    overscroll-behavior: none;
+    background-color: var(--color-background);
+    color: var(--color-on-surface);
+  }
+  main > :first-child {
+    margin-top: 0 !important;
+  }
+  main > :last-child {
+    margin-bottom: 0 !important;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+::-webkit-scrollbar {
+  display: none;
 }

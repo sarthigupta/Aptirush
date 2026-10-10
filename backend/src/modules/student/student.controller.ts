@@ -27,8 +27,8 @@ export const StudentController = {
   async saveTestAttempt(req: Request, res: Response): Promise<void> {
     try {
       const userId = (req as any).user.id;
-      const { moduleId, score, total, customTestId } = req.body;
-      const attempt = await StudentService.saveTestAttempt(userId, moduleId || null, score, total, customTestId || null);
+      const { moduleId, score, total, customTestId, durationMs } = req.body;
+      const attempt = await StudentService.saveTestAttempt(userId, moduleId || null, score, total, customTestId || null, durationMs || 0);
       res.json(attempt);
     } catch (error: any) {
       res.status(500).json({ error: error.message || 'Failed to save attempt' });
@@ -52,6 +52,15 @@ export const StudentController = {
       res.json(stats);
     } catch (error: any) {
       res.status(500).json({ error: error.message || 'Failed to fetch stats' });
+    }
+  },
+
+  async getLeaderboard(req: Request, res: Response): Promise<void> {
+    try {
+      const leaderboard = await StudentService.getLeaderboard();
+      res.json(leaderboard);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message || 'Failed to fetch leaderboard' });
     }
   }
 };

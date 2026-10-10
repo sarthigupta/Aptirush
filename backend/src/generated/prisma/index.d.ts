@@ -43,6 +43,11 @@ export type TestAttempt = $Result.DefaultSelection<Prisma.$TestAttemptPayload>
  * 
  */
 export type CustomTest = $Result.DefaultSelection<Prisma.$CustomTestPayload>
+/**
+ * Model Battle
+ * 
+ */
+export type Battle = $Result.DefaultSelection<Prisma.$BattlePayload>
 
 /**
  * Enums
@@ -64,6 +69,15 @@ export const DocumentStatus: {
 };
 
 export type DocumentStatus = (typeof DocumentStatus)[keyof typeof DocumentStatus]
+
+
+export const BattleStatus: {
+  WAITING: 'WAITING',
+  IN_PROGRESS: 'IN_PROGRESS',
+  COMPLETED: 'COMPLETED'
+};
+
+export type BattleStatus = (typeof BattleStatus)[keyof typeof BattleStatus]
 
 
 export const QuestionType: {
@@ -90,6 +104,10 @@ export const Role: typeof $Enums.Role
 export type DocumentStatus = $Enums.DocumentStatus
 
 export const DocumentStatus: typeof $Enums.DocumentStatus
+
+export type BattleStatus = $Enums.BattleStatus
+
+export const BattleStatus: typeof $Enums.BattleStatus
 
 export type QuestionType = $Enums.QuestionType
 
@@ -279,6 +297,16 @@ export class PrismaClient<
     * ```
     */
   get customTest(): Prisma.CustomTestDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.battle`: Exposes CRUD operations for the **Battle** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Battles
+    * const battles = await prisma.battle.findMany()
+    * ```
+    */
+  get battle(): Prisma.BattleDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -731,7 +759,8 @@ export namespace Prisma {
     Module: 'Module',
     Question: 'Question',
     TestAttempt: 'TestAttempt',
-    CustomTest: 'CustomTest'
+    CustomTest: 'CustomTest',
+    Battle: 'Battle'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -747,7 +776,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "documentJob" | "module" | "question" | "testAttempt" | "customTest"
+      modelProps: "user" | "documentJob" | "module" | "question" | "testAttempt" | "customTest" | "battle"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1195,6 +1224,80 @@ export namespace Prisma {
           }
         }
       }
+      Battle: {
+        payload: Prisma.$BattlePayload<ExtArgs>
+        fields: Prisma.BattleFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.BattleFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BattlePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.BattleFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BattlePayload>
+          }
+          findFirst: {
+            args: Prisma.BattleFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BattlePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.BattleFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BattlePayload>
+          }
+          findMany: {
+            args: Prisma.BattleFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BattlePayload>[]
+          }
+          create: {
+            args: Prisma.BattleCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BattlePayload>
+          }
+          createMany: {
+            args: Prisma.BattleCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.BattleCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BattlePayload>[]
+          }
+          delete: {
+            args: Prisma.BattleDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BattlePayload>
+          }
+          update: {
+            args: Prisma.BattleUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BattlePayload>
+          }
+          deleteMany: {
+            args: Prisma.BattleDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.BattleUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.BattleUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BattlePayload>[]
+          }
+          upsert: {
+            args: Prisma.BattleUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BattlePayload>
+          }
+          aggregate: {
+            args: Prisma.BattleAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateBattle>
+          }
+          groupBy: {
+            args: Prisma.BattleGroupByArgs<ExtArgs>
+            result: $Utils.Optional<BattleGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.BattleCountArgs<ExtArgs>
+            result: $Utils.Optional<BattleCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1324,6 +1427,7 @@ export namespace Prisma {
     question?: QuestionOmit
     testAttempt?: TestAttemptOmit
     customTest?: CustomTestOmit
+    battle?: BattleOmit
   }
 
   /* Types for Logging */
@@ -1407,12 +1511,18 @@ export namespace Prisma {
     testAttempts: number
     students: number
     createdTests: number
+    battlesAsP1: number
+    battlesAsP2: number
+    battlesWon: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     testAttempts?: boolean | UserCountOutputTypeCountTestAttemptsArgs
     students?: boolean | UserCountOutputTypeCountStudentsArgs
     createdTests?: boolean | UserCountOutputTypeCountCreatedTestsArgs
+    battlesAsP1?: boolean | UserCountOutputTypeCountBattlesAsP1Args
+    battlesAsP2?: boolean | UserCountOutputTypeCountBattlesAsP2Args
+    battlesWon?: boolean | UserCountOutputTypeCountBattlesWonArgs
   }
 
   // Custom InputTypes
@@ -1445,6 +1555,27 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountCreatedTestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: CustomTestWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountBattlesAsP1Args<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: BattleWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountBattlesAsP2Args<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: BattleWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountBattlesWonArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: BattleWhereInput
   }
 
 
@@ -1525,10 +1656,12 @@ export namespace Prisma {
 
   export type QuestionCountOutputType = {
     customTests: number
+    battles: number
   }
 
   export type QuestionCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     customTests?: boolean | QuestionCountOutputTypeCountCustomTestsArgs
+    battles?: boolean | QuestionCountOutputTypeCountBattlesArgs
   }
 
   // Custom InputTypes
@@ -1547,6 +1680,13 @@ export namespace Prisma {
    */
   export type QuestionCountOutputTypeCountCustomTestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: CustomTestWhereInput
+  }
+
+  /**
+   * QuestionCountOutputType without action
+   */
+  export type QuestionCountOutputTypeCountBattlesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: BattleWhereInput
   }
 
 
@@ -1591,6 +1731,37 @@ export namespace Prisma {
 
 
   /**
+   * Count Type BattleCountOutputType
+   */
+
+  export type BattleCountOutputType = {
+    questions: number
+  }
+
+  export type BattleCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    questions?: boolean | BattleCountOutputTypeCountQuestionsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * BattleCountOutputType without action
+   */
+  export type BattleCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BattleCountOutputType
+     */
+    select?: BattleCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * BattleCountOutputType without action
+   */
+  export type BattleCountOutputTypeCountQuestionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: QuestionWhereInput
+  }
+
+
+  /**
    * Models
    */
 
@@ -1600,8 +1771,18 @@ export namespace Prisma {
 
   export type AggregateUser = {
     _count: UserCountAggregateOutputType | null
+    _avg: UserAvgAggregateOutputType | null
+    _sum: UserSumAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
+  }
+
+  export type UserAvgAggregateOutputType = {
+    elo: number | null
+  }
+
+  export type UserSumAggregateOutputType = {
+    elo: number | null
   }
 
   export type UserMinAggregateOutputType = {
@@ -1615,6 +1796,7 @@ export namespace Prisma {
     updated_at: Date | null
     deleted_at: Date | null
     facultyId: string | null
+    elo: number | null
   }
 
   export type UserMaxAggregateOutputType = {
@@ -1628,6 +1810,7 @@ export namespace Prisma {
     updated_at: Date | null
     deleted_at: Date | null
     facultyId: string | null
+    elo: number | null
   }
 
   export type UserCountAggregateOutputType = {
@@ -1641,9 +1824,18 @@ export namespace Prisma {
     updated_at: number
     deleted_at: number
     facultyId: number
+    elo: number
     _all: number
   }
 
+
+  export type UserAvgAggregateInputType = {
+    elo?: true
+  }
+
+  export type UserSumAggregateInputType = {
+    elo?: true
+  }
 
   export type UserMinAggregateInputType = {
     id?: true
@@ -1656,6 +1848,7 @@ export namespace Prisma {
     updated_at?: true
     deleted_at?: true
     facultyId?: true
+    elo?: true
   }
 
   export type UserMaxAggregateInputType = {
@@ -1669,6 +1862,7 @@ export namespace Prisma {
     updated_at?: true
     deleted_at?: true
     facultyId?: true
+    elo?: true
   }
 
   export type UserCountAggregateInputType = {
@@ -1682,6 +1876,7 @@ export namespace Prisma {
     updated_at?: true
     deleted_at?: true
     facultyId?: true
+    elo?: true
     _all?: true
   }
 
@@ -1723,6 +1918,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: UserAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: UserSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: UserMinAggregateInputType
@@ -1753,6 +1960,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: UserCountAggregateInputType | true
+    _avg?: UserAvgAggregateInputType
+    _sum?: UserSumAggregateInputType
     _min?: UserMinAggregateInputType
     _max?: UserMaxAggregateInputType
   }
@@ -1768,7 +1977,10 @@ export namespace Prisma {
     updated_at: Date
     deleted_at: Date | null
     facultyId: string | null
+    elo: number
     _count: UserCountAggregateOutputType | null
+    _avg: UserAvgAggregateOutputType | null
+    _sum: UserSumAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
   }
@@ -1798,10 +2010,14 @@ export namespace Prisma {
     updated_at?: boolean
     deleted_at?: boolean
     facultyId?: boolean
+    elo?: boolean
     testAttempts?: boolean | User$testAttemptsArgs<ExtArgs>
     faculty?: boolean | User$facultyArgs<ExtArgs>
     students?: boolean | User$studentsArgs<ExtArgs>
     createdTests?: boolean | User$createdTestsArgs<ExtArgs>
+    battlesAsP1?: boolean | User$battlesAsP1Args<ExtArgs>
+    battlesAsP2?: boolean | User$battlesAsP2Args<ExtArgs>
+    battlesWon?: boolean | User$battlesWonArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -1816,6 +2032,7 @@ export namespace Prisma {
     updated_at?: boolean
     deleted_at?: boolean
     facultyId?: boolean
+    elo?: boolean
     faculty?: boolean | User$facultyArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -1830,6 +2047,7 @@ export namespace Prisma {
     updated_at?: boolean
     deleted_at?: boolean
     facultyId?: boolean
+    elo?: boolean
     faculty?: boolean | User$facultyArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -1844,14 +2062,18 @@ export namespace Prisma {
     updated_at?: boolean
     deleted_at?: boolean
     facultyId?: boolean
+    elo?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "password_hash" | "role" | "is_active" | "created_at" | "updated_at" | "deleted_at" | "facultyId", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "password_hash" | "role" | "is_active" | "created_at" | "updated_at" | "deleted_at" | "facultyId" | "elo", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     testAttempts?: boolean | User$testAttemptsArgs<ExtArgs>
     faculty?: boolean | User$facultyArgs<ExtArgs>
     students?: boolean | User$studentsArgs<ExtArgs>
     createdTests?: boolean | User$createdTestsArgs<ExtArgs>
+    battlesAsP1?: boolean | User$battlesAsP1Args<ExtArgs>
+    battlesAsP2?: boolean | User$battlesAsP2Args<ExtArgs>
+    battlesWon?: boolean | User$battlesWonArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -1868,6 +2090,9 @@ export namespace Prisma {
       faculty: Prisma.$UserPayload<ExtArgs> | null
       students: Prisma.$UserPayload<ExtArgs>[]
       createdTests: Prisma.$CustomTestPayload<ExtArgs>[]
+      battlesAsP1: Prisma.$BattlePayload<ExtArgs>[]
+      battlesAsP2: Prisma.$BattlePayload<ExtArgs>[]
+      battlesWon: Prisma.$BattlePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -1880,6 +2105,7 @@ export namespace Prisma {
       updated_at: Date
       deleted_at: Date | null
       facultyId: string | null
+      elo: number
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -2278,6 +2504,9 @@ export namespace Prisma {
     faculty<T extends User$facultyArgs<ExtArgs> = {}>(args?: Subset<T, User$facultyArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     students<T extends User$studentsArgs<ExtArgs> = {}>(args?: Subset<T, User$studentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     createdTests<T extends User$createdTestsArgs<ExtArgs> = {}>(args?: Subset<T, User$createdTestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomTestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    battlesAsP1<T extends User$battlesAsP1Args<ExtArgs> = {}>(args?: Subset<T, User$battlesAsP1Args<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BattlePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    battlesAsP2<T extends User$battlesAsP2Args<ExtArgs> = {}>(args?: Subset<T, User$battlesAsP2Args<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BattlePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    battlesWon<T extends User$battlesWonArgs<ExtArgs> = {}>(args?: Subset<T, User$battlesWonArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BattlePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2317,6 +2546,7 @@ export namespace Prisma {
     readonly updated_at: FieldRef<"User", 'DateTime'>
     readonly deleted_at: FieldRef<"User", 'DateTime'>
     readonly facultyId: FieldRef<"User", 'String'>
+    readonly elo: FieldRef<"User", 'Int'>
   }
     
 
@@ -2806,6 +3036,78 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: CustomTestScalarFieldEnum | CustomTestScalarFieldEnum[]
+  }
+
+  /**
+   * User.battlesAsP1
+   */
+  export type User$battlesAsP1Args<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Battle
+     */
+    select?: BattleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Battle
+     */
+    omit?: BattleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BattleInclude<ExtArgs> | null
+    where?: BattleWhereInput
+    orderBy?: BattleOrderByWithRelationInput | BattleOrderByWithRelationInput[]
+    cursor?: BattleWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: BattleScalarFieldEnum | BattleScalarFieldEnum[]
+  }
+
+  /**
+   * User.battlesAsP2
+   */
+  export type User$battlesAsP2Args<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Battle
+     */
+    select?: BattleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Battle
+     */
+    omit?: BattleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BattleInclude<ExtArgs> | null
+    where?: BattleWhereInput
+    orderBy?: BattleOrderByWithRelationInput | BattleOrderByWithRelationInput[]
+    cursor?: BattleWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: BattleScalarFieldEnum | BattleScalarFieldEnum[]
+  }
+
+  /**
+   * User.battlesWon
+   */
+  export type User$battlesWonArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Battle
+     */
+    select?: BattleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Battle
+     */
+    omit?: BattleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BattleInclude<ExtArgs> | null
+    where?: BattleWhereInput
+    orderBy?: BattleOrderByWithRelationInput | BattleOrderByWithRelationInput[]
+    cursor?: BattleWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: BattleScalarFieldEnum | BattleScalarFieldEnum[]
   }
 
   /**
@@ -5216,6 +5518,7 @@ export namespace Prisma {
     module?: boolean | ModuleDefaultArgs<ExtArgs>
     documentJob?: boolean | Question$documentJobArgs<ExtArgs>
     customTests?: boolean | Question$customTestsArgs<ExtArgs>
+    battles?: boolean | Question$battlesArgs<ExtArgs>
     _count?: boolean | QuestionCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["question"]>
 
@@ -5267,6 +5570,7 @@ export namespace Prisma {
     module?: boolean | ModuleDefaultArgs<ExtArgs>
     documentJob?: boolean | Question$documentJobArgs<ExtArgs>
     customTests?: boolean | Question$customTestsArgs<ExtArgs>
+    battles?: boolean | Question$battlesArgs<ExtArgs>
     _count?: boolean | QuestionCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type QuestionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5284,6 +5588,7 @@ export namespace Prisma {
       module: Prisma.$ModulePayload<ExtArgs>
       documentJob: Prisma.$DocumentJobPayload<ExtArgs> | null
       customTests: Prisma.$CustomTestPayload<ExtArgs>[]
+      battles: Prisma.$BattlePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -5693,6 +5998,7 @@ export namespace Prisma {
     module<T extends ModuleDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ModuleDefaultArgs<ExtArgs>>): Prisma__ModuleClient<$Result.GetResult<Prisma.$ModulePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     documentJob<T extends Question$documentJobArgs<ExtArgs> = {}>(args?: Subset<T, Question$documentJobArgs<ExtArgs>>): Prisma__DocumentJobClient<$Result.GetResult<Prisma.$DocumentJobPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     customTests<T extends Question$customTestsArgs<ExtArgs> = {}>(args?: Subset<T, Question$customTestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomTestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    battles<T extends Question$battlesArgs<ExtArgs> = {}>(args?: Subset<T, Question$battlesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BattlePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6176,6 +6482,30 @@ export namespace Prisma {
   }
 
   /**
+   * Question.battles
+   */
+  export type Question$battlesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Battle
+     */
+    select?: BattleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Battle
+     */
+    omit?: BattleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BattleInclude<ExtArgs> | null
+    where?: BattleWhereInput
+    orderBy?: BattleOrderByWithRelationInput | BattleOrderByWithRelationInput[]
+    cursor?: BattleWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: BattleScalarFieldEnum | BattleScalarFieldEnum[]
+  }
+
+  /**
    * Question without action
    */
   export type QuestionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -6209,11 +6539,13 @@ export namespace Prisma {
   export type TestAttemptAvgAggregateOutputType = {
     score: number | null
     total: number | null
+    durationMs: number | null
   }
 
   export type TestAttemptSumAggregateOutputType = {
     score: number | null
     total: number | null
+    durationMs: number | null
   }
 
   export type TestAttemptMinAggregateOutputType = {
@@ -6223,6 +6555,7 @@ export namespace Prisma {
     customTestId: string | null
     score: number | null
     total: number | null
+    durationMs: number | null
     createdAt: Date | null
   }
 
@@ -6233,6 +6566,7 @@ export namespace Prisma {
     customTestId: string | null
     score: number | null
     total: number | null
+    durationMs: number | null
     createdAt: Date | null
   }
 
@@ -6243,6 +6577,7 @@ export namespace Prisma {
     customTestId: number
     score: number
     total: number
+    durationMs: number
     createdAt: number
     _all: number
   }
@@ -6251,11 +6586,13 @@ export namespace Prisma {
   export type TestAttemptAvgAggregateInputType = {
     score?: true
     total?: true
+    durationMs?: true
   }
 
   export type TestAttemptSumAggregateInputType = {
     score?: true
     total?: true
+    durationMs?: true
   }
 
   export type TestAttemptMinAggregateInputType = {
@@ -6265,6 +6602,7 @@ export namespace Prisma {
     customTestId?: true
     score?: true
     total?: true
+    durationMs?: true
     createdAt?: true
   }
 
@@ -6275,6 +6613,7 @@ export namespace Prisma {
     customTestId?: true
     score?: true
     total?: true
+    durationMs?: true
     createdAt?: true
   }
 
@@ -6285,6 +6624,7 @@ export namespace Prisma {
     customTestId?: true
     score?: true
     total?: true
+    durationMs?: true
     createdAt?: true
     _all?: true
   }
@@ -6382,6 +6722,7 @@ export namespace Prisma {
     customTestId: string | null
     score: number
     total: number
+    durationMs: number
     createdAt: Date
     _count: TestAttemptCountAggregateOutputType | null
     _avg: TestAttemptAvgAggregateOutputType | null
@@ -6411,6 +6752,7 @@ export namespace Prisma {
     customTestId?: boolean
     score?: boolean
     total?: boolean
+    durationMs?: boolean
     createdAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     module?: boolean | TestAttempt$moduleArgs<ExtArgs>
@@ -6424,6 +6766,7 @@ export namespace Prisma {
     customTestId?: boolean
     score?: boolean
     total?: boolean
+    durationMs?: boolean
     createdAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     module?: boolean | TestAttempt$moduleArgs<ExtArgs>
@@ -6437,6 +6780,7 @@ export namespace Prisma {
     customTestId?: boolean
     score?: boolean
     total?: boolean
+    durationMs?: boolean
     createdAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     module?: boolean | TestAttempt$moduleArgs<ExtArgs>
@@ -6450,10 +6794,11 @@ export namespace Prisma {
     customTestId?: boolean
     score?: boolean
     total?: boolean
+    durationMs?: boolean
     createdAt?: boolean
   }
 
-  export type TestAttemptOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "moduleId" | "customTestId" | "score" | "total" | "createdAt", ExtArgs["result"]["testAttempt"]>
+  export type TestAttemptOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "moduleId" | "customTestId" | "score" | "total" | "durationMs" | "createdAt", ExtArgs["result"]["testAttempt"]>
   export type TestAttemptInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     module?: boolean | TestAttempt$moduleArgs<ExtArgs>
@@ -6484,6 +6829,7 @@ export namespace Prisma {
       customTestId: string | null
       score: number
       total: number
+      durationMs: number
       createdAt: Date
     }, ExtArgs["result"]["testAttempt"]>
     composites: {}
@@ -6917,6 +7263,7 @@ export namespace Prisma {
     readonly customTestId: FieldRef<"TestAttempt", 'String'>
     readonly score: FieldRef<"TestAttempt", 'Int'>
     readonly total: FieldRef<"TestAttempt", 'Int'>
+    readonly durationMs: FieldRef<"TestAttempt", 'Int'>
     readonly createdAt: FieldRef<"TestAttempt", 'DateTime'>
   }
     
@@ -8497,6 +8844,1179 @@ export namespace Prisma {
 
 
   /**
+   * Model Battle
+   */
+
+  export type AggregateBattle = {
+    _count: BattleCountAggregateOutputType | null
+    _min: BattleMinAggregateOutputType | null
+    _max: BattleMaxAggregateOutputType | null
+  }
+
+  export type BattleMinAggregateOutputType = {
+    id: string | null
+    player1Id: string | null
+    player2Id: string | null
+    winnerId: string | null
+    status: $Enums.BattleStatus | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type BattleMaxAggregateOutputType = {
+    id: string | null
+    player1Id: string | null
+    player2Id: string | null
+    winnerId: string | null
+    status: $Enums.BattleStatus | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type BattleCountAggregateOutputType = {
+    id: number
+    player1Id: number
+    player2Id: number
+    winnerId: number
+    status: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type BattleMinAggregateInputType = {
+    id?: true
+    player1Id?: true
+    player2Id?: true
+    winnerId?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type BattleMaxAggregateInputType = {
+    id?: true
+    player1Id?: true
+    player2Id?: true
+    winnerId?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type BattleCountAggregateInputType = {
+    id?: true
+    player1Id?: true
+    player2Id?: true
+    winnerId?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type BattleAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Battle to aggregate.
+     */
+    where?: BattleWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Battles to fetch.
+     */
+    orderBy?: BattleOrderByWithRelationInput | BattleOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: BattleWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Battles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Battles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Battles
+    **/
+    _count?: true | BattleCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: BattleMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: BattleMaxAggregateInputType
+  }
+
+  export type GetBattleAggregateType<T extends BattleAggregateArgs> = {
+        [P in keyof T & keyof AggregateBattle]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateBattle[P]>
+      : GetScalarType<T[P], AggregateBattle[P]>
+  }
+
+
+
+
+  export type BattleGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: BattleWhereInput
+    orderBy?: BattleOrderByWithAggregationInput | BattleOrderByWithAggregationInput[]
+    by: BattleScalarFieldEnum[] | BattleScalarFieldEnum
+    having?: BattleScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: BattleCountAggregateInputType | true
+    _min?: BattleMinAggregateInputType
+    _max?: BattleMaxAggregateInputType
+  }
+
+  export type BattleGroupByOutputType = {
+    id: string
+    player1Id: string
+    player2Id: string | null
+    winnerId: string | null
+    status: $Enums.BattleStatus
+    createdAt: Date
+    updatedAt: Date
+    _count: BattleCountAggregateOutputType | null
+    _min: BattleMinAggregateOutputType | null
+    _max: BattleMaxAggregateOutputType | null
+  }
+
+  type GetBattleGroupByPayload<T extends BattleGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<BattleGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof BattleGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], BattleGroupByOutputType[P]>
+            : GetScalarType<T[P], BattleGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type BattleSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    player1Id?: boolean
+    player2Id?: boolean
+    winnerId?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    player1?: boolean | UserDefaultArgs<ExtArgs>
+    player2?: boolean | Battle$player2Args<ExtArgs>
+    winner?: boolean | Battle$winnerArgs<ExtArgs>
+    questions?: boolean | Battle$questionsArgs<ExtArgs>
+    _count?: boolean | BattleCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["battle"]>
+
+  export type BattleSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    player1Id?: boolean
+    player2Id?: boolean
+    winnerId?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    player1?: boolean | UserDefaultArgs<ExtArgs>
+    player2?: boolean | Battle$player2Args<ExtArgs>
+    winner?: boolean | Battle$winnerArgs<ExtArgs>
+  }, ExtArgs["result"]["battle"]>
+
+  export type BattleSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    player1Id?: boolean
+    player2Id?: boolean
+    winnerId?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    player1?: boolean | UserDefaultArgs<ExtArgs>
+    player2?: boolean | Battle$player2Args<ExtArgs>
+    winner?: boolean | Battle$winnerArgs<ExtArgs>
+  }, ExtArgs["result"]["battle"]>
+
+  export type BattleSelectScalar = {
+    id?: boolean
+    player1Id?: boolean
+    player2Id?: boolean
+    winnerId?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type BattleOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "player1Id" | "player2Id" | "winnerId" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["battle"]>
+  export type BattleInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    player1?: boolean | UserDefaultArgs<ExtArgs>
+    player2?: boolean | Battle$player2Args<ExtArgs>
+    winner?: boolean | Battle$winnerArgs<ExtArgs>
+    questions?: boolean | Battle$questionsArgs<ExtArgs>
+    _count?: boolean | BattleCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type BattleIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    player1?: boolean | UserDefaultArgs<ExtArgs>
+    player2?: boolean | Battle$player2Args<ExtArgs>
+    winner?: boolean | Battle$winnerArgs<ExtArgs>
+  }
+  export type BattleIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    player1?: boolean | UserDefaultArgs<ExtArgs>
+    player2?: boolean | Battle$player2Args<ExtArgs>
+    winner?: boolean | Battle$winnerArgs<ExtArgs>
+  }
+
+  export type $BattlePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Battle"
+    objects: {
+      player1: Prisma.$UserPayload<ExtArgs>
+      player2: Prisma.$UserPayload<ExtArgs> | null
+      winner: Prisma.$UserPayload<ExtArgs> | null
+      questions: Prisma.$QuestionPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      player1Id: string
+      player2Id: string | null
+      winnerId: string | null
+      status: $Enums.BattleStatus
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["battle"]>
+    composites: {}
+  }
+
+  type BattleGetPayload<S extends boolean | null | undefined | BattleDefaultArgs> = $Result.GetResult<Prisma.$BattlePayload, S>
+
+  type BattleCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<BattleFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: BattleCountAggregateInputType | true
+    }
+
+  export interface BattleDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Battle'], meta: { name: 'Battle' } }
+    /**
+     * Find zero or one Battle that matches the filter.
+     * @param {BattleFindUniqueArgs} args - Arguments to find a Battle
+     * @example
+     * // Get one Battle
+     * const battle = await prisma.battle.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends BattleFindUniqueArgs>(args: SelectSubset<T, BattleFindUniqueArgs<ExtArgs>>): Prisma__BattleClient<$Result.GetResult<Prisma.$BattlePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Battle that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {BattleFindUniqueOrThrowArgs} args - Arguments to find a Battle
+     * @example
+     * // Get one Battle
+     * const battle = await prisma.battle.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends BattleFindUniqueOrThrowArgs>(args: SelectSubset<T, BattleFindUniqueOrThrowArgs<ExtArgs>>): Prisma__BattleClient<$Result.GetResult<Prisma.$BattlePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Battle that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BattleFindFirstArgs} args - Arguments to find a Battle
+     * @example
+     * // Get one Battle
+     * const battle = await prisma.battle.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends BattleFindFirstArgs>(args?: SelectSubset<T, BattleFindFirstArgs<ExtArgs>>): Prisma__BattleClient<$Result.GetResult<Prisma.$BattlePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Battle that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BattleFindFirstOrThrowArgs} args - Arguments to find a Battle
+     * @example
+     * // Get one Battle
+     * const battle = await prisma.battle.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends BattleFindFirstOrThrowArgs>(args?: SelectSubset<T, BattleFindFirstOrThrowArgs<ExtArgs>>): Prisma__BattleClient<$Result.GetResult<Prisma.$BattlePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Battles that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BattleFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Battles
+     * const battles = await prisma.battle.findMany()
+     * 
+     * // Get first 10 Battles
+     * const battles = await prisma.battle.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const battleWithIdOnly = await prisma.battle.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends BattleFindManyArgs>(args?: SelectSubset<T, BattleFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BattlePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Battle.
+     * @param {BattleCreateArgs} args - Arguments to create a Battle.
+     * @example
+     * // Create one Battle
+     * const Battle = await prisma.battle.create({
+     *   data: {
+     *     // ... data to create a Battle
+     *   }
+     * })
+     * 
+     */
+    create<T extends BattleCreateArgs>(args: SelectSubset<T, BattleCreateArgs<ExtArgs>>): Prisma__BattleClient<$Result.GetResult<Prisma.$BattlePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Battles.
+     * @param {BattleCreateManyArgs} args - Arguments to create many Battles.
+     * @example
+     * // Create many Battles
+     * const battle = await prisma.battle.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends BattleCreateManyArgs>(args?: SelectSubset<T, BattleCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Battles and returns the data saved in the database.
+     * @param {BattleCreateManyAndReturnArgs} args - Arguments to create many Battles.
+     * @example
+     * // Create many Battles
+     * const battle = await prisma.battle.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Battles and only return the `id`
+     * const battleWithIdOnly = await prisma.battle.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends BattleCreateManyAndReturnArgs>(args?: SelectSubset<T, BattleCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BattlePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Battle.
+     * @param {BattleDeleteArgs} args - Arguments to delete one Battle.
+     * @example
+     * // Delete one Battle
+     * const Battle = await prisma.battle.delete({
+     *   where: {
+     *     // ... filter to delete one Battle
+     *   }
+     * })
+     * 
+     */
+    delete<T extends BattleDeleteArgs>(args: SelectSubset<T, BattleDeleteArgs<ExtArgs>>): Prisma__BattleClient<$Result.GetResult<Prisma.$BattlePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Battle.
+     * @param {BattleUpdateArgs} args - Arguments to update one Battle.
+     * @example
+     * // Update one Battle
+     * const battle = await prisma.battle.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends BattleUpdateArgs>(args: SelectSubset<T, BattleUpdateArgs<ExtArgs>>): Prisma__BattleClient<$Result.GetResult<Prisma.$BattlePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Battles.
+     * @param {BattleDeleteManyArgs} args - Arguments to filter Battles to delete.
+     * @example
+     * // Delete a few Battles
+     * const { count } = await prisma.battle.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends BattleDeleteManyArgs>(args?: SelectSubset<T, BattleDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Battles.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BattleUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Battles
+     * const battle = await prisma.battle.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends BattleUpdateManyArgs>(args: SelectSubset<T, BattleUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Battles and returns the data updated in the database.
+     * @param {BattleUpdateManyAndReturnArgs} args - Arguments to update many Battles.
+     * @example
+     * // Update many Battles
+     * const battle = await prisma.battle.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Battles and only return the `id`
+     * const battleWithIdOnly = await prisma.battle.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends BattleUpdateManyAndReturnArgs>(args: SelectSubset<T, BattleUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BattlePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Battle.
+     * @param {BattleUpsertArgs} args - Arguments to update or create a Battle.
+     * @example
+     * // Update or create a Battle
+     * const battle = await prisma.battle.upsert({
+     *   create: {
+     *     // ... data to create a Battle
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Battle we want to update
+     *   }
+     * })
+     */
+    upsert<T extends BattleUpsertArgs>(args: SelectSubset<T, BattleUpsertArgs<ExtArgs>>): Prisma__BattleClient<$Result.GetResult<Prisma.$BattlePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Battles.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BattleCountArgs} args - Arguments to filter Battles to count.
+     * @example
+     * // Count the number of Battles
+     * const count = await prisma.battle.count({
+     *   where: {
+     *     // ... the filter for the Battles we want to count
+     *   }
+     * })
+    **/
+    count<T extends BattleCountArgs>(
+      args?: Subset<T, BattleCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], BattleCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Battle.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BattleAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends BattleAggregateArgs>(args: Subset<T, BattleAggregateArgs>): Prisma.PrismaPromise<GetBattleAggregateType<T>>
+
+    /**
+     * Group by Battle.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BattleGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends BattleGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: BattleGroupByArgs['orderBy'] }
+        : { orderBy?: BattleGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, BattleGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetBattleGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Battle model
+   */
+  readonly fields: BattleFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Battle.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__BattleClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    player1<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    player2<T extends Battle$player2Args<ExtArgs> = {}>(args?: Subset<T, Battle$player2Args<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    winner<T extends Battle$winnerArgs<ExtArgs> = {}>(args?: Subset<T, Battle$winnerArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    questions<T extends Battle$questionsArgs<ExtArgs> = {}>(args?: Subset<T, Battle$questionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QuestionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Battle model
+   */
+  interface BattleFieldRefs {
+    readonly id: FieldRef<"Battle", 'String'>
+    readonly player1Id: FieldRef<"Battle", 'String'>
+    readonly player2Id: FieldRef<"Battle", 'String'>
+    readonly winnerId: FieldRef<"Battle", 'String'>
+    readonly status: FieldRef<"Battle", 'BattleStatus'>
+    readonly createdAt: FieldRef<"Battle", 'DateTime'>
+    readonly updatedAt: FieldRef<"Battle", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Battle findUnique
+   */
+  export type BattleFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Battle
+     */
+    select?: BattleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Battle
+     */
+    omit?: BattleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BattleInclude<ExtArgs> | null
+    /**
+     * Filter, which Battle to fetch.
+     */
+    where: BattleWhereUniqueInput
+  }
+
+  /**
+   * Battle findUniqueOrThrow
+   */
+  export type BattleFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Battle
+     */
+    select?: BattleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Battle
+     */
+    omit?: BattleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BattleInclude<ExtArgs> | null
+    /**
+     * Filter, which Battle to fetch.
+     */
+    where: BattleWhereUniqueInput
+  }
+
+  /**
+   * Battle findFirst
+   */
+  export type BattleFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Battle
+     */
+    select?: BattleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Battle
+     */
+    omit?: BattleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BattleInclude<ExtArgs> | null
+    /**
+     * Filter, which Battle to fetch.
+     */
+    where?: BattleWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Battles to fetch.
+     */
+    orderBy?: BattleOrderByWithRelationInput | BattleOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Battles.
+     */
+    cursor?: BattleWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Battles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Battles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Battles.
+     */
+    distinct?: BattleScalarFieldEnum | BattleScalarFieldEnum[]
+  }
+
+  /**
+   * Battle findFirstOrThrow
+   */
+  export type BattleFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Battle
+     */
+    select?: BattleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Battle
+     */
+    omit?: BattleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BattleInclude<ExtArgs> | null
+    /**
+     * Filter, which Battle to fetch.
+     */
+    where?: BattleWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Battles to fetch.
+     */
+    orderBy?: BattleOrderByWithRelationInput | BattleOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Battles.
+     */
+    cursor?: BattleWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Battles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Battles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Battles.
+     */
+    distinct?: BattleScalarFieldEnum | BattleScalarFieldEnum[]
+  }
+
+  /**
+   * Battle findMany
+   */
+  export type BattleFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Battle
+     */
+    select?: BattleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Battle
+     */
+    omit?: BattleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BattleInclude<ExtArgs> | null
+    /**
+     * Filter, which Battles to fetch.
+     */
+    where?: BattleWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Battles to fetch.
+     */
+    orderBy?: BattleOrderByWithRelationInput | BattleOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Battles.
+     */
+    cursor?: BattleWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Battles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Battles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Battles.
+     */
+    distinct?: BattleScalarFieldEnum | BattleScalarFieldEnum[]
+  }
+
+  /**
+   * Battle create
+   */
+  export type BattleCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Battle
+     */
+    select?: BattleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Battle
+     */
+    omit?: BattleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BattleInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Battle.
+     */
+    data: XOR<BattleCreateInput, BattleUncheckedCreateInput>
+  }
+
+  /**
+   * Battle createMany
+   */
+  export type BattleCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Battles.
+     */
+    data: BattleCreateManyInput | BattleCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Battle createManyAndReturn
+   */
+  export type BattleCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Battle
+     */
+    select?: BattleSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Battle
+     */
+    omit?: BattleOmit<ExtArgs> | null
+    /**
+     * The data used to create many Battles.
+     */
+    data: BattleCreateManyInput | BattleCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BattleIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Battle update
+   */
+  export type BattleUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Battle
+     */
+    select?: BattleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Battle
+     */
+    omit?: BattleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BattleInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Battle.
+     */
+    data: XOR<BattleUpdateInput, BattleUncheckedUpdateInput>
+    /**
+     * Choose, which Battle to update.
+     */
+    where: BattleWhereUniqueInput
+  }
+
+  /**
+   * Battle updateMany
+   */
+  export type BattleUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Battles.
+     */
+    data: XOR<BattleUpdateManyMutationInput, BattleUncheckedUpdateManyInput>
+    /**
+     * Filter which Battles to update
+     */
+    where?: BattleWhereInput
+    /**
+     * Limit how many Battles to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Battle updateManyAndReturn
+   */
+  export type BattleUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Battle
+     */
+    select?: BattleSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Battle
+     */
+    omit?: BattleOmit<ExtArgs> | null
+    /**
+     * The data used to update Battles.
+     */
+    data: XOR<BattleUpdateManyMutationInput, BattleUncheckedUpdateManyInput>
+    /**
+     * Filter which Battles to update
+     */
+    where?: BattleWhereInput
+    /**
+     * Limit how many Battles to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BattleIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Battle upsert
+   */
+  export type BattleUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Battle
+     */
+    select?: BattleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Battle
+     */
+    omit?: BattleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BattleInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Battle to update in case it exists.
+     */
+    where: BattleWhereUniqueInput
+    /**
+     * In case the Battle found by the `where` argument doesn't exist, create a new Battle with this data.
+     */
+    create: XOR<BattleCreateInput, BattleUncheckedCreateInput>
+    /**
+     * In case the Battle was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<BattleUpdateInput, BattleUncheckedUpdateInput>
+  }
+
+  /**
+   * Battle delete
+   */
+  export type BattleDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Battle
+     */
+    select?: BattleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Battle
+     */
+    omit?: BattleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BattleInclude<ExtArgs> | null
+    /**
+     * Filter which Battle to delete.
+     */
+    where: BattleWhereUniqueInput
+  }
+
+  /**
+   * Battle deleteMany
+   */
+  export type BattleDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Battles to delete
+     */
+    where?: BattleWhereInput
+    /**
+     * Limit how many Battles to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Battle.player2
+   */
+  export type Battle$player2Args<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * Battle.winner
+   */
+  export type Battle$winnerArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * Battle.questions
+   */
+  export type Battle$questionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Question
+     */
+    select?: QuestionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Question
+     */
+    omit?: QuestionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuestionInclude<ExtArgs> | null
+    where?: QuestionWhereInput
+    orderBy?: QuestionOrderByWithRelationInput | QuestionOrderByWithRelationInput[]
+    cursor?: QuestionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: QuestionScalarFieldEnum | QuestionScalarFieldEnum[]
+  }
+
+  /**
+   * Battle without action
+   */
+  export type BattleDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Battle
+     */
+    select?: BattleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Battle
+     */
+    omit?: BattleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BattleInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -8520,7 +10040,8 @@ export namespace Prisma {
     created_at: 'created_at',
     updated_at: 'updated_at',
     deleted_at: 'deleted_at',
-    facultyId: 'facultyId'
+    facultyId: 'facultyId',
+    elo: 'elo'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -8569,6 +10090,7 @@ export namespace Prisma {
     customTestId: 'customTestId',
     score: 'score',
     total: 'total',
+    durationMs: 'durationMs',
     createdAt: 'createdAt'
   };
 
@@ -8584,6 +10106,19 @@ export namespace Prisma {
   };
 
   export type CustomTestScalarFieldEnum = (typeof CustomTestScalarFieldEnum)[keyof typeof CustomTestScalarFieldEnum]
+
+
+  export const BattleScalarFieldEnum: {
+    id: 'id',
+    player1Id: 'player1Id',
+    player2Id: 'player2Id',
+    winnerId: 'winnerId',
+    status: 'status',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type BattleScalarFieldEnum = (typeof BattleScalarFieldEnum)[keyof typeof BattleScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -8681,20 +10216,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'DocumentStatus'
-   */
-  export type EnumDocumentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DocumentStatus'>
-    
-
-
-  /**
-   * Reference to a field of type 'DocumentStatus[]'
-   */
-  export type ListEnumDocumentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DocumentStatus[]'>
-    
-
-
-  /**
    * Reference to a field of type 'Int'
    */
   export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -8705,6 +10226,20 @@ export namespace Prisma {
    * Reference to a field of type 'Int[]'
    */
   export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'DocumentStatus'
+   */
+  export type EnumDocumentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DocumentStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'DocumentStatus[]'
+   */
+  export type ListEnumDocumentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DocumentStatus[]'>
     
 
 
@@ -8751,6 +10286,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'BattleStatus'
+   */
+  export type EnumBattleStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BattleStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'BattleStatus[]'
+   */
+  export type ListEnumBattleStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BattleStatus[]'>
+    
+
+
+  /**
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -8781,10 +10330,14 @@ export namespace Prisma {
     updated_at?: DateTimeFilter<"User"> | Date | string
     deleted_at?: DateTimeNullableFilter<"User"> | Date | string | null
     facultyId?: StringNullableFilter<"User"> | string | null
+    elo?: IntFilter<"User"> | number
     testAttempts?: TestAttemptListRelationFilter
     faculty?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     students?: UserListRelationFilter
     createdTests?: CustomTestListRelationFilter
+    battlesAsP1?: BattleListRelationFilter
+    battlesAsP2?: BattleListRelationFilter
+    battlesWon?: BattleListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -8798,10 +10351,14 @@ export namespace Prisma {
     updated_at?: SortOrder
     deleted_at?: SortOrderInput | SortOrder
     facultyId?: SortOrderInput | SortOrder
+    elo?: SortOrder
     testAttempts?: TestAttemptOrderByRelationAggregateInput
     faculty?: UserOrderByWithRelationInput
     students?: UserOrderByRelationAggregateInput
     createdTests?: CustomTestOrderByRelationAggregateInput
+    battlesAsP1?: BattleOrderByRelationAggregateInput
+    battlesAsP2?: BattleOrderByRelationAggregateInput
+    battlesWon?: BattleOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -8818,10 +10375,14 @@ export namespace Prisma {
     updated_at?: DateTimeFilter<"User"> | Date | string
     deleted_at?: DateTimeNullableFilter<"User"> | Date | string | null
     facultyId?: StringNullableFilter<"User"> | string | null
+    elo?: IntFilter<"User"> | number
     testAttempts?: TestAttemptListRelationFilter
     faculty?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     students?: UserListRelationFilter
     createdTests?: CustomTestListRelationFilter
+    battlesAsP1?: BattleListRelationFilter
+    battlesAsP2?: BattleListRelationFilter
+    battlesWon?: BattleListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -8835,9 +10396,12 @@ export namespace Prisma {
     updated_at?: SortOrder
     deleted_at?: SortOrderInput | SortOrder
     facultyId?: SortOrderInput | SortOrder
+    elo?: SortOrder
     _count?: UserCountOrderByAggregateInput
+    _avg?: UserAvgOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
     _min?: UserMinOrderByAggregateInput
+    _sum?: UserSumOrderByAggregateInput
   }
 
   export type UserScalarWhereWithAggregatesInput = {
@@ -8854,6 +10418,7 @@ export namespace Prisma {
     updated_at?: DateTimeWithAggregatesFilter<"User"> | Date | string
     deleted_at?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     facultyId?: StringNullableWithAggregatesFilter<"User"> | string | null
+    elo?: IntWithAggregatesFilter<"User"> | number
   }
 
   export type DocumentJobWhereInput = {
@@ -8978,6 +10543,7 @@ export namespace Prisma {
     module?: XOR<ModuleScalarRelationFilter, ModuleWhereInput>
     documentJob?: XOR<DocumentJobNullableScalarRelationFilter, DocumentJobWhereInput> | null
     customTests?: CustomTestListRelationFilter
+    battles?: BattleListRelationFilter
   }
 
   export type QuestionOrderByWithRelationInput = {
@@ -8994,6 +10560,7 @@ export namespace Prisma {
     module?: ModuleOrderByWithRelationInput
     documentJob?: DocumentJobOrderByWithRelationInput
     customTests?: CustomTestOrderByRelationAggregateInput
+    battles?: BattleOrderByRelationAggregateInput
   }
 
   export type QuestionWhereUniqueInput = Prisma.AtLeast<{
@@ -9013,6 +10580,7 @@ export namespace Prisma {
     module?: XOR<ModuleScalarRelationFilter, ModuleWhereInput>
     documentJob?: XOR<DocumentJobNullableScalarRelationFilter, DocumentJobWhereInput> | null
     customTests?: CustomTestListRelationFilter
+    battles?: BattleListRelationFilter
   }, "id">
 
   export type QuestionOrderByWithAggregationInput = {
@@ -9057,6 +10625,7 @@ export namespace Prisma {
     customTestId?: StringNullableFilter<"TestAttempt"> | string | null
     score?: IntFilter<"TestAttempt"> | number
     total?: IntFilter<"TestAttempt"> | number
+    durationMs?: IntFilter<"TestAttempt"> | number
     createdAt?: DateTimeFilter<"TestAttempt"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     module?: XOR<ModuleNullableScalarRelationFilter, ModuleWhereInput> | null
@@ -9070,6 +10639,7 @@ export namespace Prisma {
     customTestId?: SortOrderInput | SortOrder
     score?: SortOrder
     total?: SortOrder
+    durationMs?: SortOrder
     createdAt?: SortOrder
     user?: UserOrderByWithRelationInput
     module?: ModuleOrderByWithRelationInput
@@ -9086,6 +10656,7 @@ export namespace Prisma {
     customTestId?: StringNullableFilter<"TestAttempt"> | string | null
     score?: IntFilter<"TestAttempt"> | number
     total?: IntFilter<"TestAttempt"> | number
+    durationMs?: IntFilter<"TestAttempt"> | number
     createdAt?: DateTimeFilter<"TestAttempt"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     module?: XOR<ModuleNullableScalarRelationFilter, ModuleWhereInput> | null
@@ -9099,6 +10670,7 @@ export namespace Prisma {
     customTestId?: SortOrderInput | SortOrder
     score?: SortOrder
     total?: SortOrder
+    durationMs?: SortOrder
     createdAt?: SortOrder
     _count?: TestAttemptCountOrderByAggregateInput
     _avg?: TestAttemptAvgOrderByAggregateInput
@@ -9117,6 +10689,7 @@ export namespace Prisma {
     customTestId?: StringNullableWithAggregatesFilter<"TestAttempt"> | string | null
     score?: IntWithAggregatesFilter<"TestAttempt"> | number
     total?: IntWithAggregatesFilter<"TestAttempt"> | number
+    durationMs?: IntWithAggregatesFilter<"TestAttempt"> | number
     createdAt?: DateTimeWithAggregatesFilter<"TestAttempt"> | Date | string
   }
 
@@ -9181,6 +10754,80 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"CustomTest"> | Date | string
   }
 
+  export type BattleWhereInput = {
+    AND?: BattleWhereInput | BattleWhereInput[]
+    OR?: BattleWhereInput[]
+    NOT?: BattleWhereInput | BattleWhereInput[]
+    id?: StringFilter<"Battle"> | string
+    player1Id?: StringFilter<"Battle"> | string
+    player2Id?: StringNullableFilter<"Battle"> | string | null
+    winnerId?: StringNullableFilter<"Battle"> | string | null
+    status?: EnumBattleStatusFilter<"Battle"> | $Enums.BattleStatus
+    createdAt?: DateTimeFilter<"Battle"> | Date | string
+    updatedAt?: DateTimeFilter<"Battle"> | Date | string
+    player1?: XOR<UserScalarRelationFilter, UserWhereInput>
+    player2?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    winner?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    questions?: QuestionListRelationFilter
+  }
+
+  export type BattleOrderByWithRelationInput = {
+    id?: SortOrder
+    player1Id?: SortOrder
+    player2Id?: SortOrderInput | SortOrder
+    winnerId?: SortOrderInput | SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    player1?: UserOrderByWithRelationInput
+    player2?: UserOrderByWithRelationInput
+    winner?: UserOrderByWithRelationInput
+    questions?: QuestionOrderByRelationAggregateInput
+  }
+
+  export type BattleWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: BattleWhereInput | BattleWhereInput[]
+    OR?: BattleWhereInput[]
+    NOT?: BattleWhereInput | BattleWhereInput[]
+    player1Id?: StringFilter<"Battle"> | string
+    player2Id?: StringNullableFilter<"Battle"> | string | null
+    winnerId?: StringNullableFilter<"Battle"> | string | null
+    status?: EnumBattleStatusFilter<"Battle"> | $Enums.BattleStatus
+    createdAt?: DateTimeFilter<"Battle"> | Date | string
+    updatedAt?: DateTimeFilter<"Battle"> | Date | string
+    player1?: XOR<UserScalarRelationFilter, UserWhereInput>
+    player2?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    winner?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    questions?: QuestionListRelationFilter
+  }, "id">
+
+  export type BattleOrderByWithAggregationInput = {
+    id?: SortOrder
+    player1Id?: SortOrder
+    player2Id?: SortOrderInput | SortOrder
+    winnerId?: SortOrderInput | SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: BattleCountOrderByAggregateInput
+    _max?: BattleMaxOrderByAggregateInput
+    _min?: BattleMinOrderByAggregateInput
+  }
+
+  export type BattleScalarWhereWithAggregatesInput = {
+    AND?: BattleScalarWhereWithAggregatesInput | BattleScalarWhereWithAggregatesInput[]
+    OR?: BattleScalarWhereWithAggregatesInput[]
+    NOT?: BattleScalarWhereWithAggregatesInput | BattleScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Battle"> | string
+    player1Id?: StringWithAggregatesFilter<"Battle"> | string
+    player2Id?: StringNullableWithAggregatesFilter<"Battle"> | string | null
+    winnerId?: StringNullableWithAggregatesFilter<"Battle"> | string | null
+    status?: EnumBattleStatusWithAggregatesFilter<"Battle"> | $Enums.BattleStatus
+    createdAt?: DateTimeWithAggregatesFilter<"Battle"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Battle"> | Date | string
+  }
+
   export type UserCreateInput = {
     id?: string
     name: string
@@ -9191,10 +10838,14 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     deleted_at?: Date | string | null
+    elo?: number
     testAttempts?: TestAttemptCreateNestedManyWithoutUserInput
     faculty?: UserCreateNestedOneWithoutStudentsInput
     students?: UserCreateNestedManyWithoutFacultyInput
     createdTests?: CustomTestCreateNestedManyWithoutFacultyInput
+    battlesAsP1?: BattleCreateNestedManyWithoutPlayer1Input
+    battlesAsP2?: BattleCreateNestedManyWithoutPlayer2Input
+    battlesWon?: BattleCreateNestedManyWithoutWinnerInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -9208,9 +10859,13 @@ export namespace Prisma {
     updated_at?: Date | string
     deleted_at?: Date | string | null
     facultyId?: string | null
+    elo?: number
     testAttempts?: TestAttemptUncheckedCreateNestedManyWithoutUserInput
     students?: UserUncheckedCreateNestedManyWithoutFacultyInput
     createdTests?: CustomTestUncheckedCreateNestedManyWithoutFacultyInput
+    battlesAsP1?: BattleUncheckedCreateNestedManyWithoutPlayer1Input
+    battlesAsP2?: BattleUncheckedCreateNestedManyWithoutPlayer2Input
+    battlesWon?: BattleUncheckedCreateNestedManyWithoutWinnerInput
   }
 
   export type UserUpdateInput = {
@@ -9223,10 +10878,14 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    elo?: IntFieldUpdateOperationsInput | number
     testAttempts?: TestAttemptUpdateManyWithoutUserNestedInput
     faculty?: UserUpdateOneWithoutStudentsNestedInput
     students?: UserUpdateManyWithoutFacultyNestedInput
     createdTests?: CustomTestUpdateManyWithoutFacultyNestedInput
+    battlesAsP1?: BattleUpdateManyWithoutPlayer1NestedInput
+    battlesAsP2?: BattleUpdateManyWithoutPlayer2NestedInput
+    battlesWon?: BattleUpdateManyWithoutWinnerNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -9240,9 +10899,13 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     facultyId?: NullableStringFieldUpdateOperationsInput | string | null
+    elo?: IntFieldUpdateOperationsInput | number
     testAttempts?: TestAttemptUncheckedUpdateManyWithoutUserNestedInput
     students?: UserUncheckedUpdateManyWithoutFacultyNestedInput
     createdTests?: CustomTestUncheckedUpdateManyWithoutFacultyNestedInput
+    battlesAsP1?: BattleUncheckedUpdateManyWithoutPlayer1NestedInput
+    battlesAsP2?: BattleUncheckedUpdateManyWithoutPlayer2NestedInput
+    battlesWon?: BattleUncheckedUpdateManyWithoutWinnerNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -9256,6 +10919,7 @@ export namespace Prisma {
     updated_at?: Date | string
     deleted_at?: Date | string | null
     facultyId?: string | null
+    elo?: number
   }
 
   export type UserUpdateManyMutationInput = {
@@ -9268,6 +10932,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    elo?: IntFieldUpdateOperationsInput | number
   }
 
   export type UserUncheckedUpdateManyInput = {
@@ -9281,6 +10946,7 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     facultyId?: NullableStringFieldUpdateOperationsInput | string | null
+    elo?: IntFieldUpdateOperationsInput | number
   }
 
   export type DocumentJobCreateInput = {
@@ -9405,6 +11071,7 @@ export namespace Prisma {
     module: ModuleCreateNestedOneWithoutQuestionsInput
     documentJob?: DocumentJobCreateNestedOneWithoutQuestionsInput
     customTests?: CustomTestCreateNestedManyWithoutQuestionsInput
+    battles?: BattleCreateNestedManyWithoutQuestionsInput
   }
 
   export type QuestionUncheckedCreateInput = {
@@ -9419,6 +11086,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     customTests?: CustomTestUncheckedCreateNestedManyWithoutQuestionsInput
+    battles?: BattleUncheckedCreateNestedManyWithoutQuestionsInput
   }
 
   export type QuestionUpdateInput = {
@@ -9433,6 +11101,7 @@ export namespace Prisma {
     module?: ModuleUpdateOneRequiredWithoutQuestionsNestedInput
     documentJob?: DocumentJobUpdateOneWithoutQuestionsNestedInput
     customTests?: CustomTestUpdateManyWithoutQuestionsNestedInput
+    battles?: BattleUpdateManyWithoutQuestionsNestedInput
   }
 
   export type QuestionUncheckedUpdateInput = {
@@ -9447,6 +11116,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     customTests?: CustomTestUncheckedUpdateManyWithoutQuestionsNestedInput
+    battles?: BattleUncheckedUpdateManyWithoutQuestionsNestedInput
   }
 
   export type QuestionCreateManyInput = {
@@ -9490,6 +11160,7 @@ export namespace Prisma {
     id?: string
     score: number
     total: number
+    durationMs?: number
     createdAt?: Date | string
     user: UserCreateNestedOneWithoutTestAttemptsInput
     module?: ModuleCreateNestedOneWithoutTestAttemptsInput
@@ -9503,6 +11174,7 @@ export namespace Prisma {
     customTestId?: string | null
     score: number
     total: number
+    durationMs?: number
     createdAt?: Date | string
   }
 
@@ -9510,6 +11182,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     score?: IntFieldUpdateOperationsInput | number
     total?: IntFieldUpdateOperationsInput | number
+    durationMs?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutTestAttemptsNestedInput
     module?: ModuleUpdateOneWithoutTestAttemptsNestedInput
@@ -9523,6 +11196,7 @@ export namespace Prisma {
     customTestId?: NullableStringFieldUpdateOperationsInput | string | null
     score?: IntFieldUpdateOperationsInput | number
     total?: IntFieldUpdateOperationsInput | number
+    durationMs?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -9533,6 +11207,7 @@ export namespace Prisma {
     customTestId?: string | null
     score: number
     total: number
+    durationMs?: number
     createdAt?: Date | string
   }
 
@@ -9540,6 +11215,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     score?: IntFieldUpdateOperationsInput | number
     total?: IntFieldUpdateOperationsInput | number
+    durationMs?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -9550,6 +11226,7 @@ export namespace Prisma {
     customTestId?: NullableStringFieldUpdateOperationsInput | string | null
     score?: IntFieldUpdateOperationsInput | number
     total?: IntFieldUpdateOperationsInput | number
+    durationMs?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -9612,6 +11289,77 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     facultyId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BattleCreateInput = {
+    id?: string
+    status?: $Enums.BattleStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    player1: UserCreateNestedOneWithoutBattlesAsP1Input
+    player2?: UserCreateNestedOneWithoutBattlesAsP2Input
+    winner?: UserCreateNestedOneWithoutBattlesWonInput
+    questions?: QuestionCreateNestedManyWithoutBattlesInput
+  }
+
+  export type BattleUncheckedCreateInput = {
+    id?: string
+    player1Id: string
+    player2Id?: string | null
+    winnerId?: string | null
+    status?: $Enums.BattleStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    questions?: QuestionUncheckedCreateNestedManyWithoutBattlesInput
+  }
+
+  export type BattleUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumBattleStatusFieldUpdateOperationsInput | $Enums.BattleStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    player1?: UserUpdateOneRequiredWithoutBattlesAsP1NestedInput
+    player2?: UserUpdateOneWithoutBattlesAsP2NestedInput
+    winner?: UserUpdateOneWithoutBattlesWonNestedInput
+    questions?: QuestionUpdateManyWithoutBattlesNestedInput
+  }
+
+  export type BattleUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    player1Id?: StringFieldUpdateOperationsInput | string
+    player2Id?: NullableStringFieldUpdateOperationsInput | string | null
+    winnerId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumBattleStatusFieldUpdateOperationsInput | $Enums.BattleStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    questions?: QuestionUncheckedUpdateManyWithoutBattlesNestedInput
+  }
+
+  export type BattleCreateManyInput = {
+    id?: string
+    player1Id: string
+    player2Id?: string | null
+    winnerId?: string | null
+    status?: $Enums.BattleStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BattleUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumBattleStatusFieldUpdateOperationsInput | $Enums.BattleStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BattleUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    player1Id?: StringFieldUpdateOperationsInput | string
+    player2Id?: NullableStringFieldUpdateOperationsInput | string | null
+    winnerId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumBattleStatusFieldUpdateOperationsInput | $Enums.BattleStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -9680,6 +11428,17 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
   export type TestAttemptListRelationFilter = {
     every?: TestAttemptWhereInput
     some?: TestAttemptWhereInput
@@ -9703,6 +11462,12 @@ export namespace Prisma {
     none?: CustomTestWhereInput
   }
 
+  export type BattleListRelationFilter = {
+    every?: BattleWhereInput
+    some?: BattleWhereInput
+    none?: BattleWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -9720,6 +11485,10 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type BattleOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type UserCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
@@ -9731,6 +11500,11 @@ export namespace Prisma {
     updated_at?: SortOrder
     deleted_at?: SortOrder
     facultyId?: SortOrder
+    elo?: SortOrder
+  }
+
+  export type UserAvgOrderByAggregateInput = {
+    elo?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -9744,6 +11518,7 @@ export namespace Prisma {
     updated_at?: SortOrder
     deleted_at?: SortOrder
     facultyId?: SortOrder
+    elo?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
@@ -9757,6 +11532,11 @@ export namespace Prisma {
     updated_at?: SortOrder
     deleted_at?: SortOrder
     facultyId?: SortOrder
+    elo?: SortOrder
+  }
+
+  export type UserSumOrderByAggregateInput = {
+    elo?: SortOrder
   }
 
   export type StringWithAggregatesFilter<$PrismaModel = never> = {
@@ -9839,6 +11619,22 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedStringNullableFilter<$PrismaModel>
     _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type EnumDocumentStatusFilter<$PrismaModel = never> = {
@@ -10075,17 +11871,6 @@ export namespace Prisma {
     _max?: NestedEnumQuestionStatusFilter<$PrismaModel>
   }
 
-  export type IntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
-  }
-
   export type UserScalarRelationFilter = {
     is?: UserWhereInput
     isNot?: UserWhereInput
@@ -10108,12 +11893,14 @@ export namespace Prisma {
     customTestId?: SortOrder
     score?: SortOrder
     total?: SortOrder
+    durationMs?: SortOrder
     createdAt?: SortOrder
   }
 
   export type TestAttemptAvgOrderByAggregateInput = {
     score?: SortOrder
     total?: SortOrder
+    durationMs?: SortOrder
   }
 
   export type TestAttemptMaxOrderByAggregateInput = {
@@ -10123,6 +11910,7 @@ export namespace Prisma {
     customTestId?: SortOrder
     score?: SortOrder
     total?: SortOrder
+    durationMs?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -10133,28 +11921,14 @@ export namespace Prisma {
     customTestId?: SortOrder
     score?: SortOrder
     total?: SortOrder
+    durationMs?: SortOrder
     createdAt?: SortOrder
   }
 
   export type TestAttemptSumOrderByAggregateInput = {
     score?: SortOrder
     total?: SortOrder
-  }
-
-  export type IntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
+    durationMs?: SortOrder
   }
 
   export type CustomTestCountOrderByAggregateInput = {
@@ -10179,6 +11953,53 @@ export namespace Prisma {
     facultyId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type EnumBattleStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.BattleStatus | EnumBattleStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.BattleStatus[] | ListEnumBattleStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.BattleStatus[] | ListEnumBattleStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumBattleStatusFilter<$PrismaModel> | $Enums.BattleStatus
+  }
+
+  export type BattleCountOrderByAggregateInput = {
+    id?: SortOrder
+    player1Id?: SortOrder
+    player2Id?: SortOrder
+    winnerId?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type BattleMaxOrderByAggregateInput = {
+    id?: SortOrder
+    player1Id?: SortOrder
+    player2Id?: SortOrder
+    winnerId?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type BattleMinOrderByAggregateInput = {
+    id?: SortOrder
+    player1Id?: SortOrder
+    player2Id?: SortOrder
+    winnerId?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EnumBattleStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.BattleStatus | EnumBattleStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.BattleStatus[] | ListEnumBattleStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.BattleStatus[] | ListEnumBattleStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumBattleStatusWithAggregatesFilter<$PrismaModel> | $Enums.BattleStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumBattleStatusFilter<$PrismaModel>
+    _max?: NestedEnumBattleStatusFilter<$PrismaModel>
   }
 
   export type TestAttemptCreateNestedManyWithoutUserInput = {
@@ -10208,6 +12029,27 @@ export namespace Prisma {
     connect?: CustomTestWhereUniqueInput | CustomTestWhereUniqueInput[]
   }
 
+  export type BattleCreateNestedManyWithoutPlayer1Input = {
+    create?: XOR<BattleCreateWithoutPlayer1Input, BattleUncheckedCreateWithoutPlayer1Input> | BattleCreateWithoutPlayer1Input[] | BattleUncheckedCreateWithoutPlayer1Input[]
+    connectOrCreate?: BattleCreateOrConnectWithoutPlayer1Input | BattleCreateOrConnectWithoutPlayer1Input[]
+    createMany?: BattleCreateManyPlayer1InputEnvelope
+    connect?: BattleWhereUniqueInput | BattleWhereUniqueInput[]
+  }
+
+  export type BattleCreateNestedManyWithoutPlayer2Input = {
+    create?: XOR<BattleCreateWithoutPlayer2Input, BattleUncheckedCreateWithoutPlayer2Input> | BattleCreateWithoutPlayer2Input[] | BattleUncheckedCreateWithoutPlayer2Input[]
+    connectOrCreate?: BattleCreateOrConnectWithoutPlayer2Input | BattleCreateOrConnectWithoutPlayer2Input[]
+    createMany?: BattleCreateManyPlayer2InputEnvelope
+    connect?: BattleWhereUniqueInput | BattleWhereUniqueInput[]
+  }
+
+  export type BattleCreateNestedManyWithoutWinnerInput = {
+    create?: XOR<BattleCreateWithoutWinnerInput, BattleUncheckedCreateWithoutWinnerInput> | BattleCreateWithoutWinnerInput[] | BattleUncheckedCreateWithoutWinnerInput[]
+    connectOrCreate?: BattleCreateOrConnectWithoutWinnerInput | BattleCreateOrConnectWithoutWinnerInput[]
+    createMany?: BattleCreateManyWinnerInputEnvelope
+    connect?: BattleWhereUniqueInput | BattleWhereUniqueInput[]
+  }
+
   export type TestAttemptUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<TestAttemptCreateWithoutUserInput, TestAttemptUncheckedCreateWithoutUserInput> | TestAttemptCreateWithoutUserInput[] | TestAttemptUncheckedCreateWithoutUserInput[]
     connectOrCreate?: TestAttemptCreateOrConnectWithoutUserInput | TestAttemptCreateOrConnectWithoutUserInput[]
@@ -10229,6 +12071,27 @@ export namespace Prisma {
     connect?: CustomTestWhereUniqueInput | CustomTestWhereUniqueInput[]
   }
 
+  export type BattleUncheckedCreateNestedManyWithoutPlayer1Input = {
+    create?: XOR<BattleCreateWithoutPlayer1Input, BattleUncheckedCreateWithoutPlayer1Input> | BattleCreateWithoutPlayer1Input[] | BattleUncheckedCreateWithoutPlayer1Input[]
+    connectOrCreate?: BattleCreateOrConnectWithoutPlayer1Input | BattleCreateOrConnectWithoutPlayer1Input[]
+    createMany?: BattleCreateManyPlayer1InputEnvelope
+    connect?: BattleWhereUniqueInput | BattleWhereUniqueInput[]
+  }
+
+  export type BattleUncheckedCreateNestedManyWithoutPlayer2Input = {
+    create?: XOR<BattleCreateWithoutPlayer2Input, BattleUncheckedCreateWithoutPlayer2Input> | BattleCreateWithoutPlayer2Input[] | BattleUncheckedCreateWithoutPlayer2Input[]
+    connectOrCreate?: BattleCreateOrConnectWithoutPlayer2Input | BattleCreateOrConnectWithoutPlayer2Input[]
+    createMany?: BattleCreateManyPlayer2InputEnvelope
+    connect?: BattleWhereUniqueInput | BattleWhereUniqueInput[]
+  }
+
+  export type BattleUncheckedCreateNestedManyWithoutWinnerInput = {
+    create?: XOR<BattleCreateWithoutWinnerInput, BattleUncheckedCreateWithoutWinnerInput> | BattleCreateWithoutWinnerInput[] | BattleUncheckedCreateWithoutWinnerInput[]
+    connectOrCreate?: BattleCreateOrConnectWithoutWinnerInput | BattleCreateOrConnectWithoutWinnerInput[]
+    createMany?: BattleCreateManyWinnerInputEnvelope
+    connect?: BattleWhereUniqueInput | BattleWhereUniqueInput[]
+  }
+
   export type StringFieldUpdateOperationsInput = {
     set?: string
   }
@@ -10247,6 +12110,14 @@ export namespace Prisma {
 
   export type NullableDateTimeFieldUpdateOperationsInput = {
     set?: Date | string | null
+  }
+
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
   }
 
   export type TestAttemptUpdateManyWithoutUserNestedInput = {
@@ -10301,6 +12172,48 @@ export namespace Prisma {
     deleteMany?: CustomTestScalarWhereInput | CustomTestScalarWhereInput[]
   }
 
+  export type BattleUpdateManyWithoutPlayer1NestedInput = {
+    create?: XOR<BattleCreateWithoutPlayer1Input, BattleUncheckedCreateWithoutPlayer1Input> | BattleCreateWithoutPlayer1Input[] | BattleUncheckedCreateWithoutPlayer1Input[]
+    connectOrCreate?: BattleCreateOrConnectWithoutPlayer1Input | BattleCreateOrConnectWithoutPlayer1Input[]
+    upsert?: BattleUpsertWithWhereUniqueWithoutPlayer1Input | BattleUpsertWithWhereUniqueWithoutPlayer1Input[]
+    createMany?: BattleCreateManyPlayer1InputEnvelope
+    set?: BattleWhereUniqueInput | BattleWhereUniqueInput[]
+    disconnect?: BattleWhereUniqueInput | BattleWhereUniqueInput[]
+    delete?: BattleWhereUniqueInput | BattleWhereUniqueInput[]
+    connect?: BattleWhereUniqueInput | BattleWhereUniqueInput[]
+    update?: BattleUpdateWithWhereUniqueWithoutPlayer1Input | BattleUpdateWithWhereUniqueWithoutPlayer1Input[]
+    updateMany?: BattleUpdateManyWithWhereWithoutPlayer1Input | BattleUpdateManyWithWhereWithoutPlayer1Input[]
+    deleteMany?: BattleScalarWhereInput | BattleScalarWhereInput[]
+  }
+
+  export type BattleUpdateManyWithoutPlayer2NestedInput = {
+    create?: XOR<BattleCreateWithoutPlayer2Input, BattleUncheckedCreateWithoutPlayer2Input> | BattleCreateWithoutPlayer2Input[] | BattleUncheckedCreateWithoutPlayer2Input[]
+    connectOrCreate?: BattleCreateOrConnectWithoutPlayer2Input | BattleCreateOrConnectWithoutPlayer2Input[]
+    upsert?: BattleUpsertWithWhereUniqueWithoutPlayer2Input | BattleUpsertWithWhereUniqueWithoutPlayer2Input[]
+    createMany?: BattleCreateManyPlayer2InputEnvelope
+    set?: BattleWhereUniqueInput | BattleWhereUniqueInput[]
+    disconnect?: BattleWhereUniqueInput | BattleWhereUniqueInput[]
+    delete?: BattleWhereUniqueInput | BattleWhereUniqueInput[]
+    connect?: BattleWhereUniqueInput | BattleWhereUniqueInput[]
+    update?: BattleUpdateWithWhereUniqueWithoutPlayer2Input | BattleUpdateWithWhereUniqueWithoutPlayer2Input[]
+    updateMany?: BattleUpdateManyWithWhereWithoutPlayer2Input | BattleUpdateManyWithWhereWithoutPlayer2Input[]
+    deleteMany?: BattleScalarWhereInput | BattleScalarWhereInput[]
+  }
+
+  export type BattleUpdateManyWithoutWinnerNestedInput = {
+    create?: XOR<BattleCreateWithoutWinnerInput, BattleUncheckedCreateWithoutWinnerInput> | BattleCreateWithoutWinnerInput[] | BattleUncheckedCreateWithoutWinnerInput[]
+    connectOrCreate?: BattleCreateOrConnectWithoutWinnerInput | BattleCreateOrConnectWithoutWinnerInput[]
+    upsert?: BattleUpsertWithWhereUniqueWithoutWinnerInput | BattleUpsertWithWhereUniqueWithoutWinnerInput[]
+    createMany?: BattleCreateManyWinnerInputEnvelope
+    set?: BattleWhereUniqueInput | BattleWhereUniqueInput[]
+    disconnect?: BattleWhereUniqueInput | BattleWhereUniqueInput[]
+    delete?: BattleWhereUniqueInput | BattleWhereUniqueInput[]
+    connect?: BattleWhereUniqueInput | BattleWhereUniqueInput[]
+    update?: BattleUpdateWithWhereUniqueWithoutWinnerInput | BattleUpdateWithWhereUniqueWithoutWinnerInput[]
+    updateMany?: BattleUpdateManyWithWhereWithoutWinnerInput | BattleUpdateManyWithWhereWithoutWinnerInput[]
+    deleteMany?: BattleScalarWhereInput | BattleScalarWhereInput[]
+  }
+
   export type NullableStringFieldUpdateOperationsInput = {
     set?: string | null
   }
@@ -10345,6 +12258,48 @@ export namespace Prisma {
     update?: CustomTestUpdateWithWhereUniqueWithoutFacultyInput | CustomTestUpdateWithWhereUniqueWithoutFacultyInput[]
     updateMany?: CustomTestUpdateManyWithWhereWithoutFacultyInput | CustomTestUpdateManyWithWhereWithoutFacultyInput[]
     deleteMany?: CustomTestScalarWhereInput | CustomTestScalarWhereInput[]
+  }
+
+  export type BattleUncheckedUpdateManyWithoutPlayer1NestedInput = {
+    create?: XOR<BattleCreateWithoutPlayer1Input, BattleUncheckedCreateWithoutPlayer1Input> | BattleCreateWithoutPlayer1Input[] | BattleUncheckedCreateWithoutPlayer1Input[]
+    connectOrCreate?: BattleCreateOrConnectWithoutPlayer1Input | BattleCreateOrConnectWithoutPlayer1Input[]
+    upsert?: BattleUpsertWithWhereUniqueWithoutPlayer1Input | BattleUpsertWithWhereUniqueWithoutPlayer1Input[]
+    createMany?: BattleCreateManyPlayer1InputEnvelope
+    set?: BattleWhereUniqueInput | BattleWhereUniqueInput[]
+    disconnect?: BattleWhereUniqueInput | BattleWhereUniqueInput[]
+    delete?: BattleWhereUniqueInput | BattleWhereUniqueInput[]
+    connect?: BattleWhereUniqueInput | BattleWhereUniqueInput[]
+    update?: BattleUpdateWithWhereUniqueWithoutPlayer1Input | BattleUpdateWithWhereUniqueWithoutPlayer1Input[]
+    updateMany?: BattleUpdateManyWithWhereWithoutPlayer1Input | BattleUpdateManyWithWhereWithoutPlayer1Input[]
+    deleteMany?: BattleScalarWhereInput | BattleScalarWhereInput[]
+  }
+
+  export type BattleUncheckedUpdateManyWithoutPlayer2NestedInput = {
+    create?: XOR<BattleCreateWithoutPlayer2Input, BattleUncheckedCreateWithoutPlayer2Input> | BattleCreateWithoutPlayer2Input[] | BattleUncheckedCreateWithoutPlayer2Input[]
+    connectOrCreate?: BattleCreateOrConnectWithoutPlayer2Input | BattleCreateOrConnectWithoutPlayer2Input[]
+    upsert?: BattleUpsertWithWhereUniqueWithoutPlayer2Input | BattleUpsertWithWhereUniqueWithoutPlayer2Input[]
+    createMany?: BattleCreateManyPlayer2InputEnvelope
+    set?: BattleWhereUniqueInput | BattleWhereUniqueInput[]
+    disconnect?: BattleWhereUniqueInput | BattleWhereUniqueInput[]
+    delete?: BattleWhereUniqueInput | BattleWhereUniqueInput[]
+    connect?: BattleWhereUniqueInput | BattleWhereUniqueInput[]
+    update?: BattleUpdateWithWhereUniqueWithoutPlayer2Input | BattleUpdateWithWhereUniqueWithoutPlayer2Input[]
+    updateMany?: BattleUpdateManyWithWhereWithoutPlayer2Input | BattleUpdateManyWithWhereWithoutPlayer2Input[]
+    deleteMany?: BattleScalarWhereInput | BattleScalarWhereInput[]
+  }
+
+  export type BattleUncheckedUpdateManyWithoutWinnerNestedInput = {
+    create?: XOR<BattleCreateWithoutWinnerInput, BattleUncheckedCreateWithoutWinnerInput> | BattleCreateWithoutWinnerInput[] | BattleUncheckedCreateWithoutWinnerInput[]
+    connectOrCreate?: BattleCreateOrConnectWithoutWinnerInput | BattleCreateOrConnectWithoutWinnerInput[]
+    upsert?: BattleUpsertWithWhereUniqueWithoutWinnerInput | BattleUpsertWithWhereUniqueWithoutWinnerInput[]
+    createMany?: BattleCreateManyWinnerInputEnvelope
+    set?: BattleWhereUniqueInput | BattleWhereUniqueInput[]
+    disconnect?: BattleWhereUniqueInput | BattleWhereUniqueInput[]
+    delete?: BattleWhereUniqueInput | BattleWhereUniqueInput[]
+    connect?: BattleWhereUniqueInput | BattleWhereUniqueInput[]
+    update?: BattleUpdateWithWhereUniqueWithoutWinnerInput | BattleUpdateWithWhereUniqueWithoutWinnerInput[]
+    updateMany?: BattleUpdateManyWithWhereWithoutWinnerInput | BattleUpdateManyWithWhereWithoutWinnerInput[]
+    deleteMany?: BattleScalarWhereInput | BattleScalarWhereInput[]
   }
 
   export type QuestionCreateNestedManyWithoutDocumentJobInput = {
@@ -10503,10 +12458,22 @@ export namespace Prisma {
     connect?: CustomTestWhereUniqueInput | CustomTestWhereUniqueInput[]
   }
 
+  export type BattleCreateNestedManyWithoutQuestionsInput = {
+    create?: XOR<BattleCreateWithoutQuestionsInput, BattleUncheckedCreateWithoutQuestionsInput> | BattleCreateWithoutQuestionsInput[] | BattleUncheckedCreateWithoutQuestionsInput[]
+    connectOrCreate?: BattleCreateOrConnectWithoutQuestionsInput | BattleCreateOrConnectWithoutQuestionsInput[]
+    connect?: BattleWhereUniqueInput | BattleWhereUniqueInput[]
+  }
+
   export type CustomTestUncheckedCreateNestedManyWithoutQuestionsInput = {
     create?: XOR<CustomTestCreateWithoutQuestionsInput, CustomTestUncheckedCreateWithoutQuestionsInput> | CustomTestCreateWithoutQuestionsInput[] | CustomTestUncheckedCreateWithoutQuestionsInput[]
     connectOrCreate?: CustomTestCreateOrConnectWithoutQuestionsInput | CustomTestCreateOrConnectWithoutQuestionsInput[]
     connect?: CustomTestWhereUniqueInput | CustomTestWhereUniqueInput[]
+  }
+
+  export type BattleUncheckedCreateNestedManyWithoutQuestionsInput = {
+    create?: XOR<BattleCreateWithoutQuestionsInput, BattleUncheckedCreateWithoutQuestionsInput> | BattleCreateWithoutQuestionsInput[] | BattleUncheckedCreateWithoutQuestionsInput[]
+    connectOrCreate?: BattleCreateOrConnectWithoutQuestionsInput | BattleCreateOrConnectWithoutQuestionsInput[]
+    connect?: BattleWhereUniqueInput | BattleWhereUniqueInput[]
   }
 
   export type EnumQuestionTypeFieldUpdateOperationsInput = {
@@ -10548,6 +12515,19 @@ export namespace Prisma {
     deleteMany?: CustomTestScalarWhereInput | CustomTestScalarWhereInput[]
   }
 
+  export type BattleUpdateManyWithoutQuestionsNestedInput = {
+    create?: XOR<BattleCreateWithoutQuestionsInput, BattleUncheckedCreateWithoutQuestionsInput> | BattleCreateWithoutQuestionsInput[] | BattleUncheckedCreateWithoutQuestionsInput[]
+    connectOrCreate?: BattleCreateOrConnectWithoutQuestionsInput | BattleCreateOrConnectWithoutQuestionsInput[]
+    upsert?: BattleUpsertWithWhereUniqueWithoutQuestionsInput | BattleUpsertWithWhereUniqueWithoutQuestionsInput[]
+    set?: BattleWhereUniqueInput | BattleWhereUniqueInput[]
+    disconnect?: BattleWhereUniqueInput | BattleWhereUniqueInput[]
+    delete?: BattleWhereUniqueInput | BattleWhereUniqueInput[]
+    connect?: BattleWhereUniqueInput | BattleWhereUniqueInput[]
+    update?: BattleUpdateWithWhereUniqueWithoutQuestionsInput | BattleUpdateWithWhereUniqueWithoutQuestionsInput[]
+    updateMany?: BattleUpdateManyWithWhereWithoutQuestionsInput | BattleUpdateManyWithWhereWithoutQuestionsInput[]
+    deleteMany?: BattleScalarWhereInput | BattleScalarWhereInput[]
+  }
+
   export type CustomTestUncheckedUpdateManyWithoutQuestionsNestedInput = {
     create?: XOR<CustomTestCreateWithoutQuestionsInput, CustomTestUncheckedCreateWithoutQuestionsInput> | CustomTestCreateWithoutQuestionsInput[] | CustomTestUncheckedCreateWithoutQuestionsInput[]
     connectOrCreate?: CustomTestCreateOrConnectWithoutQuestionsInput | CustomTestCreateOrConnectWithoutQuestionsInput[]
@@ -10559,6 +12539,19 @@ export namespace Prisma {
     update?: CustomTestUpdateWithWhereUniqueWithoutQuestionsInput | CustomTestUpdateWithWhereUniqueWithoutQuestionsInput[]
     updateMany?: CustomTestUpdateManyWithWhereWithoutQuestionsInput | CustomTestUpdateManyWithWhereWithoutQuestionsInput[]
     deleteMany?: CustomTestScalarWhereInput | CustomTestScalarWhereInput[]
+  }
+
+  export type BattleUncheckedUpdateManyWithoutQuestionsNestedInput = {
+    create?: XOR<BattleCreateWithoutQuestionsInput, BattleUncheckedCreateWithoutQuestionsInput> | BattleCreateWithoutQuestionsInput[] | BattleUncheckedCreateWithoutQuestionsInput[]
+    connectOrCreate?: BattleCreateOrConnectWithoutQuestionsInput | BattleCreateOrConnectWithoutQuestionsInput[]
+    upsert?: BattleUpsertWithWhereUniqueWithoutQuestionsInput | BattleUpsertWithWhereUniqueWithoutQuestionsInput[]
+    set?: BattleWhereUniqueInput | BattleWhereUniqueInput[]
+    disconnect?: BattleWhereUniqueInput | BattleWhereUniqueInput[]
+    delete?: BattleWhereUniqueInput | BattleWhereUniqueInput[]
+    connect?: BattleWhereUniqueInput | BattleWhereUniqueInput[]
+    update?: BattleUpdateWithWhereUniqueWithoutQuestionsInput | BattleUpdateWithWhereUniqueWithoutQuestionsInput[]
+    updateMany?: BattleUpdateManyWithWhereWithoutQuestionsInput | BattleUpdateManyWithWhereWithoutQuestionsInput[]
+    deleteMany?: BattleScalarWhereInput | BattleScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutTestAttemptsInput = {
@@ -10577,14 +12570,6 @@ export namespace Prisma {
     create?: XOR<CustomTestCreateWithoutAttemptsInput, CustomTestUncheckedCreateWithoutAttemptsInput>
     connectOrCreate?: CustomTestCreateOrConnectWithoutAttemptsInput
     connect?: CustomTestWhereUniqueInput
-  }
-
-  export type IntFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
   }
 
   export type UserUpdateOneRequiredWithoutTestAttemptsNestedInput = {
@@ -10709,6 +12694,94 @@ export namespace Prisma {
     deleteMany?: TestAttemptScalarWhereInput | TestAttemptScalarWhereInput[]
   }
 
+  export type UserCreateNestedOneWithoutBattlesAsP1Input = {
+    create?: XOR<UserCreateWithoutBattlesAsP1Input, UserUncheckedCreateWithoutBattlesAsP1Input>
+    connectOrCreate?: UserCreateOrConnectWithoutBattlesAsP1Input
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutBattlesAsP2Input = {
+    create?: XOR<UserCreateWithoutBattlesAsP2Input, UserUncheckedCreateWithoutBattlesAsP2Input>
+    connectOrCreate?: UserCreateOrConnectWithoutBattlesAsP2Input
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutBattlesWonInput = {
+    create?: XOR<UserCreateWithoutBattlesWonInput, UserUncheckedCreateWithoutBattlesWonInput>
+    connectOrCreate?: UserCreateOrConnectWithoutBattlesWonInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type QuestionCreateNestedManyWithoutBattlesInput = {
+    create?: XOR<QuestionCreateWithoutBattlesInput, QuestionUncheckedCreateWithoutBattlesInput> | QuestionCreateWithoutBattlesInput[] | QuestionUncheckedCreateWithoutBattlesInput[]
+    connectOrCreate?: QuestionCreateOrConnectWithoutBattlesInput | QuestionCreateOrConnectWithoutBattlesInput[]
+    connect?: QuestionWhereUniqueInput | QuestionWhereUniqueInput[]
+  }
+
+  export type QuestionUncheckedCreateNestedManyWithoutBattlesInput = {
+    create?: XOR<QuestionCreateWithoutBattlesInput, QuestionUncheckedCreateWithoutBattlesInput> | QuestionCreateWithoutBattlesInput[] | QuestionUncheckedCreateWithoutBattlesInput[]
+    connectOrCreate?: QuestionCreateOrConnectWithoutBattlesInput | QuestionCreateOrConnectWithoutBattlesInput[]
+    connect?: QuestionWhereUniqueInput | QuestionWhereUniqueInput[]
+  }
+
+  export type EnumBattleStatusFieldUpdateOperationsInput = {
+    set?: $Enums.BattleStatus
+  }
+
+  export type UserUpdateOneRequiredWithoutBattlesAsP1NestedInput = {
+    create?: XOR<UserCreateWithoutBattlesAsP1Input, UserUncheckedCreateWithoutBattlesAsP1Input>
+    connectOrCreate?: UserCreateOrConnectWithoutBattlesAsP1Input
+    upsert?: UserUpsertWithoutBattlesAsP1Input
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutBattlesAsP1Input, UserUpdateWithoutBattlesAsP1Input>, UserUncheckedUpdateWithoutBattlesAsP1Input>
+  }
+
+  export type UserUpdateOneWithoutBattlesAsP2NestedInput = {
+    create?: XOR<UserCreateWithoutBattlesAsP2Input, UserUncheckedCreateWithoutBattlesAsP2Input>
+    connectOrCreate?: UserCreateOrConnectWithoutBattlesAsP2Input
+    upsert?: UserUpsertWithoutBattlesAsP2Input
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutBattlesAsP2Input, UserUpdateWithoutBattlesAsP2Input>, UserUncheckedUpdateWithoutBattlesAsP2Input>
+  }
+
+  export type UserUpdateOneWithoutBattlesWonNestedInput = {
+    create?: XOR<UserCreateWithoutBattlesWonInput, UserUncheckedCreateWithoutBattlesWonInput>
+    connectOrCreate?: UserCreateOrConnectWithoutBattlesWonInput
+    upsert?: UserUpsertWithoutBattlesWonInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutBattlesWonInput, UserUpdateWithoutBattlesWonInput>, UserUncheckedUpdateWithoutBattlesWonInput>
+  }
+
+  export type QuestionUpdateManyWithoutBattlesNestedInput = {
+    create?: XOR<QuestionCreateWithoutBattlesInput, QuestionUncheckedCreateWithoutBattlesInput> | QuestionCreateWithoutBattlesInput[] | QuestionUncheckedCreateWithoutBattlesInput[]
+    connectOrCreate?: QuestionCreateOrConnectWithoutBattlesInput | QuestionCreateOrConnectWithoutBattlesInput[]
+    upsert?: QuestionUpsertWithWhereUniqueWithoutBattlesInput | QuestionUpsertWithWhereUniqueWithoutBattlesInput[]
+    set?: QuestionWhereUniqueInput | QuestionWhereUniqueInput[]
+    disconnect?: QuestionWhereUniqueInput | QuestionWhereUniqueInput[]
+    delete?: QuestionWhereUniqueInput | QuestionWhereUniqueInput[]
+    connect?: QuestionWhereUniqueInput | QuestionWhereUniqueInput[]
+    update?: QuestionUpdateWithWhereUniqueWithoutBattlesInput | QuestionUpdateWithWhereUniqueWithoutBattlesInput[]
+    updateMany?: QuestionUpdateManyWithWhereWithoutBattlesInput | QuestionUpdateManyWithWhereWithoutBattlesInput[]
+    deleteMany?: QuestionScalarWhereInput | QuestionScalarWhereInput[]
+  }
+
+  export type QuestionUncheckedUpdateManyWithoutBattlesNestedInput = {
+    create?: XOR<QuestionCreateWithoutBattlesInput, QuestionUncheckedCreateWithoutBattlesInput> | QuestionCreateWithoutBattlesInput[] | QuestionUncheckedCreateWithoutBattlesInput[]
+    connectOrCreate?: QuestionCreateOrConnectWithoutBattlesInput | QuestionCreateOrConnectWithoutBattlesInput[]
+    upsert?: QuestionUpsertWithWhereUniqueWithoutBattlesInput | QuestionUpsertWithWhereUniqueWithoutBattlesInput[]
+    set?: QuestionWhereUniqueInput | QuestionWhereUniqueInput[]
+    disconnect?: QuestionWhereUniqueInput | QuestionWhereUniqueInput[]
+    delete?: QuestionWhereUniqueInput | QuestionWhereUniqueInput[]
+    connect?: QuestionWhereUniqueInput | QuestionWhereUniqueInput[]
+    update?: QuestionUpdateWithWhereUniqueWithoutBattlesInput | QuestionUpdateWithWhereUniqueWithoutBattlesInput[]
+    updateMany?: QuestionUpdateManyWithWhereWithoutBattlesInput | QuestionUpdateManyWithWhereWithoutBattlesInput[]
+    deleteMany?: QuestionScalarWhereInput | QuestionScalarWhereInput[]
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -10771,6 +12844,17 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
+  export type NestedIntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
   export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -10786,17 +12870,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedStringFilter<$PrismaModel>
     _max?: NestedStringFilter<$PrismaModel>
-  }
-
-  export type NestedIntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
   }
 
   export type NestedEnumRoleWithAggregatesFilter<$PrismaModel = never> = {
@@ -10871,6 +12944,33 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedStringNullableFilter<$PrismaModel>
     _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type NestedFloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
   }
 
   export type NestedEnumDocumentStatusFilter<$PrismaModel = never> = {
@@ -10974,37 +13074,28 @@ export namespace Prisma {
     _max?: NestedEnumQuestionStatusFilter<$PrismaModel>
   }
 
-  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
+  export type NestedEnumBattleStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.BattleStatus | EnumBattleStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.BattleStatus[] | ListEnumBattleStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.BattleStatus[] | ListEnumBattleStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumBattleStatusFilter<$PrismaModel> | $Enums.BattleStatus
   }
 
-  export type NestedFloatFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel>
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatFilter<$PrismaModel> | number
+  export type NestedEnumBattleStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.BattleStatus | EnumBattleStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.BattleStatus[] | ListEnumBattleStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.BattleStatus[] | ListEnumBattleStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumBattleStatusWithAggregatesFilter<$PrismaModel> | $Enums.BattleStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumBattleStatusFilter<$PrismaModel>
+    _max?: NestedEnumBattleStatusFilter<$PrismaModel>
   }
 
   export type TestAttemptCreateWithoutUserInput = {
     id?: string
     score: number
     total: number
+    durationMs?: number
     createdAt?: Date | string
     module?: ModuleCreateNestedOneWithoutTestAttemptsInput
     customTest?: CustomTestCreateNestedOneWithoutAttemptsInput
@@ -11016,6 +13107,7 @@ export namespace Prisma {
     customTestId?: string | null
     score: number
     total: number
+    durationMs?: number
     createdAt?: Date | string
   }
 
@@ -11039,9 +13131,13 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     deleted_at?: Date | string | null
+    elo?: number
     testAttempts?: TestAttemptCreateNestedManyWithoutUserInput
     faculty?: UserCreateNestedOneWithoutStudentsInput
     createdTests?: CustomTestCreateNestedManyWithoutFacultyInput
+    battlesAsP1?: BattleCreateNestedManyWithoutPlayer1Input
+    battlesAsP2?: BattleCreateNestedManyWithoutPlayer2Input
+    battlesWon?: BattleCreateNestedManyWithoutWinnerInput
   }
 
   export type UserUncheckedCreateWithoutStudentsInput = {
@@ -11055,8 +13151,12 @@ export namespace Prisma {
     updated_at?: Date | string
     deleted_at?: Date | string | null
     facultyId?: string | null
+    elo?: number
     testAttempts?: TestAttemptUncheckedCreateNestedManyWithoutUserInput
     createdTests?: CustomTestUncheckedCreateNestedManyWithoutFacultyInput
+    battlesAsP1?: BattleUncheckedCreateNestedManyWithoutPlayer1Input
+    battlesAsP2?: BattleUncheckedCreateNestedManyWithoutPlayer2Input
+    battlesWon?: BattleUncheckedCreateNestedManyWithoutWinnerInput
   }
 
   export type UserCreateOrConnectWithoutStudentsInput = {
@@ -11074,9 +13174,13 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     deleted_at?: Date | string | null
+    elo?: number
     testAttempts?: TestAttemptCreateNestedManyWithoutUserInput
     students?: UserCreateNestedManyWithoutFacultyInput
     createdTests?: CustomTestCreateNestedManyWithoutFacultyInput
+    battlesAsP1?: BattleCreateNestedManyWithoutPlayer1Input
+    battlesAsP2?: BattleCreateNestedManyWithoutPlayer2Input
+    battlesWon?: BattleCreateNestedManyWithoutWinnerInput
   }
 
   export type UserUncheckedCreateWithoutFacultyInput = {
@@ -11089,9 +13193,13 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     deleted_at?: Date | string | null
+    elo?: number
     testAttempts?: TestAttemptUncheckedCreateNestedManyWithoutUserInput
     students?: UserUncheckedCreateNestedManyWithoutFacultyInput
     createdTests?: CustomTestUncheckedCreateNestedManyWithoutFacultyInput
+    battlesAsP1?: BattleUncheckedCreateNestedManyWithoutPlayer1Input
+    battlesAsP2?: BattleUncheckedCreateNestedManyWithoutPlayer2Input
+    battlesWon?: BattleUncheckedCreateNestedManyWithoutWinnerInput
   }
 
   export type UserCreateOrConnectWithoutFacultyInput = {
@@ -11132,6 +13240,96 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type BattleCreateWithoutPlayer1Input = {
+    id?: string
+    status?: $Enums.BattleStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    player2?: UserCreateNestedOneWithoutBattlesAsP2Input
+    winner?: UserCreateNestedOneWithoutBattlesWonInput
+    questions?: QuestionCreateNestedManyWithoutBattlesInput
+  }
+
+  export type BattleUncheckedCreateWithoutPlayer1Input = {
+    id?: string
+    player2Id?: string | null
+    winnerId?: string | null
+    status?: $Enums.BattleStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    questions?: QuestionUncheckedCreateNestedManyWithoutBattlesInput
+  }
+
+  export type BattleCreateOrConnectWithoutPlayer1Input = {
+    where: BattleWhereUniqueInput
+    create: XOR<BattleCreateWithoutPlayer1Input, BattleUncheckedCreateWithoutPlayer1Input>
+  }
+
+  export type BattleCreateManyPlayer1InputEnvelope = {
+    data: BattleCreateManyPlayer1Input | BattleCreateManyPlayer1Input[]
+    skipDuplicates?: boolean
+  }
+
+  export type BattleCreateWithoutPlayer2Input = {
+    id?: string
+    status?: $Enums.BattleStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    player1: UserCreateNestedOneWithoutBattlesAsP1Input
+    winner?: UserCreateNestedOneWithoutBattlesWonInput
+    questions?: QuestionCreateNestedManyWithoutBattlesInput
+  }
+
+  export type BattleUncheckedCreateWithoutPlayer2Input = {
+    id?: string
+    player1Id: string
+    winnerId?: string | null
+    status?: $Enums.BattleStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    questions?: QuestionUncheckedCreateNestedManyWithoutBattlesInput
+  }
+
+  export type BattleCreateOrConnectWithoutPlayer2Input = {
+    where: BattleWhereUniqueInput
+    create: XOR<BattleCreateWithoutPlayer2Input, BattleUncheckedCreateWithoutPlayer2Input>
+  }
+
+  export type BattleCreateManyPlayer2InputEnvelope = {
+    data: BattleCreateManyPlayer2Input | BattleCreateManyPlayer2Input[]
+    skipDuplicates?: boolean
+  }
+
+  export type BattleCreateWithoutWinnerInput = {
+    id?: string
+    status?: $Enums.BattleStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    player1: UserCreateNestedOneWithoutBattlesAsP1Input
+    player2?: UserCreateNestedOneWithoutBattlesAsP2Input
+    questions?: QuestionCreateNestedManyWithoutBattlesInput
+  }
+
+  export type BattleUncheckedCreateWithoutWinnerInput = {
+    id?: string
+    player1Id: string
+    player2Id?: string | null
+    status?: $Enums.BattleStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    questions?: QuestionUncheckedCreateNestedManyWithoutBattlesInput
+  }
+
+  export type BattleCreateOrConnectWithoutWinnerInput = {
+    where: BattleWhereUniqueInput
+    create: XOR<BattleCreateWithoutWinnerInput, BattleUncheckedCreateWithoutWinnerInput>
+  }
+
+  export type BattleCreateManyWinnerInputEnvelope = {
+    data: BattleCreateManyWinnerInput | BattleCreateManyWinnerInput[]
+    skipDuplicates?: boolean
+  }
+
   export type TestAttemptUpsertWithWhereUniqueWithoutUserInput = {
     where: TestAttemptWhereUniqueInput
     update: XOR<TestAttemptUpdateWithoutUserInput, TestAttemptUncheckedUpdateWithoutUserInput>
@@ -11158,6 +13356,7 @@ export namespace Prisma {
     customTestId?: StringNullableFilter<"TestAttempt"> | string | null
     score?: IntFilter<"TestAttempt"> | number
     total?: IntFilter<"TestAttempt"> | number
+    durationMs?: IntFilter<"TestAttempt"> | number
     createdAt?: DateTimeFilter<"TestAttempt"> | Date | string
   }
 
@@ -11182,9 +13381,13 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    elo?: IntFieldUpdateOperationsInput | number
     testAttempts?: TestAttemptUpdateManyWithoutUserNestedInput
     faculty?: UserUpdateOneWithoutStudentsNestedInput
     createdTests?: CustomTestUpdateManyWithoutFacultyNestedInput
+    battlesAsP1?: BattleUpdateManyWithoutPlayer1NestedInput
+    battlesAsP2?: BattleUpdateManyWithoutPlayer2NestedInput
+    battlesWon?: BattleUpdateManyWithoutWinnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutStudentsInput = {
@@ -11198,8 +13401,12 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     facultyId?: NullableStringFieldUpdateOperationsInput | string | null
+    elo?: IntFieldUpdateOperationsInput | number
     testAttempts?: TestAttemptUncheckedUpdateManyWithoutUserNestedInput
     createdTests?: CustomTestUncheckedUpdateManyWithoutFacultyNestedInput
+    battlesAsP1?: BattleUncheckedUpdateManyWithoutPlayer1NestedInput
+    battlesAsP2?: BattleUncheckedUpdateManyWithoutPlayer2NestedInput
+    battlesWon?: BattleUncheckedUpdateManyWithoutWinnerNestedInput
   }
 
   export type UserUpsertWithWhereUniqueWithoutFacultyInput = {
@@ -11232,6 +13439,7 @@ export namespace Prisma {
     updated_at?: DateTimeFilter<"User"> | Date | string
     deleted_at?: DateTimeNullableFilter<"User"> | Date | string | null
     facultyId?: StringNullableFilter<"User"> | string | null
+    elo?: IntFilter<"User"> | number
   }
 
   export type CustomTestUpsertWithWhereUniqueWithoutFacultyInput = {
@@ -11261,6 +13469,67 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"CustomTest"> | Date | string
   }
 
+  export type BattleUpsertWithWhereUniqueWithoutPlayer1Input = {
+    where: BattleWhereUniqueInput
+    update: XOR<BattleUpdateWithoutPlayer1Input, BattleUncheckedUpdateWithoutPlayer1Input>
+    create: XOR<BattleCreateWithoutPlayer1Input, BattleUncheckedCreateWithoutPlayer1Input>
+  }
+
+  export type BattleUpdateWithWhereUniqueWithoutPlayer1Input = {
+    where: BattleWhereUniqueInput
+    data: XOR<BattleUpdateWithoutPlayer1Input, BattleUncheckedUpdateWithoutPlayer1Input>
+  }
+
+  export type BattleUpdateManyWithWhereWithoutPlayer1Input = {
+    where: BattleScalarWhereInput
+    data: XOR<BattleUpdateManyMutationInput, BattleUncheckedUpdateManyWithoutPlayer1Input>
+  }
+
+  export type BattleScalarWhereInput = {
+    AND?: BattleScalarWhereInput | BattleScalarWhereInput[]
+    OR?: BattleScalarWhereInput[]
+    NOT?: BattleScalarWhereInput | BattleScalarWhereInput[]
+    id?: StringFilter<"Battle"> | string
+    player1Id?: StringFilter<"Battle"> | string
+    player2Id?: StringNullableFilter<"Battle"> | string | null
+    winnerId?: StringNullableFilter<"Battle"> | string | null
+    status?: EnumBattleStatusFilter<"Battle"> | $Enums.BattleStatus
+    createdAt?: DateTimeFilter<"Battle"> | Date | string
+    updatedAt?: DateTimeFilter<"Battle"> | Date | string
+  }
+
+  export type BattleUpsertWithWhereUniqueWithoutPlayer2Input = {
+    where: BattleWhereUniqueInput
+    update: XOR<BattleUpdateWithoutPlayer2Input, BattleUncheckedUpdateWithoutPlayer2Input>
+    create: XOR<BattleCreateWithoutPlayer2Input, BattleUncheckedCreateWithoutPlayer2Input>
+  }
+
+  export type BattleUpdateWithWhereUniqueWithoutPlayer2Input = {
+    where: BattleWhereUniqueInput
+    data: XOR<BattleUpdateWithoutPlayer2Input, BattleUncheckedUpdateWithoutPlayer2Input>
+  }
+
+  export type BattleUpdateManyWithWhereWithoutPlayer2Input = {
+    where: BattleScalarWhereInput
+    data: XOR<BattleUpdateManyMutationInput, BattleUncheckedUpdateManyWithoutPlayer2Input>
+  }
+
+  export type BattleUpsertWithWhereUniqueWithoutWinnerInput = {
+    where: BattleWhereUniqueInput
+    update: XOR<BattleUpdateWithoutWinnerInput, BattleUncheckedUpdateWithoutWinnerInput>
+    create: XOR<BattleCreateWithoutWinnerInput, BattleUncheckedCreateWithoutWinnerInput>
+  }
+
+  export type BattleUpdateWithWhereUniqueWithoutWinnerInput = {
+    where: BattleWhereUniqueInput
+    data: XOR<BattleUpdateWithoutWinnerInput, BattleUncheckedUpdateWithoutWinnerInput>
+  }
+
+  export type BattleUpdateManyWithWhereWithoutWinnerInput = {
+    where: BattleScalarWhereInput
+    data: XOR<BattleUpdateManyMutationInput, BattleUncheckedUpdateManyWithoutWinnerInput>
+  }
+
   export type QuestionCreateWithoutDocumentJobInput = {
     id?: string
     questionText: string
@@ -11272,6 +13541,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     module: ModuleCreateNestedOneWithoutQuestionsInput
     customTests?: CustomTestCreateNestedManyWithoutQuestionsInput
+    battles?: BattleCreateNestedManyWithoutQuestionsInput
   }
 
   export type QuestionUncheckedCreateWithoutDocumentJobInput = {
@@ -11285,6 +13555,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     customTests?: CustomTestUncheckedCreateNestedManyWithoutQuestionsInput
+    battles?: BattleUncheckedCreateNestedManyWithoutQuestionsInput
   }
 
   export type QuestionCreateOrConnectWithoutDocumentJobInput = {
@@ -11340,6 +13611,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     documentJob?: DocumentJobCreateNestedOneWithoutQuestionsInput
     customTests?: CustomTestCreateNestedManyWithoutQuestionsInput
+    battles?: BattleCreateNestedManyWithoutQuestionsInput
   }
 
   export type QuestionUncheckedCreateWithoutModuleInput = {
@@ -11353,6 +13625,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     customTests?: CustomTestUncheckedCreateNestedManyWithoutQuestionsInput
+    battles?: BattleUncheckedCreateNestedManyWithoutQuestionsInput
   }
 
   export type QuestionCreateOrConnectWithoutModuleInput = {
@@ -11369,6 +13642,7 @@ export namespace Prisma {
     id?: string
     score: number
     total: number
+    durationMs?: number
     createdAt?: Date | string
     user: UserCreateNestedOneWithoutTestAttemptsInput
     customTest?: CustomTestCreateNestedOneWithoutAttemptsInput
@@ -11380,6 +13654,7 @@ export namespace Prisma {
     customTestId?: string | null
     score: number
     total: number
+    durationMs?: number
     createdAt?: Date | string
   }
 
@@ -11488,6 +13763,31 @@ export namespace Prisma {
     create: XOR<CustomTestCreateWithoutQuestionsInput, CustomTestUncheckedCreateWithoutQuestionsInput>
   }
 
+  export type BattleCreateWithoutQuestionsInput = {
+    id?: string
+    status?: $Enums.BattleStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    player1: UserCreateNestedOneWithoutBattlesAsP1Input
+    player2?: UserCreateNestedOneWithoutBattlesAsP2Input
+    winner?: UserCreateNestedOneWithoutBattlesWonInput
+  }
+
+  export type BattleUncheckedCreateWithoutQuestionsInput = {
+    id?: string
+    player1Id: string
+    player2Id?: string | null
+    winnerId?: string | null
+    status?: $Enums.BattleStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BattleCreateOrConnectWithoutQuestionsInput = {
+    where: BattleWhereUniqueInput
+    create: XOR<BattleCreateWithoutQuestionsInput, BattleUncheckedCreateWithoutQuestionsInput>
+  }
+
   export type ModuleUpsertWithoutQuestionsInput = {
     update: XOR<ModuleUpdateWithoutQuestionsInput, ModuleUncheckedUpdateWithoutQuestionsInput>
     create: XOR<ModuleCreateWithoutQuestionsInput, ModuleUncheckedCreateWithoutQuestionsInput>
@@ -11556,6 +13856,22 @@ export namespace Prisma {
     data: XOR<CustomTestUpdateManyMutationInput, CustomTestUncheckedUpdateManyWithoutQuestionsInput>
   }
 
+  export type BattleUpsertWithWhereUniqueWithoutQuestionsInput = {
+    where: BattleWhereUniqueInput
+    update: XOR<BattleUpdateWithoutQuestionsInput, BattleUncheckedUpdateWithoutQuestionsInput>
+    create: XOR<BattleCreateWithoutQuestionsInput, BattleUncheckedCreateWithoutQuestionsInput>
+  }
+
+  export type BattleUpdateWithWhereUniqueWithoutQuestionsInput = {
+    where: BattleWhereUniqueInput
+    data: XOR<BattleUpdateWithoutQuestionsInput, BattleUncheckedUpdateWithoutQuestionsInput>
+  }
+
+  export type BattleUpdateManyWithWhereWithoutQuestionsInput = {
+    where: BattleScalarWhereInput
+    data: XOR<BattleUpdateManyMutationInput, BattleUncheckedUpdateManyWithoutQuestionsInput>
+  }
+
   export type UserCreateWithoutTestAttemptsInput = {
     id?: string
     name: string
@@ -11566,9 +13882,13 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     deleted_at?: Date | string | null
+    elo?: number
     faculty?: UserCreateNestedOneWithoutStudentsInput
     students?: UserCreateNestedManyWithoutFacultyInput
     createdTests?: CustomTestCreateNestedManyWithoutFacultyInput
+    battlesAsP1?: BattleCreateNestedManyWithoutPlayer1Input
+    battlesAsP2?: BattleCreateNestedManyWithoutPlayer2Input
+    battlesWon?: BattleCreateNestedManyWithoutWinnerInput
   }
 
   export type UserUncheckedCreateWithoutTestAttemptsInput = {
@@ -11582,8 +13902,12 @@ export namespace Prisma {
     updated_at?: Date | string
     deleted_at?: Date | string | null
     facultyId?: string | null
+    elo?: number
     students?: UserUncheckedCreateNestedManyWithoutFacultyInput
     createdTests?: CustomTestUncheckedCreateNestedManyWithoutFacultyInput
+    battlesAsP1?: BattleUncheckedCreateNestedManyWithoutPlayer1Input
+    battlesAsP2?: BattleUncheckedCreateNestedManyWithoutPlayer2Input
+    battlesWon?: BattleUncheckedCreateNestedManyWithoutWinnerInput
   }
 
   export type UserCreateOrConnectWithoutTestAttemptsInput = {
@@ -11654,9 +13978,13 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    elo?: IntFieldUpdateOperationsInput | number
     faculty?: UserUpdateOneWithoutStudentsNestedInput
     students?: UserUpdateManyWithoutFacultyNestedInput
     createdTests?: CustomTestUpdateManyWithoutFacultyNestedInput
+    battlesAsP1?: BattleUpdateManyWithoutPlayer1NestedInput
+    battlesAsP2?: BattleUpdateManyWithoutPlayer2NestedInput
+    battlesWon?: BattleUpdateManyWithoutWinnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTestAttemptsInput = {
@@ -11670,8 +13998,12 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     facultyId?: NullableStringFieldUpdateOperationsInput | string | null
+    elo?: IntFieldUpdateOperationsInput | number
     students?: UserUncheckedUpdateManyWithoutFacultyNestedInput
     createdTests?: CustomTestUncheckedUpdateManyWithoutFacultyNestedInput
+    battlesAsP1?: BattleUncheckedUpdateManyWithoutPlayer1NestedInput
+    battlesAsP2?: BattleUncheckedUpdateManyWithoutPlayer2NestedInput
+    battlesWon?: BattleUncheckedUpdateManyWithoutWinnerNestedInput
   }
 
   export type ModuleUpsertWithoutTestAttemptsInput = {
@@ -11738,9 +14070,13 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     deleted_at?: Date | string | null
+    elo?: number
     testAttempts?: TestAttemptCreateNestedManyWithoutUserInput
     faculty?: UserCreateNestedOneWithoutStudentsInput
     students?: UserCreateNestedManyWithoutFacultyInput
+    battlesAsP1?: BattleCreateNestedManyWithoutPlayer1Input
+    battlesAsP2?: BattleCreateNestedManyWithoutPlayer2Input
+    battlesWon?: BattleCreateNestedManyWithoutWinnerInput
   }
 
   export type UserUncheckedCreateWithoutCreatedTestsInput = {
@@ -11754,8 +14090,12 @@ export namespace Prisma {
     updated_at?: Date | string
     deleted_at?: Date | string | null
     facultyId?: string | null
+    elo?: number
     testAttempts?: TestAttemptUncheckedCreateNestedManyWithoutUserInput
     students?: UserUncheckedCreateNestedManyWithoutFacultyInput
+    battlesAsP1?: BattleUncheckedCreateNestedManyWithoutPlayer1Input
+    battlesAsP2?: BattleUncheckedCreateNestedManyWithoutPlayer2Input
+    battlesWon?: BattleUncheckedCreateNestedManyWithoutWinnerInput
   }
 
   export type UserCreateOrConnectWithoutCreatedTestsInput = {
@@ -11774,6 +14114,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     module: ModuleCreateNestedOneWithoutQuestionsInput
     documentJob?: DocumentJobCreateNestedOneWithoutQuestionsInput
+    battles?: BattleCreateNestedManyWithoutQuestionsInput
   }
 
   export type QuestionUncheckedCreateWithoutCustomTestsInput = {
@@ -11787,6 +14128,7 @@ export namespace Prisma {
     documentJobId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    battles?: BattleUncheckedCreateNestedManyWithoutQuestionsInput
   }
 
   export type QuestionCreateOrConnectWithoutCustomTestsInput = {
@@ -11798,6 +14140,7 @@ export namespace Prisma {
     id?: string
     score: number
     total: number
+    durationMs?: number
     createdAt?: Date | string
     user: UserCreateNestedOneWithoutTestAttemptsInput
     module?: ModuleCreateNestedOneWithoutTestAttemptsInput
@@ -11809,6 +14152,7 @@ export namespace Prisma {
     moduleId?: string | null
     score: number
     total: number
+    durationMs?: number
     createdAt?: Date | string
   }
 
@@ -11843,9 +14187,13 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    elo?: IntFieldUpdateOperationsInput | number
     testAttempts?: TestAttemptUpdateManyWithoutUserNestedInput
     faculty?: UserUpdateOneWithoutStudentsNestedInput
     students?: UserUpdateManyWithoutFacultyNestedInput
+    battlesAsP1?: BattleUpdateManyWithoutPlayer1NestedInput
+    battlesAsP2?: BattleUpdateManyWithoutPlayer2NestedInput
+    battlesWon?: BattleUpdateManyWithoutWinnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCreatedTestsInput = {
@@ -11859,8 +14207,12 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     facultyId?: NullableStringFieldUpdateOperationsInput | string | null
+    elo?: IntFieldUpdateOperationsInput | number
     testAttempts?: TestAttemptUncheckedUpdateManyWithoutUserNestedInput
     students?: UserUncheckedUpdateManyWithoutFacultyNestedInput
+    battlesAsP1?: BattleUncheckedUpdateManyWithoutPlayer1NestedInput
+    battlesAsP2?: BattleUncheckedUpdateManyWithoutPlayer2NestedInput
+    battlesWon?: BattleUncheckedUpdateManyWithoutWinnerNestedInput
   }
 
   export type QuestionUpsertWithWhereUniqueWithoutCustomTestsInput = {
@@ -11895,12 +14247,338 @@ export namespace Prisma {
     data: XOR<TestAttemptUpdateManyMutationInput, TestAttemptUncheckedUpdateManyWithoutCustomTestInput>
   }
 
+  export type UserCreateWithoutBattlesAsP1Input = {
+    id?: string
+    name: string
+    email: string
+    password_hash: string
+    role?: $Enums.Role
+    is_active?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+    deleted_at?: Date | string | null
+    elo?: number
+    testAttempts?: TestAttemptCreateNestedManyWithoutUserInput
+    faculty?: UserCreateNestedOneWithoutStudentsInput
+    students?: UserCreateNestedManyWithoutFacultyInput
+    createdTests?: CustomTestCreateNestedManyWithoutFacultyInput
+    battlesAsP2?: BattleCreateNestedManyWithoutPlayer2Input
+    battlesWon?: BattleCreateNestedManyWithoutWinnerInput
+  }
+
+  export type UserUncheckedCreateWithoutBattlesAsP1Input = {
+    id?: string
+    name: string
+    email: string
+    password_hash: string
+    role?: $Enums.Role
+    is_active?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+    deleted_at?: Date | string | null
+    facultyId?: string | null
+    elo?: number
+    testAttempts?: TestAttemptUncheckedCreateNestedManyWithoutUserInput
+    students?: UserUncheckedCreateNestedManyWithoutFacultyInput
+    createdTests?: CustomTestUncheckedCreateNestedManyWithoutFacultyInput
+    battlesAsP2?: BattleUncheckedCreateNestedManyWithoutPlayer2Input
+    battlesWon?: BattleUncheckedCreateNestedManyWithoutWinnerInput
+  }
+
+  export type UserCreateOrConnectWithoutBattlesAsP1Input = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutBattlesAsP1Input, UserUncheckedCreateWithoutBattlesAsP1Input>
+  }
+
+  export type UserCreateWithoutBattlesAsP2Input = {
+    id?: string
+    name: string
+    email: string
+    password_hash: string
+    role?: $Enums.Role
+    is_active?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+    deleted_at?: Date | string | null
+    elo?: number
+    testAttempts?: TestAttemptCreateNestedManyWithoutUserInput
+    faculty?: UserCreateNestedOneWithoutStudentsInput
+    students?: UserCreateNestedManyWithoutFacultyInput
+    createdTests?: CustomTestCreateNestedManyWithoutFacultyInput
+    battlesAsP1?: BattleCreateNestedManyWithoutPlayer1Input
+    battlesWon?: BattleCreateNestedManyWithoutWinnerInput
+  }
+
+  export type UserUncheckedCreateWithoutBattlesAsP2Input = {
+    id?: string
+    name: string
+    email: string
+    password_hash: string
+    role?: $Enums.Role
+    is_active?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+    deleted_at?: Date | string | null
+    facultyId?: string | null
+    elo?: number
+    testAttempts?: TestAttemptUncheckedCreateNestedManyWithoutUserInput
+    students?: UserUncheckedCreateNestedManyWithoutFacultyInput
+    createdTests?: CustomTestUncheckedCreateNestedManyWithoutFacultyInput
+    battlesAsP1?: BattleUncheckedCreateNestedManyWithoutPlayer1Input
+    battlesWon?: BattleUncheckedCreateNestedManyWithoutWinnerInput
+  }
+
+  export type UserCreateOrConnectWithoutBattlesAsP2Input = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutBattlesAsP2Input, UserUncheckedCreateWithoutBattlesAsP2Input>
+  }
+
+  export type UserCreateWithoutBattlesWonInput = {
+    id?: string
+    name: string
+    email: string
+    password_hash: string
+    role?: $Enums.Role
+    is_active?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+    deleted_at?: Date | string | null
+    elo?: number
+    testAttempts?: TestAttemptCreateNestedManyWithoutUserInput
+    faculty?: UserCreateNestedOneWithoutStudentsInput
+    students?: UserCreateNestedManyWithoutFacultyInput
+    createdTests?: CustomTestCreateNestedManyWithoutFacultyInput
+    battlesAsP1?: BattleCreateNestedManyWithoutPlayer1Input
+    battlesAsP2?: BattleCreateNestedManyWithoutPlayer2Input
+  }
+
+  export type UserUncheckedCreateWithoutBattlesWonInput = {
+    id?: string
+    name: string
+    email: string
+    password_hash: string
+    role?: $Enums.Role
+    is_active?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+    deleted_at?: Date | string | null
+    facultyId?: string | null
+    elo?: number
+    testAttempts?: TestAttemptUncheckedCreateNestedManyWithoutUserInput
+    students?: UserUncheckedCreateNestedManyWithoutFacultyInput
+    createdTests?: CustomTestUncheckedCreateNestedManyWithoutFacultyInput
+    battlesAsP1?: BattleUncheckedCreateNestedManyWithoutPlayer1Input
+    battlesAsP2?: BattleUncheckedCreateNestedManyWithoutPlayer2Input
+  }
+
+  export type UserCreateOrConnectWithoutBattlesWonInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutBattlesWonInput, UserUncheckedCreateWithoutBattlesWonInput>
+  }
+
+  export type QuestionCreateWithoutBattlesInput = {
+    id?: string
+    questionText: string
+    options: JsonNullValueInput | InputJsonValue
+    correctAnswer: string
+    type: $Enums.QuestionType
+    status?: $Enums.QuestionStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    module: ModuleCreateNestedOneWithoutQuestionsInput
+    documentJob?: DocumentJobCreateNestedOneWithoutQuestionsInput
+    customTests?: CustomTestCreateNestedManyWithoutQuestionsInput
+  }
+
+  export type QuestionUncheckedCreateWithoutBattlesInput = {
+    id?: string
+    moduleId: string
+    questionText: string
+    options: JsonNullValueInput | InputJsonValue
+    correctAnswer: string
+    type: $Enums.QuestionType
+    status?: $Enums.QuestionStatus
+    documentJobId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    customTests?: CustomTestUncheckedCreateNestedManyWithoutQuestionsInput
+  }
+
+  export type QuestionCreateOrConnectWithoutBattlesInput = {
+    where: QuestionWhereUniqueInput
+    create: XOR<QuestionCreateWithoutBattlesInput, QuestionUncheckedCreateWithoutBattlesInput>
+  }
+
+  export type UserUpsertWithoutBattlesAsP1Input = {
+    update: XOR<UserUpdateWithoutBattlesAsP1Input, UserUncheckedUpdateWithoutBattlesAsP1Input>
+    create: XOR<UserCreateWithoutBattlesAsP1Input, UserUncheckedCreateWithoutBattlesAsP1Input>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutBattlesAsP1Input = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutBattlesAsP1Input, UserUncheckedUpdateWithoutBattlesAsP1Input>
+  }
+
+  export type UserUpdateWithoutBattlesAsP1Input = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password_hash?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    elo?: IntFieldUpdateOperationsInput | number
+    testAttempts?: TestAttemptUpdateManyWithoutUserNestedInput
+    faculty?: UserUpdateOneWithoutStudentsNestedInput
+    students?: UserUpdateManyWithoutFacultyNestedInput
+    createdTests?: CustomTestUpdateManyWithoutFacultyNestedInput
+    battlesAsP2?: BattleUpdateManyWithoutPlayer2NestedInput
+    battlesWon?: BattleUpdateManyWithoutWinnerNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutBattlesAsP1Input = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password_hash?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    facultyId?: NullableStringFieldUpdateOperationsInput | string | null
+    elo?: IntFieldUpdateOperationsInput | number
+    testAttempts?: TestAttemptUncheckedUpdateManyWithoutUserNestedInput
+    students?: UserUncheckedUpdateManyWithoutFacultyNestedInput
+    createdTests?: CustomTestUncheckedUpdateManyWithoutFacultyNestedInput
+    battlesAsP2?: BattleUncheckedUpdateManyWithoutPlayer2NestedInput
+    battlesWon?: BattleUncheckedUpdateManyWithoutWinnerNestedInput
+  }
+
+  export type UserUpsertWithoutBattlesAsP2Input = {
+    update: XOR<UserUpdateWithoutBattlesAsP2Input, UserUncheckedUpdateWithoutBattlesAsP2Input>
+    create: XOR<UserCreateWithoutBattlesAsP2Input, UserUncheckedCreateWithoutBattlesAsP2Input>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutBattlesAsP2Input = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutBattlesAsP2Input, UserUncheckedUpdateWithoutBattlesAsP2Input>
+  }
+
+  export type UserUpdateWithoutBattlesAsP2Input = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password_hash?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    elo?: IntFieldUpdateOperationsInput | number
+    testAttempts?: TestAttemptUpdateManyWithoutUserNestedInput
+    faculty?: UserUpdateOneWithoutStudentsNestedInput
+    students?: UserUpdateManyWithoutFacultyNestedInput
+    createdTests?: CustomTestUpdateManyWithoutFacultyNestedInput
+    battlesAsP1?: BattleUpdateManyWithoutPlayer1NestedInput
+    battlesWon?: BattleUpdateManyWithoutWinnerNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutBattlesAsP2Input = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password_hash?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    facultyId?: NullableStringFieldUpdateOperationsInput | string | null
+    elo?: IntFieldUpdateOperationsInput | number
+    testAttempts?: TestAttemptUncheckedUpdateManyWithoutUserNestedInput
+    students?: UserUncheckedUpdateManyWithoutFacultyNestedInput
+    createdTests?: CustomTestUncheckedUpdateManyWithoutFacultyNestedInput
+    battlesAsP1?: BattleUncheckedUpdateManyWithoutPlayer1NestedInput
+    battlesWon?: BattleUncheckedUpdateManyWithoutWinnerNestedInput
+  }
+
+  export type UserUpsertWithoutBattlesWonInput = {
+    update: XOR<UserUpdateWithoutBattlesWonInput, UserUncheckedUpdateWithoutBattlesWonInput>
+    create: XOR<UserCreateWithoutBattlesWonInput, UserUncheckedCreateWithoutBattlesWonInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutBattlesWonInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutBattlesWonInput, UserUncheckedUpdateWithoutBattlesWonInput>
+  }
+
+  export type UserUpdateWithoutBattlesWonInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password_hash?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    elo?: IntFieldUpdateOperationsInput | number
+    testAttempts?: TestAttemptUpdateManyWithoutUserNestedInput
+    faculty?: UserUpdateOneWithoutStudentsNestedInput
+    students?: UserUpdateManyWithoutFacultyNestedInput
+    createdTests?: CustomTestUpdateManyWithoutFacultyNestedInput
+    battlesAsP1?: BattleUpdateManyWithoutPlayer1NestedInput
+    battlesAsP2?: BattleUpdateManyWithoutPlayer2NestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutBattlesWonInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password_hash?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    facultyId?: NullableStringFieldUpdateOperationsInput | string | null
+    elo?: IntFieldUpdateOperationsInput | number
+    testAttempts?: TestAttemptUncheckedUpdateManyWithoutUserNestedInput
+    students?: UserUncheckedUpdateManyWithoutFacultyNestedInput
+    createdTests?: CustomTestUncheckedUpdateManyWithoutFacultyNestedInput
+    battlesAsP1?: BattleUncheckedUpdateManyWithoutPlayer1NestedInput
+    battlesAsP2?: BattleUncheckedUpdateManyWithoutPlayer2NestedInput
+  }
+
+  export type QuestionUpsertWithWhereUniqueWithoutBattlesInput = {
+    where: QuestionWhereUniqueInput
+    update: XOR<QuestionUpdateWithoutBattlesInput, QuestionUncheckedUpdateWithoutBattlesInput>
+    create: XOR<QuestionCreateWithoutBattlesInput, QuestionUncheckedCreateWithoutBattlesInput>
+  }
+
+  export type QuestionUpdateWithWhereUniqueWithoutBattlesInput = {
+    where: QuestionWhereUniqueInput
+    data: XOR<QuestionUpdateWithoutBattlesInput, QuestionUncheckedUpdateWithoutBattlesInput>
+  }
+
+  export type QuestionUpdateManyWithWhereWithoutBattlesInput = {
+    where: QuestionScalarWhereInput
+    data: XOR<QuestionUpdateManyMutationInput, QuestionUncheckedUpdateManyWithoutBattlesInput>
+  }
+
   export type TestAttemptCreateManyUserInput = {
     id?: string
     moduleId?: string | null
     customTestId?: string | null
     score: number
     total: number
+    durationMs?: number
     createdAt?: Date | string
   }
 
@@ -11914,6 +14592,7 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     deleted_at?: Date | string | null
+    elo?: number
   }
 
   export type CustomTestCreateManyFacultyInput = {
@@ -11923,10 +14602,38 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type BattleCreateManyPlayer1Input = {
+    id?: string
+    player2Id?: string | null
+    winnerId?: string | null
+    status?: $Enums.BattleStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BattleCreateManyPlayer2Input = {
+    id?: string
+    player1Id: string
+    winnerId?: string | null
+    status?: $Enums.BattleStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BattleCreateManyWinnerInput = {
+    id?: string
+    player1Id: string
+    player2Id?: string | null
+    status?: $Enums.BattleStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type TestAttemptUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     score?: IntFieldUpdateOperationsInput | number
     total?: IntFieldUpdateOperationsInput | number
+    durationMs?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     module?: ModuleUpdateOneWithoutTestAttemptsNestedInput
     customTest?: CustomTestUpdateOneWithoutAttemptsNestedInput
@@ -11938,6 +14645,7 @@ export namespace Prisma {
     customTestId?: NullableStringFieldUpdateOperationsInput | string | null
     score?: IntFieldUpdateOperationsInput | number
     total?: IntFieldUpdateOperationsInput | number
+    durationMs?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -11947,6 +14655,7 @@ export namespace Prisma {
     customTestId?: NullableStringFieldUpdateOperationsInput | string | null
     score?: IntFieldUpdateOperationsInput | number
     total?: IntFieldUpdateOperationsInput | number
+    durationMs?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -11960,9 +14669,13 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    elo?: IntFieldUpdateOperationsInput | number
     testAttempts?: TestAttemptUpdateManyWithoutUserNestedInput
     students?: UserUpdateManyWithoutFacultyNestedInput
     createdTests?: CustomTestUpdateManyWithoutFacultyNestedInput
+    battlesAsP1?: BattleUpdateManyWithoutPlayer1NestedInput
+    battlesAsP2?: BattleUpdateManyWithoutPlayer2NestedInput
+    battlesWon?: BattleUpdateManyWithoutWinnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFacultyInput = {
@@ -11975,9 +14688,13 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    elo?: IntFieldUpdateOperationsInput | number
     testAttempts?: TestAttemptUncheckedUpdateManyWithoutUserNestedInput
     students?: UserUncheckedUpdateManyWithoutFacultyNestedInput
     createdTests?: CustomTestUncheckedUpdateManyWithoutFacultyNestedInput
+    battlesAsP1?: BattleUncheckedUpdateManyWithoutPlayer1NestedInput
+    battlesAsP2?: BattleUncheckedUpdateManyWithoutPlayer2NestedInput
+    battlesWon?: BattleUncheckedUpdateManyWithoutWinnerNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutFacultyInput = {
@@ -11990,6 +14707,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    elo?: IntFieldUpdateOperationsInput | number
   }
 
   export type CustomTestUpdateWithoutFacultyInput = {
@@ -12017,6 +14735,93 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type BattleUpdateWithoutPlayer1Input = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumBattleStatusFieldUpdateOperationsInput | $Enums.BattleStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    player2?: UserUpdateOneWithoutBattlesAsP2NestedInput
+    winner?: UserUpdateOneWithoutBattlesWonNestedInput
+    questions?: QuestionUpdateManyWithoutBattlesNestedInput
+  }
+
+  export type BattleUncheckedUpdateWithoutPlayer1Input = {
+    id?: StringFieldUpdateOperationsInput | string
+    player2Id?: NullableStringFieldUpdateOperationsInput | string | null
+    winnerId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumBattleStatusFieldUpdateOperationsInput | $Enums.BattleStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    questions?: QuestionUncheckedUpdateManyWithoutBattlesNestedInput
+  }
+
+  export type BattleUncheckedUpdateManyWithoutPlayer1Input = {
+    id?: StringFieldUpdateOperationsInput | string
+    player2Id?: NullableStringFieldUpdateOperationsInput | string | null
+    winnerId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumBattleStatusFieldUpdateOperationsInput | $Enums.BattleStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BattleUpdateWithoutPlayer2Input = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumBattleStatusFieldUpdateOperationsInput | $Enums.BattleStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    player1?: UserUpdateOneRequiredWithoutBattlesAsP1NestedInput
+    winner?: UserUpdateOneWithoutBattlesWonNestedInput
+    questions?: QuestionUpdateManyWithoutBattlesNestedInput
+  }
+
+  export type BattleUncheckedUpdateWithoutPlayer2Input = {
+    id?: StringFieldUpdateOperationsInput | string
+    player1Id?: StringFieldUpdateOperationsInput | string
+    winnerId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumBattleStatusFieldUpdateOperationsInput | $Enums.BattleStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    questions?: QuestionUncheckedUpdateManyWithoutBattlesNestedInput
+  }
+
+  export type BattleUncheckedUpdateManyWithoutPlayer2Input = {
+    id?: StringFieldUpdateOperationsInput | string
+    player1Id?: StringFieldUpdateOperationsInput | string
+    winnerId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumBattleStatusFieldUpdateOperationsInput | $Enums.BattleStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BattleUpdateWithoutWinnerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumBattleStatusFieldUpdateOperationsInput | $Enums.BattleStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    player1?: UserUpdateOneRequiredWithoutBattlesAsP1NestedInput
+    player2?: UserUpdateOneWithoutBattlesAsP2NestedInput
+    questions?: QuestionUpdateManyWithoutBattlesNestedInput
+  }
+
+  export type BattleUncheckedUpdateWithoutWinnerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    player1Id?: StringFieldUpdateOperationsInput | string
+    player2Id?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumBattleStatusFieldUpdateOperationsInput | $Enums.BattleStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    questions?: QuestionUncheckedUpdateManyWithoutBattlesNestedInput
+  }
+
+  export type BattleUncheckedUpdateManyWithoutWinnerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    player1Id?: StringFieldUpdateOperationsInput | string
+    player2Id?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumBattleStatusFieldUpdateOperationsInput | $Enums.BattleStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type QuestionCreateManyDocumentJobInput = {
     id?: string
     moduleId: string
@@ -12040,6 +14845,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     module?: ModuleUpdateOneRequiredWithoutQuestionsNestedInput
     customTests?: CustomTestUpdateManyWithoutQuestionsNestedInput
+    battles?: BattleUpdateManyWithoutQuestionsNestedInput
   }
 
   export type QuestionUncheckedUpdateWithoutDocumentJobInput = {
@@ -12053,6 +14859,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     customTests?: CustomTestUncheckedUpdateManyWithoutQuestionsNestedInput
+    battles?: BattleUncheckedUpdateManyWithoutQuestionsNestedInput
   }
 
   export type QuestionUncheckedUpdateManyWithoutDocumentJobInput = {
@@ -12085,6 +14892,7 @@ export namespace Prisma {
     customTestId?: string | null
     score: number
     total: number
+    durationMs?: number
     createdAt?: Date | string
   }
 
@@ -12099,6 +14907,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     documentJob?: DocumentJobUpdateOneWithoutQuestionsNestedInput
     customTests?: CustomTestUpdateManyWithoutQuestionsNestedInput
+    battles?: BattleUpdateManyWithoutQuestionsNestedInput
   }
 
   export type QuestionUncheckedUpdateWithoutModuleInput = {
@@ -12112,6 +14921,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     customTests?: CustomTestUncheckedUpdateManyWithoutQuestionsNestedInput
+    battles?: BattleUncheckedUpdateManyWithoutQuestionsNestedInput
   }
 
   export type QuestionUncheckedUpdateManyWithoutModuleInput = {
@@ -12130,6 +14940,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     score?: IntFieldUpdateOperationsInput | number
     total?: IntFieldUpdateOperationsInput | number
+    durationMs?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutTestAttemptsNestedInput
     customTest?: CustomTestUpdateOneWithoutAttemptsNestedInput
@@ -12141,6 +14952,7 @@ export namespace Prisma {
     customTestId?: NullableStringFieldUpdateOperationsInput | string | null
     score?: IntFieldUpdateOperationsInput | number
     total?: IntFieldUpdateOperationsInput | number
+    durationMs?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -12150,6 +14962,7 @@ export namespace Prisma {
     customTestId?: NullableStringFieldUpdateOperationsInput | string | null
     score?: IntFieldUpdateOperationsInput | number
     total?: IntFieldUpdateOperationsInput | number
+    durationMs?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -12179,12 +14992,43 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type BattleUpdateWithoutQuestionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumBattleStatusFieldUpdateOperationsInput | $Enums.BattleStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    player1?: UserUpdateOneRequiredWithoutBattlesAsP1NestedInput
+    player2?: UserUpdateOneWithoutBattlesAsP2NestedInput
+    winner?: UserUpdateOneWithoutBattlesWonNestedInput
+  }
+
+  export type BattleUncheckedUpdateWithoutQuestionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    player1Id?: StringFieldUpdateOperationsInput | string
+    player2Id?: NullableStringFieldUpdateOperationsInput | string | null
+    winnerId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumBattleStatusFieldUpdateOperationsInput | $Enums.BattleStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BattleUncheckedUpdateManyWithoutQuestionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    player1Id?: StringFieldUpdateOperationsInput | string
+    player2Id?: NullableStringFieldUpdateOperationsInput | string | null
+    winnerId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumBattleStatusFieldUpdateOperationsInput | $Enums.BattleStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type TestAttemptCreateManyCustomTestInput = {
     id?: string
     userId: string
     moduleId?: string | null
     score: number
     total: number
+    durationMs?: number
     createdAt?: Date | string
   }
 
@@ -12199,6 +15043,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     module?: ModuleUpdateOneRequiredWithoutQuestionsNestedInput
     documentJob?: DocumentJobUpdateOneWithoutQuestionsNestedInput
+    battles?: BattleUpdateManyWithoutQuestionsNestedInput
   }
 
   export type QuestionUncheckedUpdateWithoutCustomTestsInput = {
@@ -12212,6 +15057,7 @@ export namespace Prisma {
     documentJobId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    battles?: BattleUncheckedUpdateManyWithoutQuestionsNestedInput
   }
 
   export type QuestionUncheckedUpdateManyWithoutCustomTestsInput = {
@@ -12231,6 +15077,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     score?: IntFieldUpdateOperationsInput | number
     total?: IntFieldUpdateOperationsInput | number
+    durationMs?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutTestAttemptsNestedInput
     module?: ModuleUpdateOneWithoutTestAttemptsNestedInput
@@ -12242,6 +15089,7 @@ export namespace Prisma {
     moduleId?: NullableStringFieldUpdateOperationsInput | string | null
     score?: IntFieldUpdateOperationsInput | number
     total?: IntFieldUpdateOperationsInput | number
+    durationMs?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -12251,7 +15099,49 @@ export namespace Prisma {
     moduleId?: NullableStringFieldUpdateOperationsInput | string | null
     score?: IntFieldUpdateOperationsInput | number
     total?: IntFieldUpdateOperationsInput | number
+    durationMs?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type QuestionUpdateWithoutBattlesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    questionText?: StringFieldUpdateOperationsInput | string
+    options?: JsonNullValueInput | InputJsonValue
+    correctAnswer?: StringFieldUpdateOperationsInput | string
+    type?: EnumQuestionTypeFieldUpdateOperationsInput | $Enums.QuestionType
+    status?: EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    module?: ModuleUpdateOneRequiredWithoutQuestionsNestedInput
+    documentJob?: DocumentJobUpdateOneWithoutQuestionsNestedInput
+    customTests?: CustomTestUpdateManyWithoutQuestionsNestedInput
+  }
+
+  export type QuestionUncheckedUpdateWithoutBattlesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    moduleId?: StringFieldUpdateOperationsInput | string
+    questionText?: StringFieldUpdateOperationsInput | string
+    options?: JsonNullValueInput | InputJsonValue
+    correctAnswer?: StringFieldUpdateOperationsInput | string
+    type?: EnumQuestionTypeFieldUpdateOperationsInput | $Enums.QuestionType
+    status?: EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+    documentJobId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customTests?: CustomTestUncheckedUpdateManyWithoutQuestionsNestedInput
+  }
+
+  export type QuestionUncheckedUpdateManyWithoutBattlesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    moduleId?: StringFieldUpdateOperationsInput | string
+    questionText?: StringFieldUpdateOperationsInput | string
+    options?: JsonNullValueInput | InputJsonValue
+    correctAnswer?: StringFieldUpdateOperationsInput | string
+    type?: EnumQuestionTypeFieldUpdateOperationsInput | $Enums.QuestionType
+    status?: EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+    documentJobId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 

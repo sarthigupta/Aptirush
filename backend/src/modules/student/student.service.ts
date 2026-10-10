@@ -33,14 +33,15 @@ export const StudentService = {
     return quiz;
   },
 
-  async saveTestAttempt(userId: string, moduleId: string | null, score: number, total: number, customTestId: string | null = null) {
+  async saveTestAttempt(userId: string, moduleId: string | null, score: number, total: number, customTestId: string | null = null, durationMs: number = 0) {
     return prisma.testAttempt.create({
       data: {
         userId,
         ...(moduleId ? { moduleId } : {}),
         ...(customTestId ? { customTestId } : {}),
         score,
-        total
+        total,
+        durationMs
       }
     });
   },
@@ -93,5 +94,61 @@ export const StudentService = {
       },
       recentTests
     };
+  },
+
+  async getLeaderboard() {
+    const students = await prisma.user.findMany({
+      where: { role: 'STUDENT' },
+      select: {
+        id: true,
+        name: true,
+        elo: true,
+        faculty: { select: { name: true } },
+        battlesWon: { select: { id: true } },
+        battlesAsP1: { select: { id: true } },
+        battlesAsP2: { select: { id: true } },
+        testAttempts: { select: { score: true, total: true, durationMs: true } }
+      },
+      orderBy: { elo: 'desc' },
+      take: 100
+    });
+
+    return students.map(s => {
+      const totalBattles = s.battlesAsP1.length + s.battlesAsP2.length;
+      const winRate = totalBattles > 0 ? (s.battlesWon.length / totalBattles) * 100 : 0;
+      
+      let avgSpeed = 0;
+      let accuracy = 0;
+
+      if (s.testAttempts.length > 0) {
+        const sumAccuracy = s.testAttempts.reduce((acc, curr) => acc + (curr.score / curr.total), 0);
+        accuracy = (sumAccuracy / s.testAttempts.length) * 100;
+
+        let totalQuestionsAnswered = 0;
+        let totalTimeMs = 0;
+        s.testAttempts.forEach(attempt => {
+          totalTimeMs += attempt.durationMs;
+          totalQuestionsAnswered += attempt.total;
+        });
+
+        if (totalQuestionsAnswered > 0 && totalTimeMs > 0) {
+          avgSpeed = (totalTimeMs / totalQuestionsAnswered) / 1000; // Average seconds per question
+        } else {
+          avgSpeed = Math.max(10, 25 - (s.elo - 1000) / 100); // Fallback
+        }
+      } else {
+        avgSpeed = Math.max(10, 25 - (s.elo - 1000) / 100); // Fallback if no attempts
+      }
+
+      return {
+        id: s.id,
+        name: s.name,
+        affiliation: s.faculty?.name || 'Independent',
+        elo: s.elo,
+        winRate: winRate.toFixed(1) + '%',
+        avgSpeed: avgSpeed.toFixed(1) + 's',
+        accuracy: accuracy.toFixed(1) + '%'
+      };
+    });
   }
 };
