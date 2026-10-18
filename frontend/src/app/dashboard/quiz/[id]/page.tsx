@@ -3,14 +3,15 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { api } from '@/lib/api';
-import { io, Socket } from 'socket.io-client';
+import { Socket } from 'socket.io-client';
+import { getSocket } from '@/lib/socket';
 
 export default function QuizPage() {
   const { id } = useParams();
   const router = useRouter();
   const searchParams = useSearchParams();
   const type = searchParams.get('type');
-  
+
   const [module, setModule] = useState<any>(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
@@ -49,7 +50,7 @@ export default function QuizPage() {
   useEffect(() => {
     if (type !== 'custom' || !user) return;
 
-    const newSocket = io('http://localhost:5000');
+    const newSocket = getSocket();
     setSocket(newSocket);
 
     newSocket.emit('join_test_room', { customTestId: id, userId: user.id, name: user.name });
@@ -62,9 +63,9 @@ export default function QuizPage() {
       setLeaderboard(prev => {
         const existing = prev.find(p => p.userId === data.userId);
         if (existing) {
-          return prev.map(p => p.userId === data.userId ? { ...p, score: data.score, isFinished: data.isFinished } : p).sort((a,b) => b.score - a.score);
+          return prev.map(p => p.userId === data.userId ? { ...p, score: data.score, isFinished: data.isFinished } : p).sort((a, b) => b.score - a.score);
         } else {
-          return [...prev, data].sort((a,b) => b.score - a.score);
+          return [...prev, data].sort((a, b) => b.score - a.score);
         }
       });
     });
@@ -76,7 +77,7 @@ export default function QuizPage() {
 
   const emitProgress = (newAnswers: Record<string, string>, finished: boolean) => {
     if (type !== 'custom' || !socket || !user || !module) return;
-    
+
     let currentScore = 0;
     module.questions.forEach((q: any) => {
       if (newAnswers[q.id] && newAnswers[q.id].toLowerCase() === q.correctAnswer.toLowerCase()) {
@@ -91,14 +92,14 @@ export default function QuizPage() {
       score: currentScore,
       isFinished: finished
     });
-    
+
     setLeaderboard(prev => {
       const data = { userId: user.id, name: user.name, score: currentScore, isFinished: finished };
       const existing = prev.find(p => p.userId === user.id);
       if (existing) {
-        return prev.map(p => p.userId === user.id ? data : p).sort((a,b) => b.score - a.score);
+        return prev.map(p => p.userId === user.id ? data : p).sort((a, b) => b.score - a.score);
       } else {
-        return [...prev, data].sort((a,b) => b.score - a.score);
+        return [...prev, data].sort((a, b) => b.score - a.score);
       }
     });
   };
@@ -114,7 +115,7 @@ export default function QuizPage() {
   if (!module) return <div className="p-8 text-center text-error font-body-md">Simulation not found</div>;
 
   const questions = module.questions || [];
-  
+
   if (questions.length === 0) {
     return <div className="p-8 text-center text-on-surface-variant font-body-md">No questions available for this module yet.</div>;
   }
@@ -140,9 +141,17 @@ export default function QuizPage() {
 
   const handleFinishQuiz = async () => {
     let score = 0;
+    const mistakes: { questionId: string, userAnswer: string }[] = [];
+
     questions.forEach((q: any) => {
-      if (answers[q.id] && answers[q.id].toLowerCase() === q.correctAnswer.toLowerCase()) {
+      const userAnswer = answers[q.id] || '';
+      if (userAnswer.toLowerCase() === q.correctAnswer.toLowerCase()) {
         score++;
+      } else if (userAnswer) {
+        mistakes.push({
+          questionId: q.id,
+          userAnswer
+        });
       }
     });
 
@@ -153,13 +162,14 @@ export default function QuizPage() {
         ...(type === 'custom' ? { customTestId: id } : { moduleId: id }),
         score,
         total: questions.length,
-        durationMs
+        durationMs,
+        mistakes
       });
       emitProgress(answers, true);
     } catch (err) {
       console.error('Failed to save score', err);
     }
-    
+
     setIsFinished(true);
   };
 
@@ -195,7 +205,7 @@ export default function QuizPage() {
         <div className="max-w-[1120px] mx-auto px-gutter py-space-xl flex flex-col gap-space-xl w-full">
           <section className="flex flex-col items-center text-center max-w-2xl mx-auto">
             <div className="inline-flex items-center gap-space-xs px-space-md py-space-xs rounded-full bg-secondary-container/40 text-on-secondary-container font-label-md text-label-md mb-space-sm shadow-sm">
-              <span className="material-symbols-outlined text-base" style={{fontVariationSettings: "'FILL' 1"}}>verified</span>
+              <span className="material-symbols-outlined text-base" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span>
               <span>Simulation Complete</span>
             </div>
             <h1 className="font-display text-display text-on-surface tracking-tight mb-space-xs">Debrief</h1>
@@ -287,9 +297,9 @@ export default function QuizPage() {
       <div className="absolute top-10 right-0 w-[400px] h-[400px] bg-secondary-fixed/10 rounded-full blur-3xl pointer-events-none -z-10"></div>
 
       <div className="max-w-[1120px] mx-auto px-gutter py-space-lg flex gap-space-lg w-full">
-        
+
         <div className="flex-1 flex flex-col min-w-0">
-          <button 
+          <button
             onClick={() => router.push('/dashboard/tests')}
             className="flex items-center w-fit font-label-md text-label-md text-on-surface-variant hover:text-on-surface mb-space-md transition-colors"
           >
@@ -313,18 +323,18 @@ export default function QuizPage() {
                 {currentQuestion.questionText}
               </p>
             </div>
-            
+
             <div className="p-space-xl bg-surface-container-lowest relative">
               {currentQuestion.type === 'MCQ' ? (
                 <div className="space-y-space-md">
                   {Object.entries(currentQuestion.options).map(([key, value]) => {
                     const isSelected = answers[currentQuestion.id] === key;
                     const isCorrect = key === currentQuestion.correctAnswer;
-                    
+
                     let buttonStyle = "border-outline-variant/40 bg-surface text-on-surface hover:border-outline-variant";
                     let iconClass = "text-outline-variant";
                     let iconName = "radio_button_unchecked";
-                    
+
                     if (hasAnsweredCurrent) {
                       if (isCorrect) {
                         buttonStyle = "border-secondary bg-secondary-container/20 text-secondary-container shadow-[0_0_10px_rgba(0,108,73,0.1)]";
@@ -338,9 +348,9 @@ export default function QuizPage() {
                         buttonStyle = "border-outline-variant/30 bg-surface opacity-60 cursor-not-allowed text-outline";
                       }
                     } else if (isSelected) {
-                       buttonStyle = "border-primary bg-primary-container/10 text-primary shadow-sm";
-                       iconClass = "text-primary";
-                       iconName = "radio_button_checked";
+                      buttonStyle = "border-primary bg-primary-container/10 text-primary shadow-sm";
+                      iconClass = "text-primary";
+                      iconName = "radio_button_checked";
                     }
 
                     return (
@@ -365,47 +375,46 @@ export default function QuizPage() {
                 </div>
               ) : (
                 <div>
-                   <p className="font-label-md text-on-surface-variant uppercase tracking-wider mb-space-sm">Input Answer</p>
-                   <div className="flex flex-col sm:flex-row gap-space-sm">
-                     <input 
-                       type="text" 
-                       value={hasAnsweredCurrent ? answers[currentQuestion.id] : titaInput}
-                       onChange={(e) => setTitaInput(e.target.value)}
-                       disabled={hasAnsweredCurrent}
-                       placeholder="Awaiting input..."
-                       className={`flex-1 border-2 rounded-xl p-space-md outline-none font-body-lg transition-all ${
-                          hasAnsweredCurrent 
-                            ? answers[currentQuestion.id]?.toLowerCase() === currentQuestion.correctAnswer.toLowerCase()
-                              ? 'border-secondary bg-secondary-container/20 text-secondary'
-                              : 'border-error bg-error-container/20 text-error'
-                            : 'border-outline-variant/50 bg-surface text-on-surface focus:border-primary focus:ring-2 focus:ring-primary/20'
-                       }`}
-                     />
-                     {!hasAnsweredCurrent && (
-                       <button 
-                         onClick={submitTitaAnswer}
-                         disabled={!titaInput.trim()}
-                         className="bg-primary text-on-primary px-8 py-4 rounded-xl font-label-lg font-bold hover:bg-primary-container disabled:opacity-50 transition-colors shrink-0 shadow-sm"
-                       >
-                         Submit
-                       </button>
-                     )}
-                   </div>
-                   
-                   {hasAnsweredCurrent && (
-                     <div className="mt-space-md p-space-md bg-surface rounded-xl border border-surface-variant flex items-center">
-                       <span className="material-symbols-outlined text-secondary text-[20px] mr-2">verified</span>
-                       <p className="font-label-lg text-on-surface">
-                         Correct Answer: <span className="text-secondary font-bold ml-1">{currentQuestion.correctAnswer}</span>
-                       </p>
-                     </div>
-                   )}
+                  <p className="font-label-md text-on-surface-variant uppercase tracking-wider mb-space-sm">Input Answer</p>
+                  <div className="flex flex-col sm:flex-row gap-space-sm">
+                    <input
+                      type="text"
+                      value={hasAnsweredCurrent ? answers[currentQuestion.id] : titaInput}
+                      onChange={(e) => setTitaInput(e.target.value)}
+                      disabled={hasAnsweredCurrent}
+                      placeholder="Awaiting input..."
+                      className={`flex-1 border-2 rounded-xl p-space-md outline-none font-body-lg transition-all ${hasAnsweredCurrent
+                          ? answers[currentQuestion.id]?.toLowerCase() === currentQuestion.correctAnswer.toLowerCase()
+                            ? 'border-secondary bg-secondary-container/20 text-secondary'
+                            : 'border-error bg-error-container/20 text-error'
+                          : 'border-outline-variant/50 bg-surface text-on-surface focus:border-primary focus:ring-2 focus:ring-primary/20'
+                        }`}
+                    />
+                    {!hasAnsweredCurrent && (
+                      <button
+                        onClick={submitTitaAnswer}
+                        disabled={!titaInput.trim()}
+                        className="bg-primary text-on-primary px-8 py-4 rounded-xl font-label-lg font-bold hover:bg-primary-container disabled:opacity-50 transition-colors shrink-0 shadow-sm"
+                      >
+                        Submit
+                      </button>
+                    )}
+                  </div>
+
+                  {hasAnsweredCurrent && (
+                    <div className="mt-space-md p-space-md bg-surface rounded-xl border border-surface-variant flex items-center">
+                      <span className="material-symbols-outlined text-secondary text-[20px] mr-2">verified</span>
+                      <p className="font-label-lg text-on-surface">
+                        Correct Answer: <span className="text-secondary font-bold ml-1">{currentQuestion.correctAnswer}</span>
+                      </p>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
-            
+
             <div className="p-space-lg border-t border-surface-variant bg-surface-container-lowest flex justify-between">
-              <button 
+              <button
                 onClick={handlePrev}
                 disabled={isFirstQuestion}
                 className="flex items-center text-on-surface-variant hover:text-on-surface px-6 py-3 rounded-lg font-label-lg disabled:opacity-40 transition-colors bg-surface hover:bg-surface-container-high border border-outline-variant/40"
@@ -413,12 +422,12 @@ export default function QuizPage() {
                 <span className="material-symbols-outlined text-[20px] mr-2">chevron_left</span> Previous
               </button>
 
-              <button 
+              <button
                 onClick={handleNext}
                 disabled={!hasAnsweredCurrent}
                 className="flex items-center bg-primary text-on-primary px-8 py-3 rounded-lg font-label-lg font-bold disabled:opacity-50 transition-all shadow-sm hover:bg-primary-container"
               >
-                {isLastQuestion ? 'Complete Simulation' : 'Next Question'} 
+                {isLastQuestion ? 'Complete Simulation' : 'Next Question'}
                 {!isLastQuestion && <span className="material-symbols-outlined text-[20px] ml-2">chevron_right</span>}
               </button>
             </div>
@@ -433,7 +442,7 @@ export default function QuizPage() {
                 <span className="material-symbols-outlined text-primary text-[24px]">leaderboard</span>
                 <h3 className="font-title-md text-[18px] text-on-surface font-bold">Live Combatants</h3>
               </div>
-              
+
               <div className="space-y-2">
                 {leaderboard.length === 0 ? (
                   <p className="font-body-sm text-on-surface-variant text-center py-4">Awaiting competitors...</p>

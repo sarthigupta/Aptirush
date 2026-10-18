@@ -131,7 +131,26 @@ exports.Prisma.UserScalarFieldEnum = {
   updated_at: 'updated_at',
   deleted_at: 'deleted_at',
   facultyId: 'facultyId',
-  elo: 'elo'
+  elo: 'elo',
+  currentStreak: 'currentStreak',
+  lastActiveAt: 'lastActiveAt',
+  longestStreak: 'longestStreak'
+};
+
+exports.Prisma.EloHistoryScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  elo: 'elo',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.MistakeScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  questionId: 'questionId',
+  attemptId: 'attemptId',
+  userAnswer: 'userAnswer',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.DocumentJobScalarFieldEnum = {
@@ -165,11 +184,11 @@ exports.Prisma.TestAttemptScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   moduleId: 'moduleId',
-  customTestId: 'customTestId',
   score: 'score',
   total: 'total',
-  durationMs: 'durationMs',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  customTestId: 'customTestId',
+  durationMs: 'durationMs'
 };
 
 exports.Prisma.CustomTestScalarFieldEnum = {
@@ -244,6 +263,8 @@ exports.BattleStatus = exports.$Enums.BattleStatus = {
 
 exports.Prisma.ModelName = {
   User: 'User',
+  EloHistory: 'EloHistory',
+  Mistake: 'Mistake',
   DocumentJob: 'DocumentJob',
   Module: 'Module',
   Question: 'Question',

@@ -1,19 +1,132 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
   output   = "../src/generated/prisma"
-
 }
 
 datasource db {
   provider = "postgresql"
 }
 
+model User {
+  id            String        @id @default(uuid())
+  name          String
+  email         String        @unique
+  password_hash String
+  role          Role          @default(STUDENT)
+  is_active     Boolean       @default(true)
+  created_at    DateTime      @default(now())
+  updated_at    DateTime      @updatedAt
+  deleted_at    DateTime?
+  facultyId     String?
+  elo           Int           @default(1000)
+  currentStreak Int           @default(0)
+  lastActiveAt  DateTime      @default(now())
+  longestStreak Int           @default(0)
+  battlesAsP1   Battle[]      @relation("BattlePlayer1")
+  battlesAsP2   Battle[]      @relation("BattlePlayer2")
+  battlesWon    Battle[]      @relation("BattleWinner")
+  createdTests  CustomTest[]
+  eloHistory    EloHistory[]
+  mistakes      Mistake[]
+  testAttempts  TestAttempt[]
+  faculty       User?         @relation("StudentFaculty", fields: [facultyId], references: [id])
+  students      User[]        @relation("StudentFaculty")
+}
+
+model EloHistory {
+  id        String   @id @default(uuid())
+  userId    String
+  elo       Int
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model Mistake {
+  id         String       @id @default(uuid())
+  userId     String
+  questionId String
+  attemptId  String?
+  userAnswer String
+  createdAt  DateTime     @default(now())
+  attempt    TestAttempt? @relation(fields: [attemptId], references: [id])
+  question   Question     @relation(fields: [questionId], references: [id])
+  user       User         @relation(fields: [userId], references: [id])
+}
+
+model DocumentJob {
+  id         String         @id @default(uuid())
+  filename   String
+  status     DocumentStatus @default(PENDING)
+  created_at DateTime       @default(now())
+  updated_at DateTime       @updatedAt
+  questions  Question[]
+}
+
+model Module {
+  id            String        @id @default(uuid())
+  chapterNumber Int?
+  title         String
+  questions     Question[]
+  testAttempts  TestAttempt[]
+}
+
+model Question {
+  id            String         @id @default(uuid())
+  moduleId      String
+  questionText  String
+  options       Json
+  correctAnswer String
+  type          QuestionType
+  status        QuestionStatus @default(NEEDS_REVIEW)
+  documentJobId String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  mistakes      Mistake[]
+  documentJob   DocumentJob?   @relation(fields: [documentJobId], references: [id])
+  module        Module         @relation(fields: [moduleId], references: [id])
+  battles       Battle[]       @relation("BattleToQuestion")
+  customTests   CustomTest[]   @relation("CustomTestToQuestion")
+}
+
+model TestAttempt {
+  id           String      @id @default(uuid())
+  userId       String
+  moduleId     String?
+  score        Int
+  total        Int
+  createdAt    DateTime    @default(now())
+  customTestId String?
+  durationMs   Int         @default(0)
+  mistakes     Mistake[]
+  customTest   CustomTest? @relation(fields: [customTestId], references: [id])
+  module       Module?     @relation(fields: [moduleId], references: [id])
+  user         User        @relation(fields: [userId], references: [id])
+}
+
+model CustomTest {
+  id        String        @id @default(uuid())
+  title     String
+  facultyId String
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  faculty   User          @relation(fields: [facultyId], references: [id])
+  attempts  TestAttempt[]
+  questions Question[]    @relation("CustomTestToQuestion")
+}
+
+model Battle {
+  id        String       @id @default(uuid())
+  player1Id String
+  player2Id String?
+  winnerId  String?
+  status    BattleStatus @default(WAITING)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  player1   User         @relation("BattlePlayer1", fields: [player1Id], references: [id])
+  player2   User?        @relation("BattlePlayer2", fields: [player2Id], references: [id])
+  winner    User?        @relation("BattleWinner", fields: [winnerId], references: [id])
+  questions Question[]   @relation("BattleToQuestion")
+}
 
 enum Role {
   STUDENT
@@ -41,97 +154,4 @@ enum QuestionType {
 enum QuestionStatus {
   PUBLISHED
   NEEDS_REVIEW
-}
-
-model User {
-  id            String    @id @default(uuid())
-  name          String
-  email         String    @unique
-  password_hash String
-  role          Role      @default(STUDENT)
-  is_active     Boolean   @default(true)
-  created_at    DateTime  @default(now())
-  updated_at    DateTime  @updatedAt
-  deleted_at    DateTime?
-  testAttempts  TestAttempt[]
-  facultyId     String?
-  faculty       User?        @relation("StudentFaculty", fields: [facultyId], references: [id])
-  students      User[]       @relation("StudentFaculty")
-  createdTests  CustomTest[]
-  battlesAsP1   Battle[] @relation("BattlePlayer1")
-  battlesAsP2   Battle[] @relation("BattlePlayer2")
-  battlesWon    Battle[] @relation("BattleWinner")
-  elo           Int      @default(1000)
-}
-model DocumentJob {
-  id         String         @id @default(uuid())
-  filename   String
-  status     DocumentStatus @default(PENDING)
-  questions  Question[] 
-  created_at DateTime       @default(now())
-  updated_at DateTime       @updatedAt  
-}
-
-model Module {
-  id            String     @id @default(uuid())
-  chapterNumber Int?
-  title         String     
-  questions     Question[]
-  testAttempts  TestAttempt[]
-}
-
-model Question {
-  id            String         @id @default(uuid())
-  moduleId      String
-  module        Module         @relation(fields: [moduleId], references: [id])
-  questionText  String
-  options       Json     
-  correctAnswer String   
-  type          QuestionType
-  status        QuestionStatus @default(NEEDS_REVIEW)
-  documentJobId String?
-  documentJob   DocumentJob?   @relation(fields: [documentJobId], references: [id])
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  customTests   CustomTest[]
-  battles       Battle[]
-}
-
-model TestAttempt {
-  id           String      @id @default(uuid())
-  userId       String
-  user         User        @relation(fields: [userId], references: [id])
-  moduleId     String?
-  module       Module?     @relation(fields: [moduleId], references: [id])
-  customTestId String?
-  customTest   CustomTest? @relation(fields: [customTestId], references: [id])
-  score        Int
-  total        Int
-  durationMs   Int         @default(0)
-  createdAt    DateTime    @default(now())
-}
-
-model CustomTest {
-  id          String         @id @default(uuid())
-  title       String
-  facultyId   String
-  faculty     User           @relation(fields: [facultyId], references: [id])
-  questions   Question[]
-  attempts    TestAttempt[]
-  createdAt   DateTime       @default(now())
-  updatedAt   DateTime       @updatedAt
-}
-
-model Battle {
-  id          String       @id @default(uuid())
-  player1Id   String
-  player2Id   String?
-  player1     User         @relation("BattlePlayer1", fields: [player1Id], references: [id])
-  player2     User?        @relation("BattlePlayer2", fields: [player2Id], references: [id])
-  winnerId    String?
-  winner      User?        @relation("BattleWinner", fields: [winnerId], references: [id])
-  status      BattleStatus @default(WAITING)
-  questions   Question[]
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
 }

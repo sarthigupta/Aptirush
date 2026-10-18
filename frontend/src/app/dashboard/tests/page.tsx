@@ -46,32 +46,42 @@ export default function MyTestsPage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-space-md">
-            {modules.map((mod, index) => (
-              <div key={mod.id} className="group relative rounded-xl bg-surface-container-lowest p-space-lg shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between">
-                <div className="flex flex-col gap-space-sm">
-                  <div className="flex items-center justify-between">
-                    <div className="w-12 h-12 rounded-xl bg-primary-fixed flex items-center justify-center text-primary group-hover:scale-105 transition-transform">
-                      <span className="material-symbols-outlined text-[26px]">menu_book</span>
+            {modules.map((mod, index) => {
+              const attempted = mod.testAttempts && mod.testAttempts.length > 0;
+              return (
+                <div key={mod.id} className="group relative rounded-xl bg-surface-container-lowest p-space-lg shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between">
+                  <div className="flex flex-col gap-space-sm">
+                    <div className="flex items-center justify-between">
+                      <div className="w-12 h-12 rounded-xl bg-primary-fixed flex items-center justify-center text-primary group-hover:scale-105 transition-transform">
+                        <span className="material-symbols-outlined text-[26px]">menu_book</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        {attempted && (
+                          <span className="px-space-sm py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-semibold flex items-center gap-1">
+                            <span className="material-symbols-outlined text-[14px]">check</span> Completed
+                          </span>
+                        )}
+                        <span className="px-space-sm py-0.5 rounded-full bg-surface-container text-primary font-label-sm text-label-sm font-semibold">Module {mod.chapterNumber || index + 1}</span>
+                      </div>
                     </div>
-                    <span className="px-space-sm py-0.5 rounded-full bg-surface-container text-primary font-label-sm text-label-sm font-semibold">Module {mod.chapterNumber || index + 1}</span>
+                    <h3 className="font-title-md text-title-md font-semibold text-on-surface group-hover:text-primary transition-colors">{mod.title}</h3>
+                    <p className="font-body-sm text-body-sm text-on-surface-variant">Includes {mod._count?.questions || 0} challenging analytical sequences designed to enhance your cognitive flow.</p>
                   </div>
-                  <h3 className="font-title-md text-title-md font-semibold text-on-surface group-hover:text-primary transition-colors">{mod.title}</h3>
-                  <p className="font-body-sm text-body-sm text-on-surface-variant">Includes {mod._count?.questions || 0} challenging analytical sequences designed to enhance your cognitive flow.</p>
-                </div>
-                <div className="pt-space-lg flex items-center justify-between mt-auto">
-                  <div className="flex items-center gap-space-xs text-on-surface-variant font-label-sm text-label-sm">
-                    <span className="material-symbols-outlined text-[16px]">schedule</span>
-                    <span>Self-Paced</span>
+                  <div className="pt-space-lg flex items-center justify-between mt-auto">
+                    <div className="flex items-center gap-space-xs text-on-surface-variant font-label-sm text-label-sm">
+                      <span className="material-symbols-outlined text-[16px]">schedule</span>
+                      <span>Self-Paced</span>
+                    </div>
+                    <button 
+                      onClick={() => router.push(`/dashboard/quiz/${mod.id}`)}
+                      className={`px-space-md py-space-xs rounded-lg font-label-lg text-label-lg transition-colors ${attempted ? 'bg-surface-container text-primary hover:bg-primary-container' : 'bg-surface-container text-primary hover:bg-primary hover:text-on-primary'}`}
+                    >
+                      {attempted ? 'Retake Module' : 'Enter Module'}
+                    </button>
                   </div>
-                  <button 
-                    onClick={() => router.push(`/dashboard/quiz/${mod.id}`)}
-                    className="px-space-md py-space-xs rounded-lg bg-surface-container font-label-lg text-label-lg text-primary hover:bg-primary hover:text-on-primary transition-colors"
-                  >
-                    Enter Module
-                  </button>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>

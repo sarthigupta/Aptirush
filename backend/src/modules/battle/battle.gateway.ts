@@ -1,8 +1,8 @@
 import { Server, Socket } from 'socket.io';
 import { prisma } from '../../lib/prisma.js';
 
-// Simple in-memory queue
-let waitingPlayer: { socket: Socket; userId: string } | null = null;
+// Matchmaking queue
+let queue: { socket: Socket; userId: string; elo: number; joinedAt: number }[] = [];
 
 // Map to track private rooms
 const privateRooms = new Map<string, { socket: Socket; userId: string }>();
@@ -20,12 +20,21 @@ export const setupBattleGateway = (io: Server) => {
       if (!userId) return;
 
       console.log(`User ${userId} joined queue`);
+      
+      // Prevent duplicate queue entries
+      if (queue.find(p => p.userId === userId)) return;
 
-      if (waitingPlayer && waitingPlayer.userId !== userId) {
+      // Fetch user's ELO to match them properly
+      const user = await prisma.user.findUnique({ where: { id: userId }, select: { elo: true } });
+      const userElo = user?.elo || 1000;
+
+      // Find an opponent with MMR within +/- 200
+      const opponentIndex = queue.findIndex(p => Math.abs(p.elo - userElo) <= 200 && p.userId !== userId);
+
+      if (opponentIndex !== -1) {
         // Match found!
-        const player1 = waitingPlayer;
-        const player2 = { socket, userId };
-        waitingPlayer = null; // Clear queue
+        const player1 = queue.splice(opponentIndex, 1)[0];
+        const player2 = { socket, userId, elo: userElo, joinedAt: Date.now() };
 
         // Get 5 random published questions
         const questions = await prisma.question.findMany({
@@ -58,15 +67,13 @@ export const setupBattleGateway = (io: Server) => {
           questions
         });
       } else {
-        // Join queue
-        waitingPlayer = { socket, userId };
+        // No match found, join queue
+        queue.push({ socket, userId, elo: userElo, joinedAt: Date.now() });
       }
     });
 
     socket.on('leave_queue', () => {
-      if (waitingPlayer && waitingPlayer.socket.id === socket.id) {
-        waitingPlayer = null;
-      }
+      queue = queue.filter(p => p.socket.id !== socket.id);
     });
 
     socket.on('create_private_room', (data) => {
@@ -186,9 +193,7 @@ export const setupBattleGateway = (io: Server) => {
 
     socket.on('disconnect', () => {
       console.log(`User disconnected: ${socket.id}`);
-      if (waitingPlayer && waitingPlayer.socket.id === socket.id) {
-        waitingPlayer = null;
-      }
+      queue = queue.filter(p => p.socket.id !== socket.id);
     });
   });
 };

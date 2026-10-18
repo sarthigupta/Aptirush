@@ -10,5 +10,7 @@ router.post('/attempts', authenticateToken, StudentController.saveTestAttempt);
 router.get('/dashboard-stats', authenticateToken, StudentController.getDashboardStats);
 router.get('/custom-tests', authenticateToken, StudentController.getAssignedTests);
 router.get('/leaderboard', authenticateToken, StudentController.getLeaderboard);
+router.get('/mistake-vault', authenticateToken, StudentController.getMistakeVault);
+router.get('/analytics', authenticateToken, StudentController.getPerformanceAnalytics);
 
 export default router;

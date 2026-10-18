@@ -185,7 +185,7 @@ export default function LeaderboardPage() {
           </div>
         )}
 
-        {/* Main Content Split */}
+      {/* Main Content Split */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
           
           {/* Left (8 Cols): Minimalist Ranks Table */}
@@ -193,10 +193,10 @@ export default function LeaderboardPage() {
             <div className="flex items-center justify-between px-space-xs">
               <div className="flex items-center gap-space-xs">
                 <span className="font-title-md text-title-md text-on-surface font-semibold">Division Contenders</span>
-                <span className="px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm">4 - 100 of 100</span>
+                <span className="px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm">{rest.length > 0 ? `4 - ${leaderboard.length} of ${leaderboard.length}` : 'All Contenders'}</span>
               </div>
               <span className="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1">
-                <span className="w-2 h-2 rounded-full bg-secondary"></span> Live Updates
+                <span className="w-2 h-2 rounded-full bg-secondary animate-pulse"></span> Live Updates
               </span>
             </div>
             
@@ -276,10 +276,10 @@ export default function LeaderboardPage() {
                     <span className="flex items-center gap-1.5 text-on-surface">
                       <span className="w-2 h-2 rounded-full bg-primary"></span> Quantitative Aptitude
                     </span>
-                    <span className="font-semibold text-primary">92<span className="text-on-surface-variant font-normal">/100 (Master)</span></span>
+                    <span className="font-semibold text-primary">{Math.min(99, Math.floor((currentUserData?.elo || 1000) / 2400 * 100) + 5)}<span className="text-on-surface-variant font-normal">/100</span></span>
                   </div>
                   <div className="w-full h-2 rounded-full bg-surface-container-low overflow-hidden">
-                    <div className="h-full bg-primary rounded-full transition-all duration-500" style={{width: '92%'}}></div>
+                    <div className="h-full bg-primary rounded-full transition-all duration-500" style={{width: `${Math.min(99, Math.floor((currentUserData?.elo || 1000) / 2400 * 100) + 5)}%`}}></div>
                   </div>
                 </div>
                 
@@ -289,10 +289,10 @@ export default function LeaderboardPage() {
                     <span className="flex items-center gap-1.5 text-on-surface">
                       <span className="w-2 h-2 rounded-full bg-secondary"></span> Logical Reasoning
                     </span>
-                    <span className="font-semibold text-secondary">89<span className="text-on-surface-variant font-normal">/100 (Master)</span></span>
+                    <span className="font-semibold text-secondary">{Math.min(99, Math.floor((currentUserData?.elo || 1000) / 2400 * 100) + 2)}<span className="text-on-surface-variant font-normal">/100</span></span>
                   </div>
                   <div className="w-full h-2 rounded-full bg-surface-container-low overflow-hidden">
-                    <div className="h-full bg-secondary rounded-full transition-all duration-500" style={{width: '89%'}}></div>
+                    <div className="h-full bg-secondary rounded-full transition-all duration-500" style={{width: `${Math.min(99, Math.floor((currentUserData?.elo || 1000) / 2400 * 100) + 2)}%`}}></div>
                   </div>
                 </div>
 
@@ -302,10 +302,10 @@ export default function LeaderboardPage() {
                     <span className="flex items-center gap-1.5 text-on-surface">
                       <span className="w-2 h-2 rounded-full bg-surface-tint"></span> Verbal Blitz
                     </span>
-                    <span className="font-semibold text-on-surface">84<span className="text-on-surface-variant font-normal">/100 (Diamond)</span></span>
+                    <span className="font-semibold text-on-surface">{Math.min(99, Math.floor((currentUserData?.elo || 1000) / 2400 * 100) - 3)}<span className="text-on-surface-variant font-normal">/100</span></span>
                   </div>
                   <div className="w-full h-2 rounded-full bg-surface-container-low overflow-hidden">
-                    <div className="h-full bg-surface-tint rounded-full transition-all duration-500" style={{width: '84%'}}></div>
+                    <div className="h-full bg-surface-tint rounded-full transition-all duration-500" style={{width: `${Math.min(99, Math.floor((currentUserData?.elo || 1000) / 2400 * 100) - 3)}%`}}></div>
                   </div>
                 </div>
 
@@ -315,25 +315,41 @@ export default function LeaderboardPage() {
                     <span className="flex items-center gap-1.5 text-on-surface">
                       <span className="w-2 h-2 rounded-full bg-tertiary-container"></span> Data Interpretation
                     </span>
-                    <span className="font-semibold text-on-surface">81<span className="text-on-surface-variant font-normal">/100 (Diamond)</span></span>
+                    <span className="font-semibold text-on-surface">{Math.min(99, Math.floor((currentUserData?.elo || 1000) / 2400 * 100) - 1)}<span className="text-on-surface-variant font-normal">/100</span></span>
                   </div>
                   <div className="w-full h-2 rounded-full bg-surface-container-low overflow-hidden">
-                    <div className="h-full bg-tertiary-container rounded-full transition-all duration-500" style={{width: '81%'}}></div>
+                    <div className="h-full bg-tertiary-container rounded-full transition-all duration-500" style={{width: `${Math.min(99, Math.floor((currentUserData?.elo || 1000) / 2400 * 100) - 1)}%`}}></div>
                   </div>
                 </div>
               </div>
 
               {/* Milestone Callout */}
-              <div className="bg-surface-container-low p-space-md rounded-xl flex flex-col gap-space-xs mt-1 border border-surface-variant">
-                <div className="flex items-center justify-between">
-                  <span className="font-label-md text-label-md text-on-surface font-semibold">Season Goal</span>
-                  <span className="font-label-sm text-label-sm text-primary font-bold">28 MMR to Apex Master</span>
-                </div>
-                <div className="w-full h-1.5 rounded-full bg-surface-container-high overflow-hidden">
-                  <div className="h-full bg-gradient-to-r from-primary to-secondary rounded-full" style={{width: '82%'}}></div>
-                </div>
-                <span className="font-body-sm text-body-sm text-on-surface-variant text-[12px]">Win 2 consecutive cognitive duels to surpass current tier threshold.</span>
-              </div>
+              {currentUserData && (() => {
+                const elo = currentUserData.elo;
+                let nextTier = 'Diamond II';
+                let threshold = 1800;
+                let progress = ((elo - 1000) / 800) * 100;
+                
+                if (elo >= 2400) { nextTier = 'Maxed'; threshold = 2400; progress = 100; }
+                else if (elo >= 2100) { nextTier = 'Apex Master'; threshold = 2400; progress = ((elo - 2100) / 300) * 100; }
+                else if (elo >= 2000) { nextTier = 'Master I'; threshold = 2100; progress = ((elo - 2000) / 100) * 100; }
+                else if (elo >= 1800) { nextTier = 'Diamond I'; threshold = 2000; progress = ((elo - 1800) / 200) * 100; }
+
+                return (
+                  <div className="bg-surface-container-low p-space-md rounded-xl flex flex-col gap-space-xs mt-1 border border-surface-variant">
+                    <div className="flex items-center justify-between">
+                      <span className="font-label-md text-label-md text-on-surface font-semibold">Season Goal</span>
+                      <span className="font-label-sm text-label-sm text-primary font-bold">
+                        {elo >= 2400 ? 'Highest Tier Reached!' : `${threshold - elo} MMR to ${nextTier}`}
+                      </span>
+                    </div>
+                    <div className="w-full h-1.5 rounded-full bg-surface-container-high overflow-hidden">
+                      <div className="h-full bg-gradient-to-r from-primary to-secondary rounded-full" style={{width: `${Math.max(0, Math.min(100, progress))}%`}}></div>
+                    </div>
+                    <span className="font-body-sm text-body-sm text-on-surface-variant text-[12px]">Win consecutive cognitive duels to surpass current tier threshold.</span>
+                  </div>
+                );
+              })()}
             </div>
           </div>
         </div>

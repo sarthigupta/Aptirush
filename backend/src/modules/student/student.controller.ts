@@ -4,7 +4,8 @@ import { StudentService } from './student.service.js';
 export const StudentController = {
   async getModules(req: Request, res: Response) {
     try {
-      const modules = await StudentService.getModules();
+      const userId = (req as any).user.id;
+      const modules = await StudentService.getModules(userId);
       res.json(modules);
     } catch (error: any) {
       res.status(500).json({ error: error.message || 'Failed to fetch modules' });
@@ -27,8 +28,8 @@ export const StudentController = {
   async saveTestAttempt(req: Request, res: Response): Promise<void> {
     try {
       const userId = (req as any).user.id;
-      const { moduleId, score, total, customTestId, durationMs } = req.body;
-      const attempt = await StudentService.saveTestAttempt(userId, moduleId || null, score, total, customTestId || null, durationMs || 0);
+      const { moduleId, score, total, customTestId, durationMs, mistakes } = req.body;
+      const attempt = await StudentService.saveTestAttempt(userId, moduleId || null, score, total, customTestId || null, durationMs || 0, mistakes || []);
       res.json(attempt);
     } catch (error: any) {
       res.status(500).json({ error: error.message || 'Failed to save attempt' });
@@ -61,6 +62,26 @@ export const StudentController = {
       res.json(leaderboard);
     } catch (error: any) {
       res.status(500).json({ error: error.message || 'Failed to fetch leaderboard' });
+    }
+  },
+
+  async getMistakeVault(req: Request, res: Response): Promise<void> {
+    try {
+      const userId = (req as any).user.id;
+      const mistakes = await StudentService.getMistakeVault(userId);
+      res.json(mistakes);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message || 'Failed to fetch mistake vault' });
+    }
+  },
+
+  async getPerformanceAnalytics(req: Request, res: Response): Promise<void> {
+    try {
+      const userId = (req as any).user.id;
+      const analytics = await StudentService.getPerformanceAnalytics(userId);
+      res.json(analytics);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message || 'Failed to fetch performance analytics' });
     }
   }
 };

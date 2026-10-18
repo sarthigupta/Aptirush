@@ -1,11 +1,15 @@
 import { prisma } from '../../lib/prisma.js';
 
 export const StudentService = {
-  async getModules() {
+  async getModules(userId: string) {
     return prisma.module.findMany({
       include: {
         _count: {
           select: { questions: { where: { status: 'PUBLISHED' } } }
+        },
+        testAttempts: {
+          where: { userId },
+          take: 1
         }
       }
     });
@@ -33,8 +37,42 @@ export const StudentService = {
     return quiz;
   },
 
-  async saveTestAttempt(userId: string, moduleId: string | null, score: number, total: number, customTestId: string | null = null, durationMs: number = 0) {
-    return prisma.testAttempt.create({
+  async saveTestAttempt(userId: string, moduleId: string | null, score: number, total: number, customTestId: string | null = null, durationMs: number = 0, mistakes: {questionId: string, userAnswer: string}[] = []) {
+    // 1. Update Streak
+    const user = await prisma.user.findUnique({ where: { id: userId }});
+    if (user) {
+      const now = new Date();
+      const lastActive = new Date(user.lastActiveAt);
+      
+      const isToday = now.toDateString() === lastActive.toDateString();
+      const yesterday = new Date(now);
+      yesterday.setDate(now.getDate() - 1);
+      const isYesterday = yesterday.toDateString() === lastActive.toDateString();
+      
+      let newStreak = user.currentStreak;
+      if (isYesterday) {
+        newStreak += 1;
+      } else if (!isToday) {
+        newStreak = 1; // Reset streak if missed a day
+      }
+      
+      // Ensure they get a streak of at least 1 for playing today
+      if (newStreak === 0) {
+        newStreak = 1;
+      }
+
+      await prisma.user.update({
+        where: { id: userId },
+        data: { 
+          currentStreak: newStreak,
+          longestStreak: Math.max(newStreak, user.longestStreak),
+          lastActiveAt: now 
+        }
+      });
+    }
+
+    // 2. Save Test Attempt
+    const attempt = await prisma.testAttempt.create({
       data: {
         userId,
         ...(moduleId ? { moduleId } : {}),
@@ -44,6 +82,20 @@ export const StudentService = {
         durationMs
       }
     });
+
+    // 3. Log Mistakes
+    if (mistakes && mistakes.length > 0) {
+      await prisma.mistake.createMany({
+        data: mistakes.map(m => ({
+          userId,
+          attemptId: attempt.id,
+          questionId: m.questionId,
+          userAnswer: m.userAnswer
+        }))
+      });
+    }
+
+    return attempt;
   },
 
   async getAssignedTests(userId: string) {
@@ -150,5 +202,106 @@ export const StudentService = {
         accuracy: accuracy.toFixed(1) + '%'
       };
     });
+  },
+
+  async getMistakeVault(userId: string) {
+    const threeHoursAgo = new Date(Date.now() - 3 * 60 * 60 * 1000);
+
+    const mistakes = await prisma.mistake.findMany({
+      where: { 
+        userId,
+        createdAt: { gte: threeHoursAgo }
+      },
+      include: {
+        question: {
+          select: { questionText: true, options: true, correctAnswer: true, type: true }
+        },
+        attempt: {
+          select: { createdAt: true }
+        }
+      },
+      orderBy: { createdAt: 'desc' }
+    });
+
+    return mistakes.map(m => ({
+      id: m.id,
+      questionText: m.question.questionText,
+      options: m.question.options,
+      correctAnswer: m.question.correctAnswer,
+      userAnswer: m.userAnswer,
+      date: m.attempt?.createdAt || m.createdAt,
+      type: m.question.type
+    }));
+  },
+
+  async getPerformanceAnalytics(userId: string) {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      include: {
+        eloHistory: {
+          orderBy: { createdAt: 'asc' }
+        },
+        mistakes: {
+          include: { question: true }
+        }
+      }
+    });
+
+    if (!user) return null;
+
+    // Determine Weakness based on mistakes
+    const categoryMistakes: Record<string, number> = {
+      'Quantitative': 0,
+      'Logical': 0,
+      'Verbal': 0,
+      'Data Interpretation': 0
+    };
+
+    const threeHoursAgo = new Date(Date.now() - 3 * 60 * 60 * 1000);
+    const recentMistakes = user.mistakes.filter(m => new Date(m.createdAt) >= threeHoursAgo);
+
+    recentMistakes.forEach(m => {
+      // Mock category assignment based on question type or text
+      if (m.question.questionText.toLowerCase().includes('data') || m.question.questionText.includes('%')) {
+        categoryMistakes['Data Interpretation']++;
+      } else if (m.question.questionText.toLowerCase().includes('if') || m.question.questionText.includes('logic')) {
+        categoryMistakes['Logical']++;
+      } else if (m.question.type === 'TITA') {
+        categoryMistakes['Quantitative']++;
+      } else {
+        categoryMistakes['Verbal']++;
+      }
+    });
+
+    let topWeakness = 'None';
+    let maxMistakes = 0;
+    for (const [cat, count] of Object.entries(categoryMistakes)) {
+      if (count > maxMistakes) {
+        maxMistakes = count;
+        topWeakness = cat;
+      }
+    }
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const testsCompletedToday = await prisma.testAttempt.count({
+      where: {
+        userId,
+        createdAt: {
+          gte: today
+        }
+      }
+    });
+
+    return {
+      elo: user.elo,
+      eloHistory: user.eloHistory,
+      weakness: maxMistakes > 0 ? topWeakness : 'Keep practicing to uncover weaknesses!',
+      mistakeCount: recentMistakes.length,
+      currentStreak: user.currentStreak,
+      longestStreak: user.longestStreak,
+      testsCompletedToday
+    };
   }
 };

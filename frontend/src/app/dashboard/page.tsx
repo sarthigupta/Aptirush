@@ -8,6 +8,7 @@ export default function DashboardOverview() {
   const router = useRouter();
   const [data, setData] = useState<any>(null);
   const [assignedTests, setAssignedTests] = useState<any[]>([]);
+  const [analytics, setAnalytics] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<any>(null);
 
@@ -21,11 +22,13 @@ export default function DashboardOverview() {
 
     Promise.all([
       api.get('/student/dashboard-stats'),
-      api.get('/student/custom-tests')
+      api.get('/student/custom-tests'),
+      api.get('/student/analytics')
     ])
-      .then(([statsRes, testsRes]) => {
+      .then(([statsRes, testsRes, analyticsRes]) => {
         setData(statsRes.data);
         setAssignedTests(testsRes.data);
+        setAnalytics(analyticsRes.data);
       })
       .catch(console.error)
       .finally(() => setLoading(false));
@@ -44,6 +47,20 @@ export default function DashboardOverview() {
   const testsCompleted = data?.stats?.testsCompleted || '0';
   const timeSpent = data?.stats?.timeSpent || '0h';
   const recentTests = data?.recentTests || [];
+
+  const getTierInfo = (elo: number) => {
+    if (elo >= 2400) return { name: 'Apex Master', tier: 6, next: null, diff: 0, progress: 100 };
+    if (elo >= 2100) return { name: 'Master I', tier: 5, next: 'Apex Master', diff: 2400 - elo, progress: ((elo - 2100) / 300) * 100 };
+    if (elo >= 2000) return { name: 'Diamond I', tier: 4, next: 'Master I', diff: 2100 - elo, progress: ((elo - 2000) / 100) * 100 };
+    if (elo >= 1800) return { name: 'Diamond II', tier: 3, next: 'Diamond I', diff: 2000 - elo, progress: ((elo - 1800) / 200) * 100 };
+    if (elo >= 1500) return { name: 'Bronze Crest', tier: 2, next: 'Diamond II', diff: 1800 - elo, progress: ((elo - 1500) / 300) * 100 };
+    return { name: 'Initiate', tier: 1, next: 'Bronze Crest', diff: 1500 - elo, progress: ((elo - 1000) / 500) * 100 };
+  };
+
+  const elo = analytics?.elo || 1000;
+  const tierInfo = getTierInfo(elo);
+  const eloHistory = analytics?.eloHistory || [];
+  const eloGainedToday = eloHistory.length > 0 ? (elo - eloHistory[0].elo) : 0; // simplistic metric
 
   return (
     <div className="flex flex-col w-full">
@@ -91,31 +108,42 @@ export default function DashboardOverview() {
             <div className="flex items-center justify-between mb-space-sm">
               <div className="flex flex-col">
                 <span className="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">Cognitive Tier</span>
-                <span className="font-title-md text-title-md font-semibold text-on-surface">Diamond II Rating</span>
+                <span className="font-title-md text-title-md font-semibold text-on-surface">{tierInfo.name} Rating</span>
               </div>
-              <span className="px-space-sm py-space-xs rounded-full bg-primary-fixed text-primary font-label-sm text-label-sm font-semibold">Tier 4 / 6</span>
+              <span className="px-space-sm py-space-xs rounded-full bg-primary-fixed text-primary font-label-sm text-label-sm font-semibold">Tier {tierInfo.tier} / 6</span>
             </div>
             <div className="my-space-md flex items-center justify-around gap-space-md">
               <div className="relative w-32 h-32 flex-shrink-0 flex items-center justify-center">
                 <svg className="w-full h-full -rotate-90 transform" viewBox="0 0 100 100">
                   <circle className="text-surface-container-high" cx="50" cy="50" fill="none" r="42" stroke="currentColor" strokeWidth="7"></circle>
-                  <circle className="text-primary transition-all duration-1000 ease-out" cx="50" cy="50" fill="none" r="42" stroke="currentColor" strokeDasharray="263.89" strokeDashoffset="47.5" strokeLinecap="round" strokeWidth="7"></circle>
+                  <circle className="text-primary transition-all duration-1000 ease-out" cx="50" cy="50" fill="none" r="42" stroke="currentColor" strokeDasharray="263.89" strokeDashoffset={263.89 - (263.89 * tierInfo.progress) / 100} strokeLinecap="round" strokeWidth="7"></circle>
                 </svg>
                 <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-                  <span className="font-display text-headline-md font-bold text-on-surface leading-none">1,840</span>
+                  <span className="font-display text-headline-md font-bold text-on-surface leading-none">{elo.toLocaleString()}</span>
                   <span className="font-label-sm text-label-sm text-on-surface-variant mt-1">MMR</span>
                 </div>
               </div>
               <div className="flex flex-col gap-space-xs">
-                <div className="flex items-center gap-space-xs text-secondary font-label-md text-label-md">
-                  <span className="material-symbols-outlined text-[18px]">trending_up</span>
-                  <span>+34 MMR today</span>
+                <div className={`flex items-center gap-space-xs ${eloGainedToday >= 0 ? 'text-secondary' : 'text-error'} font-label-md text-label-md`}>
+                  <span className="material-symbols-outlined text-[18px]">{eloGainedToday >= 0 ? 'trending_up' : 'trending_down'}</span>
+                  <span>{eloGainedToday >= 0 ? '+' : ''}{eloGainedToday} MMR today</span>
                 </div>
-                <p className="font-body-sm text-body-sm text-on-surface-variant">82% toward <span className="font-semibold text-on-surface">Master Tier</span></p>
-                <div className="w-36 bg-surface-container h-1.5 rounded-full overflow-hidden">
-                  <div className="bg-primary h-full rounded-full" style={{width: '82%'}}></div>
-                </div>
-                <span className="font-label-sm text-label-sm text-outline">160 MMR needed</span>
+                {tierInfo.next ? (
+                  <>
+                    <p className="font-body-sm text-body-sm text-on-surface-variant">{Math.round(tierInfo.progress)}% toward <span className="font-semibold text-on-surface">{tierInfo.next}</span></p>
+                    <div className="w-36 bg-surface-container h-1.5 rounded-full overflow-hidden">
+                      <div className="bg-primary h-full rounded-full" style={{width: `${tierInfo.progress}%`}}></div>
+                    </div>
+                    <span className="font-label-sm text-label-sm text-outline">{tierInfo.diff} MMR needed</span>
+                  </>
+                ) : (
+                  <>
+                    <p className="font-body-sm text-body-sm text-on-surface-variant"><span className="font-semibold text-on-surface">Maximum Tier Reached</span></p>
+                    <div className="w-36 bg-surface-container h-1.5 rounded-full overflow-hidden">
+                      <div className="bg-primary h-full rounded-full" style={{width: `100%`}}></div>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </div>

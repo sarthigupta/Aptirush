@@ -3,11 +3,13 @@
 import { ReactNode, useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
+import { api } from '@/lib/api';
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
   const [user, setUser] = useState<any>(null);
+  const [navStats, setNavStats] = useState<{elo: number, currentStreak: number} | null>(null);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -20,6 +22,12 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         setUser(JSON.parse(userDataStr));
       } catch(e) {}
     }
+
+    if (token) {
+      api.get('/student/analytics')
+        .then((res: any) => setNavStats({ elo: res.data.elo, currentStreak: res.data.currentStreak }))
+        .catch(() => {});
+    }
   }, [router]);
 
   const handleLogout = () => {
@@ -28,11 +36,20 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
     router.push('/login');
   };
 
+  const getTier = (elo: number) => {
+    if (elo >= 2400) return 'Apex Master';
+    if (elo >= 2100) return 'Master I';
+    if (elo >= 2000) return 'Diamond I';
+    if (elo >= 1800) return 'Diamond II';
+    return 'Bronze Crest';
+  };
+
   const navItems = [
     { name: 'Lobby', href: '/dashboard' },
     { name: '1v1 Arena', href: '/dashboard/battle' },
     { name: 'My Tests', href: '/dashboard/tests' },
     { name: 'Leaderboard', href: '/dashboard/performance' },
+    { name: 'Analytics', href: '/dashboard/analytics' },
   ];
 
   if (!user) return <div className="min-h-screen bg-surface flex items-center justify-center"><div className="w-8 h-8 rounded-full border-2 border-primary border-t-transparent animate-spin"></div></div>;
@@ -69,13 +86,17 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           </nav>
 
           <div className="flex items-center gap-space-sm flex-shrink-0">
-            <div className="hidden lg:flex items-center px-space-sm py-space-xs rounded-full bg-surface-container-lowest shadow-[0_1px_3px_0_rgba(15,23,42,0.04)]">
-              <span className="font-label-md text-label-md text-on-surface-variant">Diamond II <span class="text-outline-variant mx-space-xs">•</span> <span className="font-semibold text-primary">1,840 MMR</span></span>
-            </div>
-            <div className="flex items-center gap-space-xs px-space-sm py-space-xs rounded-full bg-tertiary-fixed/40 text-tertiary font-label-md text-label-md">
-              <span className="material-symbols-outlined text-base leading-none text-tertiary-container">local_fire_department</span>
-              <span>5 Streak</span>
-            </div>
+            {navStats && (
+              <>
+                <div className="hidden lg:flex items-center px-space-sm py-space-xs rounded-full bg-surface-container-lowest shadow-[0_1px_3px_0_rgba(15,23,42,0.04)]">
+                  <span className="font-label-md text-label-md text-on-surface-variant">{getTier(navStats.elo)} <span className="text-outline-variant mx-space-xs">•</span> <span className="font-semibold text-primary">{navStats.elo.toLocaleString()} MMR</span></span>
+                </div>
+                <div className="flex items-center gap-space-xs px-space-sm py-space-xs rounded-full bg-tertiary-fixed/40 text-tertiary font-label-md text-label-md">
+                  <span className="material-symbols-outlined text-base leading-none text-tertiary-container">local_fire_department</span>
+                  <span>{navStats.currentStreak} Streak</span>
+                </div>
+              </>
+            )}
             <div className="pl-space-xs cursor-pointer" onClick={handleLogout} title="Logout">
               <div className="w-8 h-8 rounded-full bg-surface-container-highest flex items-center justify-center text-on-surface font-bold text-xs ring-2 ring-surface-container-highest">
                 {user?.name?.substring(0,2).toUpperCase() || 'U'}

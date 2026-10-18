@@ -1,0 +1,21 @@
+# Environment variables
+.env
+backend/.env
+frontend/.env
+frontend/.env.local
+
+# Node dependencies
+node_modules/
+backend/node_modules/
+frontend/node_modules/
+
+# Next.js build
+frontend/.next/
+frontend/out/
+
+# Prisma generated
+backend/src/generated/
+
+# OS files
+.DS_Store
+Thumbs.db

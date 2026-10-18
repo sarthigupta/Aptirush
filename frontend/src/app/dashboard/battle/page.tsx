@@ -9,20 +9,37 @@ export default function BattleLobby() {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [isSearching, setIsSearching] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
-  
+
   const [mode, setMode] = useState<'random' | 'private'>('random');
   const [privateRoomId, setPrivateRoomId] = useState<string | null>(null);
   const [joinRoomId, setJoinRoomId] = useState('');
   const [roomError, setRoomError] = useState('');
   const [copied, setCopied] = useState(false);
+  const [userStats, setUserStats] = useState<{ elo: number, winRate: string } | null>(null);
+
+  const getTier = (elo: number) => {
+    if (elo >= 2400) return 'Apex Master';
+    if (elo >= 2100) return 'Master I';
+    if (elo >= 2000) return 'Diamond I';
+    if (elo >= 1800) return 'Diamond II';
+    if (elo >= 1500) return 'Bronze Crest';
+    return 'Initiate';
+  };
 
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
       const payload = JSON.parse(atob(token.split('.')[1]));
       setUserId(payload.id);
+
+      import('@/lib/api').then(({ api }) => {
+        api.get('/student/leaderboard').then(res => {
+          const me = res.data.find((u: any) => u.id === payload.id);
+          if (me) setUserStats({ elo: me.elo, winRate: me.winRate });
+        }).catch(console.error);
+      });
     }
-    
+
     // Cleanup on unmount
     return () => {
       if (socket) {
@@ -46,9 +63,9 @@ export default function BattleLobby() {
         resolve(socket);
         return;
       }
-      
+
       const newSocket = io('http://localhost:5000');
-      
+
       newSocket.on('connect', () => {
         setSocket(newSocket);
         resolve(newSocket);
@@ -142,18 +159,16 @@ export default function BattleLobby() {
           <div className="flex p-1 bg-surface-container rounded-lg mb-space-lg relative z-10 shadow-inner">
             <button
               onClick={() => { setMode('random'); setRoomError(''); setPrivateRoomId(null); setIsSearching(false); }}
-              className={`flex-1 py-3 px-4 rounded font-label-md text-label-md uppercase tracking-wider flex items-center justify-center transition-all ${
-                mode === 'random' ? 'bg-surface-container-lowest text-primary shadow-sm font-bold' : 'text-on-surface-variant hover:text-on-surface'
-              }`}
+              className={`flex-1 py-3 px-4 rounded font-label-md text-label-md uppercase tracking-wider flex items-center justify-center transition-all ${mode === 'random' ? 'bg-surface-container-lowest text-primary shadow-sm font-bold' : 'text-on-surface-variant hover:text-on-surface'
+                }`}
             >
               <span className="material-symbols-outlined text-[18px] mr-2">public</span>
               Random Match
             </button>
             <button
               onClick={() => { setMode('private'); setRoomError(''); setIsSearching(false); }}
-              className={`flex-1 py-3 px-4 rounded font-label-md text-label-md uppercase tracking-wider flex items-center justify-center transition-all ${
-                mode === 'private' ? 'bg-surface-container-lowest text-secondary shadow-sm font-bold' : 'text-on-surface-variant hover:text-on-surface'
-              }`}
+              className={`flex-1 py-3 px-4 rounded font-label-md text-label-md uppercase tracking-wider flex items-center justify-center transition-all ${mode === 'private' ? 'bg-surface-container-lowest text-secondary shadow-sm font-bold' : 'text-on-surface-variant hover:text-on-surface'
+                }`}
             >
               <span className="material-symbols-outlined text-[18px] mr-2">group</span>
               Play with Friend
@@ -162,7 +177,7 @@ export default function BattleLobby() {
 
           {roomError && (
             <div className="mb-6 p-4 bg-error-container/40 text-error rounded-lg font-body-sm text-body-sm relative z-10 flex items-center">
-               <span className="material-symbols-outlined text-base mr-2">error</span>
+              <span className="material-symbols-outlined text-base mr-2">error</span>
               {roomError}
             </div>
           )}
@@ -172,11 +187,15 @@ export default function BattleLobby() {
               <div className="grid grid-cols-2 gap-space-sm pt-space-md mb-10 bg-surface-container-low rounded-xl p-space-md">
                 <div className="flex flex-col border-r border-outline-variant/20">
                   <span className="font-label-sm text-label-sm text-on-surface-variant">CURRENT MMR</span>
-                  <span className="font-headline-sm text-headline-sm text-primary">1,840 (Diamond II)</span>
+                  <span className="font-headline-sm text-headline-sm text-primary">
+                    {userStats ? `${userStats.elo.toLocaleString()} (${getTier(userStats.elo)})` : 'Loading...'}
+                  </span>
                 </div>
                 <div className="flex flex-col">
                   <span className="font-label-sm text-label-sm text-on-surface-variant">WIN RATE</span>
-                  <span className="font-headline-sm text-headline-sm text-secondary">64.5%</span>
+                  <span className="font-headline-sm text-headline-sm text-secondary">
+                    {userStats ? userStats.winRate : '...'}
+                  </span>
                 </div>
               </div>
 
@@ -190,8 +209,8 @@ export default function BattleLobby() {
                   </div>
                   <h3 className="font-headline-md text-headline-md text-on-surface">Finding Matched Opponent</h3>
                   <p className="font-body-sm text-body-sm text-on-surface-variant mb-4">Searching within ±50 MMR. Maintaining quiet focus...</p>
-                  
-                  <button 
+
+                  <button
                     onClick={cancelSearch}
                     className="w-full py-space-xs rounded-lg bg-surface-container-highest text-on-surface font-label-lg text-label-lg hover:bg-surface-dim transition-colors"
                   >
@@ -199,7 +218,7 @@ export default function BattleLobby() {
                   </button>
                 </div>
               ) : (
-                <button 
+                <button
                   onClick={findMatch}
                   className="w-full py-4 rounded-xl bg-primary text-on-primary font-headline-sm text-headline-sm shadow-sm hover:bg-primary-container transition-all active:scale-[0.98] flex items-center justify-center gap-2"
                 >
@@ -222,12 +241,12 @@ export default function BattleLobby() {
                   </div>
                   <h3 className="font-headline-sm text-headline-sm text-on-surface mb-2">Chamber Created</h3>
                   <p className="font-body-sm text-body-sm text-on-surface-variant mb-6">Share this 6-digit passcode with your challenger.</p>
-                  
+
                   <div className="flex items-center justify-center space-x-3 mb-8 w-full max-w-sm">
                     <div className="flex-1 bg-surface-container border-2 border-surface-container-high px-8 py-4 rounded-xl font-display text-[28px] tracking-widest text-secondary font-bold flex items-center justify-center h-[72px]">
                       {privateRoomId}
                     </div>
-                    <button 
+                    <button
                       onClick={copyRoomId}
                       className="w-[72px] h-[72px] flex items-center justify-center bg-surface-container text-on-surface-variant hover:text-secondary hover:bg-surface-container-high rounded-xl transition-colors shadow-sm"
                       title="Copy Code"
@@ -235,8 +254,8 @@ export default function BattleLobby() {
                       <span className="material-symbols-outlined text-[24px]">{copied ? 'check' : 'content_copy'}</span>
                     </button>
                   </div>
-                  
-                  <button 
+
+                  <button
                     onClick={cancelRoom}
                     className="font-label-md text-label-md text-error hover:text-on-error-container uppercase tracking-wider transition-colors px-6 py-2 rounded bg-error-container/30 hover:bg-error-container/60"
                   >
@@ -247,7 +266,7 @@ export default function BattleLobby() {
                 <div className="space-y-8">
                   <div className="p-8 border-2 border-dashed border-outline-variant/60 rounded-2xl text-center hover:border-secondary hover:bg-surface-container-low transition-colors cursor-pointer group" onClick={createRoom}>
                     <div className="w-14 h-14 bg-secondary-container/40 text-on-secondary-container rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                       <span className="material-symbols-outlined text-[24px]">add_circle</span>
+                      <span className="material-symbols-outlined text-[24px]">add_circle</span>
                     </div>
                     <h3 className="font-title-md text-title-md text-on-surface font-semibold mb-2">Host Chamber</h3>
                     <p className="font-body-sm text-body-sm text-on-surface-variant max-w-sm mx-auto">Generate a direct 6-digit lobby passcode for a private match.</p>
@@ -261,15 +280,15 @@ export default function BattleLobby() {
                   <div className="bg-surface-container-low p-6 rounded-2xl shadow-sm border border-surface-variant">
                     <h3 className="font-label-md text-label-md text-primary mb-4 uppercase tracking-wider">Join Chamber</h3>
                     <div className="flex space-x-3">
-                      <input 
-                        type="text" 
+                      <input
+                        type="text"
                         value={joinRoomId}
                         onChange={(e) => setJoinRoomId(e.target.value.toUpperCase())}
                         placeholder="ENTER PIN"
                         maxLength={6}
                         className="flex-1 bg-surface-container-lowest border border-outline-variant/50 px-4 py-3 rounded-xl font-headline-sm text-headline-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none uppercase tracking-widest text-center text-on-surface shadow-inner"
                       />
-                      <button 
+                      <button
                         onClick={joinRoom}
                         disabled={isSearching || joinRoomId.length !== 6}
                         className="bg-primary text-on-primary px-8 py-3 rounded-xl font-label-lg text-label-lg hover:bg-primary-container disabled:opacity-50 transition-colors shadow-sm"
