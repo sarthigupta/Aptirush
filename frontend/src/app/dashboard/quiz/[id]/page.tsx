@@ -384,10 +384,10 @@ export default function QuizPage() {
                       disabled={hasAnsweredCurrent}
                       placeholder="Awaiting input..."
                       className={`flex-1 border-2 rounded-xl p-space-md outline-none font-body-lg transition-all ${hasAnsweredCurrent
-                          ? answers[currentQuestion.id]?.toLowerCase() === currentQuestion.correctAnswer.toLowerCase()
-                            ? 'border-secondary bg-secondary-container/20 text-secondary'
-                            : 'border-error bg-error-container/20 text-error'
-                          : 'border-outline-variant/50 bg-surface text-on-surface focus:border-primary focus:ring-2 focus:ring-primary/20'
+                        ? answers[currentQuestion.id]?.toLowerCase() === currentQuestion.correctAnswer.toLowerCase()
+                          ? 'border-secondary bg-secondary-container/20 text-secondary'
+                          : 'border-error bg-error-container/20 text-error'
+                        : 'border-outline-variant/50 bg-surface text-on-surface focus:border-primary focus:ring-2 focus:ring-primary/20'
                         }`}
                     />
                     {!hasAnsweredCurrent && (

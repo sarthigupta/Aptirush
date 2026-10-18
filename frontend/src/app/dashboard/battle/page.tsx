@@ -64,7 +64,9 @@ export default function BattleLobby() {
         return;
       }
 
-      const newSocket = io('http://localhost:5000');
+      const newSocket = io('https://aptirush.onrender.com', {
+        transports: ['websocket', 'polling'],
+      });
 
       newSocket.on('connect', () => {
         setSocket(newSocket);
