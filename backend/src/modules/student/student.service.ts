@@ -243,6 +243,10 @@ export const StudentService = {
         },
         mistakes: {
           include: { question: true }
+        },
+        testAttempts: {
+          select: { createdAt: true },
+          orderBy: { createdAt: 'desc' }
         }
       }
     });
@@ -294,6 +298,26 @@ export const StudentService = {
       }
     });
 
+    const dailyActivity: Record<string, number> = {};
+    if (user.testAttempts) {
+      user.testAttempts.forEach((attempt) => {
+        const d = attempt.createdAt.toISOString().slice(0, 10);
+        dailyActivity[d] = (dailyActivity[d] || 0) + 1;
+      });
+    }
+
+    if (user.currentStreak > 0) {
+      const now = new Date();
+      for (let i = 0; i < user.currentStreak; i++) {
+        const d = new Date(now);
+        d.setDate(now.getDate() - i);
+        const key = d.toISOString().slice(0, 10);
+        if (!dailyActivity[key]) {
+          dailyActivity[key] = 1;
+        }
+      }
+    }
+
     return {
       elo: user.elo,
       eloHistory: user.eloHistory,
@@ -301,7 +325,8 @@ export const StudentService = {
       mistakeCount: recentMistakes.length,
       currentStreak: user.currentStreak,
       longestStreak: user.longestStreak,
-      testsCompletedToday
+      testsCompletedToday,
+      dailyActivity
     };
   }
 };
