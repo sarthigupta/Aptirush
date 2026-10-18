@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "AptiRush",
-  description: "Mindful Aptitude Duels",
+  title: "AptiRush | Mindful Aptitude Duels & Competitive Cognitive Training",
+  description: "Real-time 1v1 aptitude battles, AI-powered syllabus question banks, synchronized cohort examinations, and deep placement analytics.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
