@@ -8,8 +8,102 @@ let queue: { socket: Socket; userId: string; elo: number; joinedAt: number }[] =
 const privateRooms = new Map<string, { socket: Socket; userId: string }>();
 const generateShortId = () => Math.random().toString(36).substring(2, 8).toUpperCase();
 
-// Map to track active battles
-const activeBattles = new Map<string, { p1: string; p2: string; questions: any[] }>();
+// Active battles state map
+interface ActiveBattle {
+  battleId: string;
+  p1: { userId: string; score: number };
+  p2: { userId: string; score: number };
+  questions: any[];
+  currentQIndex: number;
+  questionClaimed: boolean;
+  claimedBy: string | null;
+  wrongAttempts: Set<string>;
+  advanceTimeout?: NodeJS.Timeout;
+}
+
+const activeBattles = new Map<string, ActiveBattle>();
+
+async function finalizeBattle(battleId: string, battle: ActiveBattle, io: Server) {
+  try {
+    if (battle.advanceTimeout) {
+      clearTimeout(battle.advanceTimeout);
+    }
+
+    let winnerId: string | null = null;
+    if (battle.p1.score > battle.p2.score) {
+      winnerId = battle.p1.userId;
+    } else if (battle.p2.score > battle.p1.score) {
+      winnerId = battle.p2.userId;
+    }
+
+    // Update Battle record in DB
+    await prisma.battle.update({
+      where: { id: battleId },
+      data: {
+        status: 'COMPLETED',
+        winnerId: winnerId || undefined
+      }
+    });
+
+    // Update ELO and streaks
+    if (winnerId) {
+      const loserId = winnerId === battle.p1.userId ? battle.p2.userId : battle.p1.userId;
+
+      const winner = await prisma.user.findUnique({
+        where: { id: winnerId },
+        select: { elo: true, currentStreak: true, longestStreak: true }
+      });
+      const loser = await prisma.user.findUnique({
+        where: { id: loserId },
+        select: { elo: true }
+      });
+
+      if (winner) {
+        const newElo = winner.elo + 25;
+        const newStreak = (winner.currentStreak || 0) + 1;
+        await prisma.user.update({
+          where: { id: winnerId },
+          data: {
+            elo: newElo,
+            currentStreak: newStreak,
+            longestStreak: Math.max(newStreak, winner.longestStreak || 0),
+            lastActiveAt: new Date()
+          }
+        });
+        await prisma.eloHistory.create({
+          data: { userId: winnerId, elo: newElo }
+        });
+      }
+
+      if (loser) {
+        const newElo = Math.max(1000, loser.elo - 15);
+        await prisma.user.update({
+          where: { id: loserId },
+          data: {
+            elo: newElo,
+            currentStreak: 0,
+            lastActiveAt: new Date()
+          }
+        });
+        await prisma.eloHistory.create({
+          data: { userId: loserId, elo: newElo }
+        });
+      }
+    }
+
+    io.to(battleId).emit('battle_completed', {
+      battleId,
+      p1Score: battle.p1.score,
+      p2Score: battle.p2.score,
+      winnerId,
+      isDraw: battle.p1.score === battle.p2.score
+    });
+
+    activeBattles.delete(battleId);
+  } catch (err) {
+    console.error('Error finalizing battle:', err);
+  }
+}
 
 export const setupBattleGateway = (io: Server) => {
   io.on('connection', (socket) => {
@@ -20,29 +114,23 @@ export const setupBattleGateway = (io: Server) => {
       if (!userId) return;
 
       console.log(`User ${userId} joined queue`);
-      
-      // Prevent duplicate queue entries
+
       if (queue.find(p => p.userId === userId)) return;
 
-      // Fetch user's ELO to match them properly
       const user = await prisma.user.findUnique({ where: { id: userId }, select: { elo: true } });
       const userElo = user?.elo || 1000;
 
-      // Find an opponent with MMR within +/- 200
-      const opponentIndex = queue.findIndex(p => Math.abs(p.elo - userElo) <= 200 && p.userId !== userId);
+      const opponentIndex = queue.findIndex(p => Math.abs(p.elo - userElo) <= 250 && p.userId !== userId);
 
       if (opponentIndex !== -1) {
-        // Match found!
         const player1 = queue.splice(opponentIndex, 1)[0];
         const player2 = { socket, userId, elo: userElo, joinedAt: Date.now() };
 
-        // Get 5 random published questions
         const questions = await prisma.question.findMany({
           where: { status: 'PUBLISHED' },
           take: 5
         });
 
-        // Create battle in DB
         const battle = await prisma.battle.create({
           data: {
             player1Id: player1.userId,
@@ -54,20 +142,29 @@ export const setupBattleGateway = (io: Server) => {
           }
         });
 
-        activeBattles.set(battle.id, { p1: player1.userId, p2: player2.userId, questions });
+        const battleState: ActiveBattle = {
+          battleId: battle.id,
+          p1: { userId: player1.userId, score: 0 },
+          p2: { userId: player2.userId, score: 0 },
+          questions,
+          currentQIndex: 0,
+          questionClaimed: false,
+          claimedBy: null,
+          wrongAttempts: new Set<string>()
+        };
 
-        // Join both to a socket room
+        activeBattles.set(battle.id, battleState);
+
         player1.socket.join(battle.id);
         player2.socket.join(battle.id);
 
-        // Notify both players
         io.to(battle.id).emit('match_found', {
           battleId: battle.id,
-          opponentId: player2.userId, // for p1
+          p1Id: player1.userId,
+          p2Id: player2.userId,
           questions
         });
       } else {
-        // No match found, join queue
         queue.push({ socket, userId, elo: userElo, joinedAt: Date.now() });
       }
     });
@@ -79,7 +176,7 @@ export const setupBattleGateway = (io: Server) => {
     socket.on('create_private_room', (data) => {
       const { userId } = data;
       if (!userId) return;
-      
+
       const roomId = generateShortId();
       privateRooms.set(roomId, { socket, userId });
       socket.emit('private_room_created', { roomId });
@@ -88,7 +185,7 @@ export const setupBattleGateway = (io: Server) => {
     socket.on('join_private_room', async (data) => {
       const { userId, roomId } = data;
       if (!userId || !roomId) return;
-      
+
       const host = privateRooms.get(roomId);
       if (!host) {
         socket.emit('room_error', { message: 'Room not found or already started.' });
@@ -98,7 +195,7 @@ export const setupBattleGateway = (io: Server) => {
         socket.emit('room_error', { message: 'You cannot join your own room.' });
         return;
       }
-      
+
       const player1 = host;
       const player2 = { socket, userId };
       privateRooms.delete(roomId);
@@ -119,14 +216,26 @@ export const setupBattleGateway = (io: Server) => {
         }
       });
 
-      activeBattles.set(battle.id, { p1: player1.userId, p2: player2.userId, questions });
+      const battleState: ActiveBattle = {
+        battleId: battle.id,
+        p1: { userId: player1.userId, score: 0 },
+        p2: { userId: player2.userId, score: 0 },
+        questions,
+        currentQIndex: 0,
+        questionClaimed: false,
+        claimedBy: null,
+        wrongAttempts: new Set<string>()
+      };
+
+      activeBattles.set(battle.id, battleState);
 
       player1.socket.join(battle.id);
       player2.socket.join(battle.id);
 
       io.to(battle.id).emit('match_found', {
         battleId: battle.id,
-        opponentId: player2.userId,
+        p1Id: player1.userId,
+        p2Id: player2.userId,
         questions
       });
     });
@@ -139,56 +248,137 @@ export const setupBattleGateway = (io: Server) => {
     });
 
     socket.on('join_battle', (data) => {
-      const { battleId } = data;
+      const { battleId, userId } = data;
+      if (!battleId) return;
       socket.join(battleId);
+
+      const battle = activeBattles.get(battleId);
+      if (battle) {
+        socket.emit('battle_sync', {
+          currentQIndex: battle.currentQIndex,
+          p1Score: battle.p1.score,
+          p2Score: battle.p2.score,
+          p1Id: battle.p1.userId,
+          p2Id: battle.p2.userId,
+          questionClaimed: battle.questionClaimed,
+          claimedBy: battle.claimedBy,
+          isLocked: battle.questionClaimed || battle.wrongAttempts.has(userId)
+        });
+      }
     });
 
-    socket.on('join_test_room', async (data) => {
-      const { customTestId } = data;
-      if (!customTestId) return;
+    socket.on('submit_answer', async (data) => {
+      const { battleId, userId, optionKey, questionIndex } = data;
+      const battle = activeBattles.get(battleId);
+      if (!battle) return;
 
-      const roomName = `test_${customTestId}`;
-      socket.join(roomName);
+      // Ignore if question index doesn't match or question already claimed
+      if (questionIndex !== battle.currentQIndex || battle.questionClaimed) {
+        return;
+      }
 
-      const topAttempts = await prisma.testAttempt.findMany({
-        where: { customTestId },
-        include: { user: { select: { id: true, name: true } } },
-        orderBy: { score: 'desc' },
-        take: 10
-      });
+      // Ignore if this user already missed this question
+      if (battle.wrongAttempts.has(userId)) {
+        return;
+      }
 
-      const initialLeaderboard = topAttempts.map(a => ({
-        userId: a.user.id,
-        name: a.user.name,
-        score: a.score,
-        isFinished: true
-      }));
+      const currentQuestion = battle.questions[battle.currentQIndex];
+      if (!currentQuestion) return;
 
-      socket.emit('initial_leaderboard', { leaderboard: initialLeaderboard });
-    });
+      const isCorrect = optionKey === currentQuestion.correctAnswer;
 
-    socket.on('test_progress', (data) => {
-      const { customTestId, userId, name, score, isFinished } = data;
-      socket.to(`test_${customTestId}`).emit('leaderboard_update', {
-        userId,
-        name,
-        score,
-        isFinished
-      });
-    });
+      if (isCorrect) {
+        // Player answered CORRECT first -> claims the point immediately!
+        battle.questionClaimed = true;
+        battle.claimedBy = userId;
 
-    socket.on('submit_answer', (data) => {
-      const { battleId, userId, score } = data;
-      // Notify the other player
-      socket.to(battleId).emit('opponent_progress', { score });
-    });
+        if (userId === battle.p1.userId) {
+          battle.p1.score += 1;
+        } else if (userId === battle.p2.userId) {
+          battle.p2.score += 1;
+        }
 
-    socket.on('battle_over', async (data) => {
-      const { battleId, userId, score } = data;
-      socket.to(battleId).emit('opponent_finished', { score });
-      
-      // We can handle final DB logic via REST API or here.
-      // For now, let the frontend send a REST call to finalize the battle.
+        // Emit IMMEDIATELY so score reflects on both screens right away
+        io.to(battleId).emit('question_resolved', {
+          questionIndex: battle.currentQIndex,
+          claimedBy: userId,
+          isCorrect: true,
+          correctAnswer: currentQuestion.correctAnswer,
+          selectedOption: optionKey,
+          p1Score: battle.p1.score,
+          p2Score: battle.p2.score
+        });
+
+        // Advance to next question after 1.5 seconds
+        battle.advanceTimeout = setTimeout(async () => {
+          const currentBattle = activeBattles.get(battleId);
+          if (!currentBattle) return;
+
+          currentBattle.currentQIndex += 1;
+          currentBattle.questionClaimed = false;
+          currentBattle.claimedBy = null;
+          currentBattle.wrongAttempts.clear();
+
+          if (currentBattle.currentQIndex < currentBattle.questions.length) {
+            io.to(battleId).emit('next_question', {
+              currentQIndex: currentBattle.currentQIndex,
+              p1Score: currentBattle.p1.score,
+              p2Score: currentBattle.p2.score
+            });
+          } else {
+            await finalizeBattle(battleId, currentBattle, io);
+          }
+        }, 1500);
+
+      } else {
+        // Player answered INCORRECT -> locked out of this question!
+        battle.wrongAttempts.add(userId);
+
+        // Notify the answering player that their answer was wrong
+        socket.emit('answer_incorrect', {
+          questionIndex: battle.currentQIndex,
+          selectedOption: optionKey
+        });
+
+        // Notify opponent that the challenger missed, point is still up for grabs
+        socket.to(battleId).emit('opponent_missed', {
+          questionIndex: battle.currentQIndex
+        });
+
+        // If both players attempted and missed, reveal correct answer and advance
+        if (battle.wrongAttempts.size >= 2) {
+          battle.questionClaimed = true;
+          io.to(battleId).emit('question_resolved', {
+            questionIndex: battle.currentQIndex,
+            claimedBy: null,
+            isCorrect: false,
+            correctAnswer: currentQuestion.correctAnswer,
+            selectedOption: optionKey,
+            p1Score: battle.p1.score,
+            p2Score: battle.p2.score
+          });
+
+          battle.advanceTimeout = setTimeout(async () => {
+            const currentBattle = activeBattles.get(battleId);
+            if (!currentBattle) return;
+
+            currentBattle.currentQIndex += 1;
+            currentBattle.questionClaimed = false;
+            currentBattle.claimedBy = null;
+            currentBattle.wrongAttempts.clear();
+
+            if (currentBattle.currentQIndex < currentBattle.questions.length) {
+              io.to(battleId).emit('next_question', {
+                currentQIndex: currentBattle.currentQIndex,
+                p1Score: currentBattle.p1.score,
+                p2Score: currentBattle.p2.score
+              });
+            } else {
+              await finalizeBattle(battleId, currentBattle, io);
+            }
+          }, 1500);
+        }
+      }
     });
 
     socket.on('disconnect', () => {
