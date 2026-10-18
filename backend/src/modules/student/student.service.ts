@@ -95,6 +95,77 @@ export const StudentService = {
       });
     }
 
+    // 4. Dynamic MMR adjustment based on test performance
+    if (user) {
+      const accuracy = total > 0 ? score / total : 0;
+      let eloChange = 0;
+
+      // Base ELO from accuracy tier
+      if (accuracy >= 0.9) {
+        eloChange = 10;       // 90%+ → excellent
+      } else if (accuracy >= 0.8) {
+        eloChange = 7;        // 80-89% → great
+      } else if (accuracy >= 0.6) {
+        eloChange = 4;        // 60-79% → decent
+      } else if (accuracy >= 0.4) {
+        eloChange = 0;        // 40-59% → neutral
+      } else {
+        eloChange = -5;       // <40% → penalty for careless attempts
+      }
+
+      // Speed bonus: if finished in under 20s per question on average, +2
+      if (total > 0 && durationMs > 0) {
+        const avgMsPerQ = durationMs / total;
+        if (avgMsPerQ < 20000) {    // under 20s per question
+          eloChange += 2;
+        }
+      }
+
+      // First test of the day bonus: +3
+      const startOfDay = new Date();
+      startOfDay.setHours(0, 0, 0, 0);
+      const testsToday = await prisma.testAttempt.count({
+        where: {
+          userId,
+          createdAt: { gte: startOfDay },
+          id: { not: attempt.id }   // exclude the one we just created
+        }
+      });
+      if (testsToday === 0) {
+        eloChange += 3;   // daily consistency reward
+      }
+
+      // Improvement trend bonus: if this accuracy > avg of last 3 attempts, +5
+      const recentAttempts = await prisma.testAttempt.findMany({
+        where: { userId, id: { not: attempt.id } },
+        orderBy: { createdAt: 'desc' },
+        take: 3,
+        select: { score: true, total: true }
+      });
+      if (recentAttempts.length >= 2) {
+        const recentAvgAccuracy = recentAttempts.reduce(
+          (sum, a) => sum + (a.total > 0 ? a.score / a.total : 0), 0
+        ) / recentAttempts.length;
+        if (accuracy > recentAvgAccuracy + 0.05) {
+          eloChange += 5;  // meaningful improvement over recent average
+        }
+      }
+
+      // Clamp total change to ±15 per test to prevent farming
+      eloChange = Math.max(-15, Math.min(eloChange, 15));
+
+      if (eloChange !== 0) {
+        const newElo = Math.max(1000, user.elo + eloChange);
+        await prisma.user.update({
+          where: { id: userId },
+          data: { elo: newElo }
+        });
+        await prisma.eloHistory.create({
+          data: { userId, elo: newElo }
+        });
+      }
+    }
+
     return attempt;
   },
 

@@ -81,50 +81,82 @@ async function finalizeBattle(battleId: string, battle: ActiveBattle, io: Server
       }
     });
 
-    // Update ELO and streaks
-    if (winnerId) {
-      const loserId = winnerId === battle.p1.userId ? battle.p2.userId : battle.p1.userId;
-
-      const winner = await prisma.user.findUnique({
-        where: { id: winnerId },
-        select: { elo: true, currentStreak: true, longestStreak: true }
-      });
-      const loser = await prisma.user.findUnique({
-        where: { id: loserId },
-        select: { elo: true }
-      });
-
-      if (winner) {
-        const newElo = winner.elo + 25;
-        const newStreak = (winner.currentStreak || 0) + 1;
-        await prisma.user.update({
+    // Update ELO and streaks using dynamic Elo formula
+    const winnerData = winnerId
+      ? await prisma.user.findUnique({
           where: { id: winnerId },
-          data: {
-            elo: newElo,
-            currentStreak: newStreak,
-            longestStreak: Math.max(newStreak, winner.longestStreak || 0),
-            lastActiveAt: new Date()
-          }
-        });
-        await prisma.eloHistory.create({
-          data: { userId: winnerId, elo: newElo }
-        });
-      }
+          select: { elo: true, currentStreak: true, longestStreak: true }
+        })
+      : null;
 
-      if (loser) {
-        const newElo = Math.max(1000, loser.elo - 15);
-        await prisma.user.update({
+    const loserId = winnerId
+      ? (winnerId === battle.p1.userId ? battle.p2.userId : battle.p1.userId)
+      : null;
+
+    const loserData = loserId
+      ? await prisma.user.findUnique({
           where: { id: loserId },
-          data: {
-            elo: newElo,
-            currentStreak: 0,
-            lastActiveAt: new Date()
-          }
-        });
-        await prisma.eloHistory.create({
-          data: { userId: loserId, elo: newElo }
-        });
-      }
+          select: { elo: true }
+        })
+      : null;
+
+    let winnerEloChange = 0;
+    let loserEloChange = 0;
+
+    if (winnerId && winnerData && loserId && loserData) {
+      const K = 32; // base K-factor
+      const totalQs = battle.questions.length || 5;
+      const winnerScore = winnerId === battle.p1.userId ? battle.p1.score : battle.p2.score;
+      const loserScore = winnerId === battle.p1.userId ? battle.p2.score : battle.p1.score;
+
+      // Expected win probability (standard Elo formula)
+      const expectedWin = 1 / (1 + Math.pow(10, (loserData.elo - winnerData.elo) / 400));
+
+      // Margin bonus: dominating 5-0 earns more than scraping 3-2
+      const marginBonus = (winnerScore - loserScore) / totalQs; // 0 to 1
+
+      // Streak multiplier: 5% extra per consecutive win (capped at 50%)
+      const streak = (winnerData.currentStreak || 0);
+      const streakMultiplier = 1 + Math.min(streak * 0.05, 0.5);
+
+      // Winner gains: higher when beating stronger opponents, with margin & streak bonuses
+      winnerEloChange = Math.round(K * (1 - expectedWin) * (1 + marginBonus) * streakMultiplier);
+      winnerEloChange = Math.max(5, Math.min(winnerEloChange, 60)); // clamp [5, 60]
+
+      // Loser loses: more when losing to a weaker opponent
+      loserEloChange = Math.round(K * (0 - expectedWin) * (1 + marginBonus * 0.5));
+      loserEloChange = Math.max(-40, Math.min(loserEloChange, -3)); // clamp [-40, -3]
+
+      // Update winner
+      const newWinnerElo = winnerData.elo + winnerEloChange;
+      const newStreak = streak + 1;
+      await prisma.user.update({
+        where: { id: winnerId },
+        data: {
+          elo: newWinnerElo,
+          currentStreak: newStreak,
+          longestStreak: Math.max(newStreak, winnerData.longestStreak || 0),
+          lastActiveAt: new Date()
+        }
+      });
+      await prisma.eloHistory.create({
+        data: { userId: winnerId, elo: newWinnerElo }
+      });
+
+      // Update loser (floor at 1000)
+      const newLoserElo = Math.max(1000, loserData.elo + loserEloChange);
+      loserEloChange = newLoserElo - loserData.elo; // recalculate in case of floor
+      await prisma.user.update({
+        where: { id: loserId },
+        data: {
+          elo: newLoserElo,
+          currentStreak: 0,
+          lastActiveAt: new Date()
+        }
+      });
+      await prisma.eloHistory.create({
+        data: { userId: loserId, elo: newLoserElo }
+      });
     }
 
     io.to(battleId).emit('battle_completed', {
@@ -132,7 +164,11 @@ async function finalizeBattle(battleId: string, battle: ActiveBattle, io: Server
       p1Score: battle.p1.score,
       p2Score: battle.p2.score,
       winnerId,
-      isDraw: battle.p1.score === battle.p2.score
+      isDraw: battle.p1.score === battle.p2.score,
+      eloChanges: {
+        [battle.p1.userId]: winnerId === battle.p1.userId ? winnerEloChange : loserEloChange,
+        [battle.p2.userId]: winnerId === battle.p2.userId ? winnerEloChange : loserEloChange,
+      }
     });
 
     activeBattles.delete(battleId);
