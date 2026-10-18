@@ -23,6 +23,42 @@ interface ActiveBattle {
 
 const activeBattles = new Map<string, ActiveBattle>();
 
+function shuffleArray<T>(array: T[]): T[] {
+  const result = [...array];
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+}
+
+async function getRandomBattleQuestions(count: number = 5) {
+  let candidates = await prisma.question.findMany({
+    where: { status: 'PUBLISHED' },
+    select: { id: true }
+  });
+
+  if (candidates.length === 0) {
+    candidates = await prisma.question.findMany({
+      select: { id: true }
+    });
+  }
+
+  if (candidates.length === 0) {
+    return [];
+  }
+
+  const selectedIds = shuffleArray(candidates)
+    .slice(0, count)
+    .map(c => c.id);
+
+  const questions = await prisma.question.findMany({
+    where: { id: { in: selectedIds } }
+  });
+
+  return shuffleArray(questions);
+}
+
 async function finalizeBattle(battleId: string, battle: ActiveBattle, io: Server) {
   try {
     if (battle.advanceTimeout) {
@@ -126,10 +162,7 @@ export const setupBattleGateway = (io: Server) => {
         const player1 = queue.splice(opponentIndex, 1)[0];
         const player2 = { socket, userId, elo: userElo, joinedAt: Date.now() };
 
-        const questions = await prisma.question.findMany({
-          where: { status: 'PUBLISHED' },
-          take: 5
-        });
+        const questions = await getRandomBattleQuestions(5);
 
         const battle = await prisma.battle.create({
           data: {
@@ -200,10 +233,7 @@ export const setupBattleGateway = (io: Server) => {
       const player2 = { socket, userId };
       privateRooms.delete(roomId);
 
-      const questions = await prisma.question.findMany({
-        where: { status: 'PUBLISHED' },
-        take: 5
-      });
+      const questions = await getRandomBattleQuestions(5);
 
       const battle = await prisma.battle.create({
         data: {
