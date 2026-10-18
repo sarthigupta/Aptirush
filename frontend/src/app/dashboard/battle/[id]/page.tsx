@@ -33,6 +33,7 @@ interface BattleCompletedData {
   p2Score: number;
   winnerId: string | null;
   isDraw: boolean;
+  eloChanges?: Record<string, number>;
 }
 
 type ResolutionStatus =
@@ -252,13 +253,19 @@ export default function BattleArena() {
         </p>
 
         {/* ELO Rating Badge */}
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8 font-label-md font-bold uppercase tracking-wider shadow-sm border border-outline-variant/30 bg-surface-container-low">
-          <Sparkles className="w-4 h-4 text-secondary" />
-          <span>MMR Update:</span>
-          <span className={isWinner ? 'text-secondary font-black' : isDraw ? 'text-on-surface-variant' : 'text-error font-black'}>
-            {isWinner ? '+25 ELO' : isDraw ? '+0 ELO' : '-15 ELO'}
-          </span>
-        </div>
+        {(() => {
+          const myEloChange = userId && completedData?.eloChanges ? (completedData.eloChanges[userId] ?? 0) : 0;
+          const sign = myEloChange > 0 ? '+' : '';
+          return (
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8 font-label-md font-bold uppercase tracking-wider shadow-sm border border-outline-variant/30 bg-surface-container-low">
+              <Sparkles className="w-4 h-4 text-secondary" />
+              <span>MMR Update:</span>
+              <span className={myEloChange > 0 ? 'text-secondary font-black' : myEloChange === 0 ? 'text-on-surface-variant' : 'text-error font-black'}>
+                {sign}{myEloChange} ELO
+              </span>
+            </div>
+          );
+        })()}
 
         {/* Final Scoreboard */}
         <div className="grid grid-cols-2 gap-6 mb-10">
